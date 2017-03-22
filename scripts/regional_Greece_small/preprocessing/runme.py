@@ -94,43 +94,45 @@ class Seisflow(PoE):
 
     def stage_5(self, instance):
 
-        # Substage 6: Calculate weights for each measurements
+        if instance==1:
 
-        k5 = Kernel(name="pypaw_window_weights")
-        k5.arguments = ["--filtered_window=","--stations=",'path.json','param.yml']
-        k5.link_input_data = ['$STAGE_4_TASK_1/filtered_window.json','path.json',
+            # Substage 6: Calculate weights for each measurements (window?)
+
+            k5 = Kernel(name="pypaw_window_weights")
+            k5.arguments = ["--filtered_window=","--stations=",'path.json','param.yml']
+            k5.link_input_data = ['$STAGE_4_TASK_1/filtered_window.json','path.json',
                             'param.yml','stations.json']
-        k5.cores = 1
-        k5.mpi = True
+            k5.cores = 1
+            k5.mpi = True
 
-        return k5
+            return k5
+
+        else:
+
+            # Substage 7: Calculate adjoint sources
+
+            k5 = Kernel(name="pypaw_adjoint_asdf")
+            k5.arguments = ["--observed=","--synthetic=","--filtered_window=","--path=","--param="]
+            k5.link_input_data = ['$STAGE_1_TASK_1/observed.asdf','$STAGE_1_TASK_2/synthetic.asdf',
+                            '$STAGE_4_TASK_1/filtered_window.json','path.json','param.yml']
+            k5.cores = 16
+            k5.mpi = True
+
+            return k5
 
 
     def stage_6(self, instance):
 
-        # Substage 7: Calculate adjoint sources
+        # Substage 8: Combine weights and adjoint sources
 
-        k6 = Kernel(name="pypaw_adjoint_asdf")
-        k6.arguments = ["--observed=","--synthetic=","--filtered_window=","--path=","--param="]
-        k6.link_input_data = ['$STAGE_1_TASK_1/observed.asdf','$STAGE_1_TASK_2/synthetic.asdf',
-                            '$STAGE_4_TASK_1/window.json','path.json','param.yml']
-        k6.cores = 16
+        k6 = Kernel(name="pypaw_sum_adjoint_asdf")
+        k6.arguments = ["--adjoint_asdf=","--window_weight="]
+        k6.link_input_data = ['$STAGE_6_TASK_1/adoint.asdf','$STAGE_5_TASK_1/weighted_window.json',
+                            'path.json','param.yml']
+        k6.cores = 1
         k6.mpi = True
 
         return k6
-
-    def stage_7(self, instance):
-
-        # Substage 8: Combine weights and adjoint sources
-
-        k7 = Kernel(name="pypaw_sum_adjoint_asdf")
-        k7.arguments = ["--adjoint_asdf=","--window_weight="]
-        k7.link_input_data = ['$STAGE_6_TASK_1/adoint.asdf','$STAGE_5_TASK_1/weighted_window.json',
-                            'path.json','param.yml']
-        k7.cores = 1
-        k7.mpi = True
-
-        return k7
 
 
   
@@ -185,7 +187,7 @@ if __name__ == '__main__':
         res.allocate(wait=True)
 
         # Create pattern object with desired ensemble size, pipeline size
-        pipe = Test(ensemble_size=[2,1,1,1,1,1,1], pipeline_size=7)
+        pipe = Test(ensemble_size=[2,1,1,1,2,1], pipeline_size=6)
 
         # Add workload to the application manager
         app.add_workload(pipe)
