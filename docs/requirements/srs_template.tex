@@ -15,6 +15,9 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{hyperref}
+\usepackage{wrapfig}
+\usepackage{url}
+\usepackage{graphicx}
 
 \hypersetup{
     bookmarks=false,                                % show bookmarks bar?
@@ -26,11 +29,13 @@
     linkcolor=blue,                                 % color of internal links
     citecolor=black,                                % color of links to bibliography
     filecolor=black,                                % color of file links
-    urlcolor=purple,                                % color of external links
+    urlcolor=black,                                % color of external links
     linktoc=page                                    % only page is linked
 }
 
-\def\myversion{1.0 }
+\def\myversion{0.1.0 }
+\def\projname{Ensemble Toolkit for Earth Sciences: Seismic Inversion}
+\def\projauthors{$<$Authors$>$}
 \date{}
 \title{}
 
@@ -47,13 +52,13 @@
         \vspace{1.9cm}
         for\\
         \vspace{1.9cm}
-        $<$Project$>$\\
+        \projname \\
         \vspace{1.9cm}
         \LARGE{Version \myversion approved}\\
         \vspace{1.9cm}
-        Prepared by $<$author$>$\\
+        Prepared by \projauthors\\
         \vspace{1.9cm}
-        $<$Organization$>$\\
+        Princeton University and Rutgers University\\
         \vspace{1.9cm}
         \today\\
     \end{bfseries}
@@ -72,10 +77,10 @@
         \hline
 	    Name & Date & Reason For Changes & Version\\
         \hline
-	    21 & 22 & 23 & 24\\
+	    1 & 16-04-2017 & Initial version & 0.1.0\\
         \hline
-	    31 & 32 & 33 & 34\\
-        \hline
+	    %31 & 32 & 33 & 34\\
+        %\hline
     \end{tabular}
 \end{center}
 
@@ -86,38 +91,67 @@
 \chapter{Introduction}
 
 \section{Purpose}
-$<$Identify the product whose software requirements are specified in this 
-document, including the revision or release number. Describe the scope of the 
-product that is covered by this SRS, particularly if this SRS describes only 
-part of the system or a single subsystem.$>$
+%$<$Identify the product whose software requirements are specified in this 
+%document, including the revision or release number. Describe the scope of the 
+%product that is covered by this SRS, particularly if this SRS describes only 
+%part of the system or a single subsystem.$>$
+
+The purpose of the document is to capture, in detail, the requirements of the "Seismic Inversion" track of the "Ensemble Toolkit for Earth Sciences" project. This document will include all the system requirements, interface, interactions and limitations of this track. . This document is primarily intended to be proposed to a customer for its approval
+and a reference for developing the first version of the system.
 
 \section{Document Conventions}
-$<$Describe any standards or typographical conventions that were followed when 
-writing this SRS, such as fonts or highlighting that have special significance.  
-For example, state whether priorities  for higher-level requirements are assumed 
-to be inherited by detailed requirements, or whether every requirement statement 
-is to have its own priority.$>$
+%$<$Describe any standards or typographical conventions that were followed when 
+%writing this SRS, such as fonts or highlighting that have special significance.  
+%For example, state whether priorities  for higher-level requirements are assumed 
+%to be inherited by detailed requirements, or whether every requirement statement 
+%is to have its own priority.$>$
+
+The requested features are listed in section 4 and the non-functional requirements are listed in section 5. Each of these requirements have a priority from the set \{HIGH, MEDIUM, LOW\}. Based on the number of requirements and their priority, a timeline will be created with each requirement and its expected time-to-completion.
 
 \section{Intended Audience and Reading Suggestions}
-$<$Describe the different types of reader that the document is intended for, 
-such as developers, project managers, marketing staff, users, testers, and 
-documentation writers. Describe what the rest of this SRS contains and how it is 
-organized. Suggest a sequence for reading the document, beginning with the 
-overview sections and proceeding through the sections that are most pertinent to 
-each reader type.$>$
+%$<$Describe the different types of reader that the document is intended for, 
+%such as developers, project managers, marketing staff, users, testers, and 
+%documentation writers. Describe what the rest of this SRS contains and how it is 
+%organized. Suggest a sequence for reading the document, beginning with the 
+%overview sections and proceeding through the sections that are most pertinent to 
+%each reader type.$>$
+
+The document is created and iterated by both the users and developers together. This document is intended for the developers and project manager to get a complete understanding of the requirements of the system as expected by the user.
+
+An early usecase document is available at [1]. [2] presents the current status and overall goal of the seismic inversion application. [3] provides a quick introduction to the current capabilities of the Ensemble Toolkit.
 
 \section{Project Scope}
-$<$Provide a short description of the software being specified and its purpose, 
-including relevant benefits, objectives, and goals. Relate the software to 
-corporate goals or business strategies. If a separate vision and scope document 
-is available, refer to it rather than duplicating its contents here.$>$
+%$<$Provide a short description of the software being specified and its purpose, 
+%including relevant benefits, objectives, and goals. Relate the software to 
+%corporate goals or business strategies. If a separate vision and scope document 
+%is available, refer to it rather than duplicating its contents here.$>$
+
+$<$This might be better suited for Princeton $>$.
+
+The project has the following goals:
+
+\begin{itemize}
+\item increase the ultimate resolving power of global inversions through more efficient use of resources
+\item open new avenues of scientific research,in particular, anisotropic inversions
+\item a package is to be developed and shared with the wider seismology community
+\end{itemize}
 
 \section{References}
-$<$List any other documents or Web addresses to which this SRS refers. These may 
-include user interface style guides, contracts, standards, system requirements 
-specifications, use case documents, or a vision and scope document. Provide 
-enough information so that the reader could access a copy of each reference, 
-including title, author, version number, date, and source or location.$>$
+%$<$List any other documents or Web addresses to which this SRS refers. These may 
+%include user interface style guides, contracts, standards, system requirements 
+%specifications, use case documents, or a vision and scope document. Provide 
+%enough information so that the reader could access a copy of each reference, 
+%including title, author, version number, date, and source or location.$>$
+
+[1] \url{https://docs.google.com/document/d/1EjUKJxsNNISBwZ9IXERyiCAISKb25mEwjhyi1gePCDk/edit?usp=sharing}
+
+[2] \url{https://github.com/radical-collaboration/hpc-workflows/blob/master/docs/presentations/20161026_ET_Seismo.pdf}
+
+[3] \url{https://github.com/radical-collaboration/hpc-workflows/blob/master/docs/presentations/Ensemble\%20Toolkit\%20-\%20Quick\%20Overview.pdf}
+
+[4] \url{http://seisflows.readthedocs.io/en/latest/}
+
+[5] \url{https://bitbucket.org/mpbl/simpy}
 
 
 % ----------------------------------------------------------------------------
@@ -125,52 +159,100 @@ including title, author, version number, date, and source or location.$>$
 % ----------------------------------------------------------------------------
 \chapter{Overall Description}
 
+This chapter provides an overview of the system. It will describe the context of the system and why its development is deemed necessary. It will broadly list the functions the system is expected to perform along with its interaction with other systems as well as the user. This chapter will also describe the intended users and the system environment for the current version of the system. It will conclude with a list of assumptions and foreseen constraints.
+
+
 \section{Product Perspective}
-$<$Describe the context and origin of the product being specified in this SRS.  
-For example, state whether this product is a follow-on member of a product 
-family, a replacement for certain existing systems, or a new, self-contained 
-product. If the SRS defines a component of a larger system, relate the 
-requirements of the larger system to the functionality of this software and 
-identify interfaces between the two. A simple diagram that shows the major 
-components of the overall system, subsystem interconnections, and external 
-interfaces can be helpful.$>$
+%$<$Describe the context and origin of the product being specified in this SRS.  
+%For example, state whether this product is a follow-on member of a product 
+%family, a replacement for certain existing systems, or a new, self-contained 
+%product. If the SRS defines a component of a larger system, relate the 
+%requirements of the larger system to the functionality of this software and 
+%identify interfaces between the two. A simple diagram that shows the major 
+%components of the overall system, subsystem interconnections, and external 
+%interfaces can be helpful.$>$
+
+The system will be designed to execute the seismic inversion workflow, as represented in Figure~\ref{fig:seismic_wflow}, at scale on HPCs, more specifically on DoE Titan machine. The various sequential and concurrent stages of the workflow and the associated data movement will be captured using the Ensemble Toolkit API.
+
+\begin{wrapfigure}{R}{0.41\textwidth}
+\includegraphics[width=0.4\textwidth]{SeismicWorkflow.pdf}
+\caption{Seismic inversion workflow}
+\label{fig:seismic_wflow}
+\end{wrapfigure}
+
+Existing solution executes the various stages of the workflow in parts: Seisflow[4] is the tool used to perform the simulations on an HPC and Simpy[5] is used to preprocess and postprocess the simulation data before the next set of simulations. This document captures the requirement of a product that will be an end-to-end solution addressing many of the missing features in the existing solution.
+
+\begin{wrapfigure}{R}{0.41\textwidth}
+\includegraphics[width=0.4\textwidth]{seisflow-sys-design.pdf}
+\caption{High-level design of the Ensemble Toolkit for Earth Sciences}
+\label{fig:seisflow_sys_design}
+\end{wrapfigure}
+
+This system will be designed in order to expose, to the user, two components: an API and a database. The API will enable the user to describe the application workflow completely. The database will provide access to the state of the various tasks in the workflow. This will enable the user to observe performance metrics or perform various analysis in real time.
+Once the application is described via the API, the internal components will translate the application into executable units and manage their execution across multiple resources. Figure~\ref{fig:seisflow_sys_design} provides a graphical representation of the system.
+
+
 
 \section{Product Functions}
-$<$Summarize the major functions the product must perform or must let the user 
-perform. Details will be provided in Section 3, so only a high level summary 
-(such as a bullet list) is needed here. Organize the functions to make them 
-understandable to any reader of the SRS. A picture of the major groups of 
-related requirements and how they relate, such as a top level data flow diagram 
-or object class diagram, is often effective.$>$
+%$<$Summarize the major functions the product must perform or must let the user 
+%perform. Details will be provided in Section 3, so only a high level summary 
+%(such as a bullet list) is needed here. Organize the functions to make them 
+%understandable to any reader of the SRS. A picture of the major groups of 
+%related requirements and how they relate, such as a top level data flow diagram 
+%or object class diagram, is often effective.$>$
+
+The major functions the product is expected to perform is the following:
+
+\begin{itemize}
+\item an API sufficient to capture the description of the complete workflow
+\item capacity to execute O(1000) tasks concurrently
+\item ability to manage task failures due to several reasons
+\item ability to provide real time execution statistics and user access to intermediate data
+\end{itemize}
+
+
 
 \section{User Classes and Characteristics}
-$<$Identify the various user classes that you anticipate will use this product.  
-User classes may be differentiated based on frequency of use, subset of product 
-functions used, technical expertise, security or privilege levels, educational 
-level, or experience. Describe the pertinent characteristics of each user class.  
-Certain requirements may pertain only to certain user classes. Distinguish the 
-most important user classes for this product from those who are less important 
-to satisfy.$>$
+%$<$Identify the various user classes that you anticipate will use this product.  
+%User classes may be differentiated based on frequency of use, subset of product 
+%functions used, technical expertise, security or privilege levels, educational 
+%level, or experience. Describe the pertinent characteristics of each user class.  
+%Certain requirements may pertain only to certain user classes. Distinguish the 
+%most important user classes for this product from those who are less important 
+%to satisfy.$>$
+
+The \myversion version of the product is intended to be used only by the Princeton and Rutgers groups. Later versions will be developed and packaged to be distributed to a wider community.
 
 \section{Operating Environment}
-$<$Describe the environment in which the software will operate, including the 
-hardware platform, operating system and versions, and any other software 
-components or applications with which it must peacefully coexist.$>$
+%$<$Describe the environment in which the software will operate, including the 
+%hardware platform, operating system and versions, and any other software 
+%components or applications with which it must peacefully coexist.$>$
+
+The primary OS the product will be tested on is Linux with possible support of MacOS. The primary HPCs the product will be tested on is the ORNL Titan, ORNL Rhea and TACC Stampede.
 
 \section{Design and Implementation Constraints}
-$<$Describe any items or issues that will limit the options available to the 
-developers. These might include: corporate or regulatory policies; hardware 
-limitations (timing requirements, memory requirements); interfaces to other 
-applications; specific technologies, tools, and databases to be used; parallel 
-operations; language requirements; communications protocols; security 
-considerations; design conventions or programming standards (for example, if the 
-customer’s organization will be responsible for maintaining the delivered 
-software).$>$
+%$<$Describe any items or issues that will limit the options available to the 
+%developers. These might include: corporate or regulatory policies; hardware 
+%limitations (timing requirements, memory requirements); interfaces to other 
+%applications; specific technologies, tools, and databases to be used; parallel 
+%operations; language requirements; communications protocols; security 
+%considerations; design conventions or programming standards (for example, if the 
+%customer’s organization will be responsible for maintaining the delivered 
+%software).$>$
+
+The entire framework, including the API exposed to the user, will be python based but will support any task kernel intended for a Linux OS.
+
+The current version will be using RADICAL Pilot as a runtime system and will be constrained to the performance limitations of the same. <TBA: Relevant RP performance numbers/plots>.
+
+The forward and adjoint simulations will use the SPECFEM tool, available at \url{http://specfem3d-globe.readthedocs.io/en/latest/}. The preprocessing and postprocessing will use the pypaw tool, available at \url{https://github.com/wjlei1990/pypaw}.
 
 \section{User Documentation}
-$<$List the user documentation components (such as user manuals, on-line help, 
-and tutorials) that will be delivered along with the software. Identify any 
-known user documentation delivery formats or standards.$>$
+%$<$List the user documentation components (such as user manuals, on-line help, 
+%and tutorials) that will be delivered along with the software. Identify any 
+%known user documentation delivery formats or standards.$>$
+
+All the relevant code will be available on Github. Ensemble Toolkit code will be available at \url{https://github.com/radical-cybertools/radical.ensemblemd}. User manual for Ensemble Toolkit will be made available in \url{http://radicalensemblemd.readthedocs.org/en/latest/}. The code for the end-to-end workflow will be available on Github and user manual on \url{www.readthedocs.org}. The exact URLs will be updated as the project matures.
+
 \section{Assumptions and Dependencies}
 
 $<$List any assumed factors (as opposed to known facts) that could affect the 
