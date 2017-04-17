@@ -294,35 +294,40 @@ The framework will have a dependency on the following tools:
 %the user interface design should be documented in a separate user interface 
 %specification.$>$
 
-
+TBD
 
 \section{Hardware Interfaces}
-$<$Describe the logical and physical characteristics of each interface between 
-the software product and the hardware components of the system. This may include 
-the supported device types, the nature of the data and control interactions 
-between the software and the hardware, and communication protocols to be 
-used.$>$
+%$<$Describe the logical and physical characteristics of each interface between 
+%the software product and the hardware components of the system. This may include 
+%the supported device types, the nature of the data and control interactions 
+%between the software and the hardware, and communication protocols to be 
+%used.$>$
+
+The interaction between the product and the hardware, both on the local and remote ends, is abstracted from the user. The hardware interaction is complex and can be deemed out of scope for the current document.
 
 \section{Software Interfaces}
-$<$Describe the connections between this product and other specific software 
-components (name and version), including databases, operating systems, tools, 
-libraries, and integrated commercial components. Identify the data items or 
-messages coming into the system and going out and describe the purpose of each.  
-Describe the services needed and the nature of communications. Refer to 
-documents that describe detailed application programming interface protocols.  
-Identify data that will be shared across software components. If the data 
-sharing mechanism must be implemented in a specific way (for example, use of a 
-global data area in a multitasking operating system), specify this as an 
-implementation constraint.$>$
+%$<$Describe the connections between this product and other specific software 
+%components (name and version), including databases, operating systems, tools, 
+%libraries, and integrated commercial components. Identify the data items or 
+%messages coming into the system and going out and describe the purpose of each.  
+%Describe the services needed and the nature of communications. Refer to 
+%documents that describe detailed application programming interface protocols.  
+%Identify data that will be shared across software components. If the data 
+%sharing mechanism must be implemented in a specific way (for example, use of a 
+%global data area in a multitasking operating system), specify this as an 
+%implementation constraint.$>$
+
+TBD
 
 \section{Communications Interfaces}
-$<$Describe the requirements associated with any communications functions 
-required by this product, including e-mail, web browser, network server 
-communications protocols, electronic forms, and so on. Define any pertinent 
-message formatting. Identify any communication standards that will be used, such 
-as FTP or HTTP. Specify any communication security or encryption issues, data 
-transfer rates, and synchronization mechanisms.$>$
+%$<$Describe the requirements associated with any communications functions 
+%required by this product, including e-mail, web browser, network server 
+%communications protocols, electronic forms, and so on. Define any pertinent 
+%message formatting. Identify any communication standards that will be used, such 
+%as FTP or HTTP. Specify any communication security or encryption issues, data 
+%transfer rates, and synchronization mechanisms.$>$
 
+There exists communication amongst the various internal components of the system as well as communication between the system and external entities such as the database or the HPC. Although these are crucial, these are hidden from the user, within the system.
 
 % ----------------------------------------------------------------------------
 % Functional Requirements
