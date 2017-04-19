@@ -41,6 +41,17 @@
 \date{}
 \title{}
 
+
+\newif\ifdraft
+\drafttrue
+%\draftfalse
+\ifdraft
+ \newcommand{\vbnote}[1]{ {\textcolor{blue} { ***VB: #1 }}}
+\else
+ \newcommand{\vbnote}[1]{}
+\fi
+
+
 \begin{document}
 
 
@@ -317,7 +328,7 @@ The interaction between the product and the hardware, both on the local and remo
 %global data area in a multitasking operating system), specify this as an 
 %implementation constraint.$>$
 
-TBD
+\entk will use the python API provided by the underlying runtime system. Depending on the database that is decided, the standard python API would be used to interface with the database.
 
 \section{Communications Interfaces}
 %$<$Describe the requirements associated with any communications functions 
@@ -479,6 +490,8 @@ Depending on the database that is chosen (redis,mongodb,?), the framework will r
 %functional requirements or features.$>$
 TBD
 
+\vbnote{What kind of performance is required? This can be in terms of the scale of operation, whether there is any priority on time-to-completion or resource utilization, etc.}
+
 \section{Safety Requirements}
 %$<$Specify those requirements that are concerned with possible loss, damage, or 
 %harm that could result from the use of the product. Define any safeguards or 
@@ -494,7 +507,8 @@ None
 %any user identity authentication requirements. Refer to any external policies or 
 %regulations containing security issues that affect the product. Define any 
 %security or privacy certifications that must be satisfied.$>$
-TBD
+
+\vbnote{Any security requirements?}
 
 \section{Software Quality Attributes}
 %$<$Specify any additional quality characteristics for the product that will be 
@@ -516,7 +530,13 @@ This system is expected to be robust and capable of handling task failure. The f
 
 \subsection{Reliability}
 
-The system is perform reliably over long durations of time at scale on the intended HPCs. Given no variations in the execution environment, the system should not be faulty state at any point.
+The system needs to perform reliably over long durations at scale on the intended HPCs. 
+The reliability of the system depends on the following:
+
+\begin{itemize}[noitemsep]
+\item reliability of the underlying runtime system, RADICAL Pilot
+\item the uptime of the HPC resources and the stability of the software environment in the HPC.
+\end{itemize}
 
 % ----------------------------------------------------------------------------
 % Other Requirements
