@@ -1,4 +1,4 @@
-# Forward simulations with EnTK
+# Preprocessing with EnTK
 
 ## Requirements (local machine)
 
