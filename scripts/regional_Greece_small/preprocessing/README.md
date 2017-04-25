@@ -22,7 +22,7 @@ source $HOME/myenv/bin/activate
 * You now need to install specific branches of [radical.pilot](https://github.com/radical-cybertools/radical.pilot) and [radical.ensemblemd](https://github.com/radical-cybertools/radical.ensemblemd). Some of the features required for this work are in the development branch and would be released soon. Even if you already have the branches please follow the instructions from scratch (or do a 'git pull' before installation).
 
 
-Radical pilot installation:
+### Radical pilot installation:
 
 ```bash
 cd $HOME
@@ -32,7 +32,7 @@ git checkout usecase/vivek
 pip install .
 ```
 
-Ensemble toolkit installation:
+### Ensemble toolkit installation:
 
 ```bash
 cd $HOME
@@ -42,7 +42,7 @@ git checkout fix/kernel_args
 pip install .
 ```
 
-Other depenencies (pypaw, pyadjoint, etc.):
+### Other depenencies (pypaw, pyadjoint, etc.):
 
 All the dependencies are installed on Stampede. The permissions have been set for public access. Let me know if you hit any access issues. No installation from the user is required for testing this example.
 
@@ -71,3 +71,10 @@ cd `ls -Art | tail -n 1`
 ```
 
 You will see multiple ```unit.*``` folders here that correspond to the various preprocessing tasks.
+
+**Important**: Please cleanup the data at the end of the run (after looking into them) so that the next run does not fail. You can do that as follows (on stampede):
+
+```bash
+cd /work/02734/vivek91/DATA_RADICAL
+rm adjoint/* adjoint_sum/* measure/* proc_obsd/* proc_synt/* weight/* window/* -rf
+```
