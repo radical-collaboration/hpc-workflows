@@ -1,5 +1,19 @@
 # Analogs Ensemble User Guide
 
+```
+"`-''-/").___..--''"`-._
+(`6_ 6  )   `-.  (     ).`-.__.`)   WE ARE ...
+(_Y_.)'  ._   )  `._ `. ``-..-'    PENN STATE!
+_ ..`--'_..-_/  /--'_.' ,'
+(il),-''  (li),'  ((!.-'
+```
+
+*Weiming Hu*
+*wuh20@psu.edu*
+*[Geoinformatics and Earth Observation Laboratory](http://geolab.psu.edu)*
+*Department of Geography and Institute for CyberScience*
+*The Pennsylvania State University*
+
 This is the guide for compiling Analog Ensemble C++ code.
 
 ### Getting Prepared
@@ -8,7 +22,7 @@ To compile AnEn, the following tools/libraries are needed:
 - GCC (recommended);
 - Boost library
 
-#### GCC
+##### GCC
 
 To begin with, [GCC](https://gcc.gnu.org/) is preferred to compile the code. If you are using MacOS system, you do not have GCC by default because MacOS uses Clang compiler. Clang sometimes work, but for the sake of standardization, we recommend using GCC.
 
@@ -26,7 +40,7 @@ This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ```
 
-#### Boost Library
+##### Boost Library
 
 Next, [Boost](http://www.boost.org/) is a set of libraries for the C++ programming language. **Note** that Boost compiled by GCC is not compatible with Clang, and vice versa. So please be aware of the compiler you use when you compile Boost library, and use the same compiler to compile the AnEn code.
 
@@ -47,4 +61,22 @@ You can always use an Integrated Development Environment (IDE) application, like
 - Linker options: `-lboost_program_options -lboost_filesystem -lboost_system`;
 - Additional library directories: `/[your directory to boost]/lib`;
 
-*Manual compilation is still under development.*
+You can also compile the AnEn code using the provided `Makefile.in` and `configure.ac`. They are located under `troubleshoot`. These two files guide the system how to compile the codes.
+
+```
+# assume that we are under the src directory
+# copy the two files into our project folder
+cp troubleshoot/Makefile.in .
+cp troubleshoot/configure.ac .
+
+# configure options for compilation
+autoconf
+
+# generate the Makefile
+./configure
+
+# compile
+make
+```
+
+If you have any problems, please contact maintaner. Thank you.
