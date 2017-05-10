@@ -29,23 +29,26 @@ class MyApp(PoE):
 
 	def stage_1(self, instance):
 		k = Kernel(name="compute_analog_for_one_station")
+		k.arguments = [	'--data=/Users/wuh20/data/data_windLuca',
+						'--output=results_for_station_1.txt',
+						'--stations=1']
 		return k
 
 if __name__ == "__main__":
 
 
 	# use the resource specified as argument, fall back to localhost
-	if   len(sys.argv)  > 2: 
+	if   len(sys.argv)  > 2:
 		print 'Usage:\t%s [resource]\n\n' % sys.argv[0]
 		sys.exit(1)
-	elif len(sys.argv) == 2: 
+	elif len(sys.argv) == 2:
 		resource = sys.argv[1]
-	else: 
+	else:
 		resource = 'local.localhost'
 
 	try:
-		
-		with open('%s/config.json'%os.path.dirname(os.path.abspath(__file__))) as data_file:    
+
+		with open('%s/config.json'%os.path.dirname(os.path.abspath(__file__))) as data_file:
 			config = json.load(data_file)
 
 
@@ -79,7 +82,7 @@ if __name__ == "__main__":
 		raise # Just raise the execption again to get the backtrace
 
 	try:
-		# Deallocate the resources. 
+		# Deallocate the resources.
 		cluster.deallocate()
 
 	except:

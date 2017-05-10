@@ -47,4 +47,4 @@ You can always use an Integrated Development Environment (IDE) application, like
 - Linker options: `-lboost_program_options -lboost_filesystem -lboost_system`;
 - Additional library directories: `/[your directory to boost]/lib`;
 
-==Manual compilation is still under development.==
+*Manual compilation is still under development.*
