@@ -132,8 +132,8 @@ bool
 Array2DCompare::operator()(vector <double> const& lhs,
         vector <double> const& rhs) {
 
-    if (isnan(lhs[m_column_])) return false;
-    if (isnan(rhs[m_column_])) return true;
+    if (std::isnan(lhs[m_column_])) return false;
+    if (std::isnan(rhs[m_column_])) return true;
 
     return lhs[m_column_] < rhs[m_column_];
 }

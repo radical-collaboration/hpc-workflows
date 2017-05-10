@@ -21,7 +21,7 @@ Functions::mean(vector<double> const & rhs) {
     int valid = 0;
 
     for (unsigned int i = 0; i < rhs.size(); i++) {
-        if (!isnan(rhs[i])) {
+        if (!std::isnan(rhs[i])) {
             sum += rhs[i];
             valid++;
         }
@@ -46,7 +46,7 @@ Functions::mean(Array2D const & rhs) {
 
     for (int m = 0; m < M; m++) {
         for (int n = 0; n < N; n++) {
-            if (!isnan(rhs[m][n])) {
+            if (!std::isnan(rhs[m][n])) {
                 sum += rhs[m][n];
                 valid++;
             }
@@ -111,7 +111,7 @@ Functions::var(vector<double> const & rhs) {
 
     for (unsigned int i = 0; i < rhs.size(); i++) {
 
-        if (!isnan(rhs[i])) {
+        if (!std::isnan(rhs[i])) {
             sum += pow(rhs[i] - mean, 2);
             valid++;
         }

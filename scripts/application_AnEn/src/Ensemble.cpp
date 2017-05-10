@@ -260,7 +260,7 @@ AnEn::computeMetricSingle_(
             // Also make sure that the no forecasts had NAN values
             // The analog can be NAN if the forecasts were missing for any other parameter
             //
-            if (!isnan(observation) & !isnan(forecast) & !isnan(metric[train_ID_index][time])) {
+            if (!std::isnan(observation) & !std::isnan(forecast) & !std::isnan(metric[train_ID_index][time])) {
 
                 // compute the difference between the forecast and this ensemble member
                 //
