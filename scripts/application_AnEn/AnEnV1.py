@@ -29,9 +29,9 @@ class MyApp(PoE):
 
 	def stage_1(self, instance):
 		k = Kernel(name="compute_analog_for_one_station")
-		k.arguments = [	'--data=/Users/wuh20/data/data_windLuca',
-						'--output=results_for_station_1.txt',
-						'--stations=1']
+		k.arguments = [	'--data=/Users/wuh20/data/data_windLuca/',
+                                '--output=/Users/wuh20/Desktop/results_for_station_1.txt',
+                                '--stations=1']
 		return k
 
 if __name__ == "__main__":
