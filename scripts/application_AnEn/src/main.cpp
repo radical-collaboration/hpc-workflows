@@ -22,7 +22,10 @@
 #if defined(_OPENMP)
 #include <omp.h>
 #else
-double omp_get_wtime() {return 0.0;}
+
+double omp_get_wtime() {
+    return 0.0;
+}
 #endif
 
 //#include <netcdf>
@@ -31,7 +34,8 @@ double omp_get_wtime() {return 0.0;}
 using namespace std;
 
 void
-run_analogs_Weiming(string bin_path, int parameter_ID, int stations, int test_ID_start, int test_ID_end,
+run_analogs_Weiming(string bin_path, int parameter_ID, std::vector< unsigned int > stations_ID,
+        int test_ID_start, int test_ID_end,
         int train_ID_start, int train_ID_end, int rolling, int members_size,
         int num_cores, bool single_station_search, bool flag_print, string output_file) {
 
@@ -115,10 +119,6 @@ run_analogs_Weiming(string bin_path, int parameter_ID, int stations, int test_ID
 
     cout << "Done!" << endl;
 
-    // define the stations
-    vector< int > stations_ID;
-    for (int i = 0; i < stations; i++)
-        stations_ID.push_back(i);
     vector<double> weights(forecasts.getSizeDim0(), 1);
 
 
@@ -170,15 +170,18 @@ run_analogs_Weiming(string bin_path, int parameter_ID, int stations, int test_ID
 }
 
 void
-run_analogs_Luca(string bin_path, int parameter_ID, int stations, int test_ID_start, int test_ID_end,
+run_analogs_Luca(string bin_path, int parameter_ID, std::vector<unsigned int> stations_ID,
+        int test_ID_start, int test_ID_end,
         int train_ID_start, int train_ID_end, int rolling, int members_size,
         int quick, int num_cores, bool flag_print, string output_file) {
 
     // LucaMethod
     cout << "**** Using LucaMethod ****" << endl;
 
-    Array4D observations(1, 669, 457, 17);
-    Array4D forecasts(4, 669, 457, 17);
+//    Array4D observations(1, 669, 457, 17);
+//    Array4D forecasts(4, 669, 457, 17);
+    Array4D observations(1, 1000, 4015, 17);
+    Array4D forecasts(4, 1000, 4015, 17);
 
     cout << "Read and Assign observations... ";
     cout.flush();
@@ -253,10 +256,6 @@ run_analogs_Luca(string bin_path, int parameter_ID, int stations, int test_ID_st
 
     cout << "Done!" << endl;
 
-    // define the stations
-    vector< int > stations_ID;
-    for (int i = 0; i < stations; i++)
-        stations_ID.push_back(i);
     vector<double> weights(forecasts.getSizeDim0(), 1);
 
     // compute analog ensembles
@@ -311,7 +310,7 @@ main(int argc, char** argv) {
     // ranges are inclusive
     //
     int parameter_ID = 0;
-    int stations = 3;
+    //    int stations = 3;
     int test_ID_start = 410;
     int test_ID_end = 415;
     int train_ID_start = 0;
@@ -325,6 +324,10 @@ main(int argc, char** argv) {
     bool print_Luca = false;
     bool use_Weiming_method = false;
     bool use_Luca_method = false;
+
+    // later on all the positive IDs will be put into an unsigned int vector
+    std::vector<int> stations_ID_input = {0, 9};
+    bool continuous_stations = false;
 
     string bin_path = "../bin/";
     // output to the console by default
@@ -343,7 +346,6 @@ main(int argc, char** argv) {
             desc.add_options()
                     ("help,h", "program to compute analog ensembles. Allowed options as followed.")
                     ("parameter-ID", po::value<int>(), "set parameter ID in the observations")
-                    ("stations", po::value<int>(), "set number of stations to compute the ensembles")
                     ("test-ID-start", po::value<int>(), "set the start day of test dataset")
                     ("test-ID-end", po::value<int>(), "set the end day of test dataset")
                     ("train-ID-start", po::value<int>(), "set the start day of training dataset")
@@ -358,7 +360,9 @@ main(int argc, char** argv) {
                     ("print-Weiming-method,w", po::bool_switch()->default_value(false), "enable printing results from Weiming method")
                     ("print-Luca-method,l", po::bool_switch()->default_value(false), "enable printing results from Luca method")
                     ("data-folder,d", po::value<string>(), "set the folder of the data")
-                    ("output-file,o", po::value<string>(), "set the full path of the output file");
+                    ("output-file,o", po::value<string>(), "set the full path of the output file")
+                    ("stations-ID", po::value< std::vector<int> >()->multitoken(), "set IDs for the stations, separated by a space. If you set --continuous-stations, only two IDs are accepted, and they are treated as the starting and ending IDs")
+                    ("continuous-stations,c", po::bool_switch()->default_value(false), "enable continuous station ID specification. The first two IDs in stations_ID will be treated as the starting and the ending IDs");
 
             po::variables_map vm;
             po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -370,7 +374,9 @@ main(int argc, char** argv) {
 
                 cout << "Default settings:" << endl;
                 cout << "parameter_ID: " << parameter_ID << endl;
-                cout << "stations: " << stations << endl;
+                cout << "stations_ID: ";
+                std::copy(stations_ID_input.begin(), stations_ID_input.end(), std::ostream_iterator<int>(std::cout, " "));
+                cout << endl;
                 cout << "test_ID_start: " << test_ID_start << endl;
                 cout << "test_ID_end: " << test_ID_end << endl;
                 cout << "train_ID_start: " << train_ID_start << endl;
@@ -390,9 +396,6 @@ main(int argc, char** argv) {
             }
             if (vm.count("parameter-ID")) {
                 parameter_ID = vm["parameter-ID"].as<int>();
-            }
-            if (vm.count("stations")) {
-                stations = vm["stations"].as<int>();
             }
             if (vm.count("test-ID-start")) {
                 test_ID_start = vm["test-ID-start"].as<int>();
@@ -439,6 +442,12 @@ main(int argc, char** argv) {
             if (vm.count("output-file")) {
                 output_file = vm["output-file"].as<string>();
             }
+            if (vm.count("continuous-stations")) {
+                continuous_stations = vm["continuous-stations"].as<bool>();
+            }
+            if (vm.count("stations-ID")) {
+                stations_ID_input = vm["stations-ID"].as< std::vector<int> >();
+            }
         } catch (Exception e) {
             cout << "Error: " << e.what() << endl;
             return 1;
@@ -467,12 +476,45 @@ main(int argc, char** argv) {
         cout << "Warning: single_station_search only works in Weiming's method. The option is ignored." << endl;
     }
 
+    if (!std::all_of(stations_ID_input.begin(), stations_ID_input.end(),
+            [](int i) {
+                return (i >= 0);
+            })) {
+    cout << "Error: negative station ID detected." << endl;
+    return 1;
+}
+
+    if (continuous_stations) {
+        if (stations_ID_input.size() != 2) {
+            cout << "Error: only 2 station IDs are accepted when you use --continuous-stations." << endl;
+            cout << "Please use -h to refer to the help document." << endl;
+            return 1;
+        }
+        int start, end;
+        start = stations_ID_input.at(0);
+        end = stations_ID_input.at(1);
+
+        if (start > end) {
+            cout << "Error: the start ID (1st in stations_ID) is bigger than the end ID (2nd in stations_ID)!" << endl;
+            return 1;
+        }
+
+        stations_ID_input.clear();
+        stations_ID_input.resize(end - start + 1);
+        for (int i = 0; i < (start - end + 1); i++) {
+            stations_ID_input[i] = start;
+            start++;
+        }
+    }
+
+    std::vector< unsigned int > stations_ID(stations_ID_input.begin(), stations_ID_input.end());
+
     if (use_Luca_method) {
-        run_analogs_Luca(bin_path, parameter_ID, stations, test_ID_start, test_ID_end, train_ID_start,
+        run_analogs_Luca(bin_path, parameter_ID, stations_ID, test_ID_start, test_ID_end, train_ID_start,
                 train_ID_end, rolling, members_size, quick, num_cores, print_Luca, output_file);
     }
     if (use_Weiming_method) {
-        run_analogs_Weiming(bin_path, parameter_ID, stations, test_ID_start, test_ID_end, train_ID_start,
+        run_analogs_Weiming(bin_path, parameter_ID, stations_ID, test_ID_start, test_ID_end, train_ID_start,
                 train_ID_end, rolling, members_size, num_cores, !multiple_stations_search, print_Weiming, output_file);
     }
 

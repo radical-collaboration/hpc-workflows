@@ -13,6 +13,7 @@
 #include <iterator>
 #include <cstdlib>
 #include <ctime>
+#include <vector>
 
 
 using namespace std;
@@ -127,6 +128,35 @@ Array4D::setFirstDimension(vector<double> const & data, int pos) {
     }
 }
 
+void
+Array4D::getDimension(vector<double> & data, int pos) {
+    int m = pos;
+    int n = 0;
+    int o = 0;
+    int p = 0;
+
+    int N = shape()[1];
+    int O = shape()[2];
+    int P = shape()[3];
+    
+    data.clear();
+    double write;
+
+    while (n != (N-1) || o != (O-1) || p != (P-1)) {
+        if (n == N) {
+            n = 0;
+            o++;
+            if (o == O) {
+                o = 0;
+                p++;
+            }
+        }
+        write = (*this)[m][n][o][p];
+        data.push_back(write);
+        n++;
+    }
+}
+
 
 
 
@@ -190,7 +220,7 @@ Array4D::randomize() {
             for (int o = 0; o < O; o++) {
                 for (int p = 0; p < P; p++) {
                     {
-//                        (*this)[m][n][o][p] = drand48();
+                        //                        (*this)[m][n][o][p] = drand48();
                         std::srand(std::time(0));
                         (*this)[m][n][o][p] = std::rand();
                     }
@@ -290,12 +320,12 @@ Array4D::print(ostream & os) const {
         os << endl;
     }
 
-//    os << "Circular Parameters:";
-//
-//    for (unsigned int i = 0; i < shape()[0]; i++) {
-//        os << "[" << isCircular(i) << "]";
-//    }
-//    os << endl;
+    //    os << "Circular Parameters:";
+    //
+    //    for (unsigned int i = 0; i < shape()[0]; i++) {
+    //        os << "[" << isCircular(i) << "]";
+    //    }
+    //    os << endl;
 
 
 }
