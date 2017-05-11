@@ -3,20 +3,29 @@
 				"project"  : null,
 				"queue"    : null,
 				"schema"   : "local",
-				"cores": 2
+				"cores": 2,
+				"username": null,
+				"data": "/Users/wuh20/data/data_windLuca/",
+				"output": "/Users/wuh20/Desktop/results_for_station_1.txt"
 			},
 
 	"xsede.stampede" : {
-				"project"  : "TG-TRA100001S",
+				"project"  : "TG-MCB090174",
 				"queue"    : "development",
 				"schema"   : "gsissh",
-				"cores": 16
+				"cores": 16,
+				"username": "vivek91",
+				"data": "/Users/wuh20/data/data_windLuca/",
+				"output": "/Users/wuh20/Desktop/results_for_station_1.txt"
 			},
 
 	"xsede.comet"  : {
-				"project"  : "uic157",
+				"project"  : "unc100",
 				"queue"    : "compute",
 				"schema"   : "gsissh",
-				"cores": 16
+				"cores": 16,
+				"username": "vivek91",
+				"data": "/Users/wuh20/data/data_windLuca/",
+				"output": "/Users/wuh20/Desktop/results_for_station_1.txt"
 			}
 }

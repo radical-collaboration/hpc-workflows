@@ -7,16 +7,16 @@ _KERNEL_INFO = {
                 '--data=': {
                                 "mandatory": True,                # Mandatory argument? True or False
                                 "description": "Location of the data"
-    	                    },
+                            },
                 '--output=': {
                                 "mandatory": True,                # Mandatory argument? True or False
                                 "description": "Location of output"
-    	                    },
+                            },
 
                 '--stations=': {
                                 "mandatory": True,                # Mandatory argument? True or False
                                 "description": "Number of stations"
-    	                    },
+                            },
 
 
     },
@@ -29,6 +29,25 @@ _KERNEL_INFO = {
                 "executable"  : 'canalogsmp',        # specify the executable to be used
                 "uses_mpi"    : False         # mpi-enabled? True or False
             },
+
+            "xsede.stampede":                # to the resource
+            {
+                "environment" : None,         # dict or None, can be used to set env variables
+                "pre_exec"    : [   'module load gcc',
+                                            'module load boost',
+                                            'export PATH=$PATH:/work/02734/vivek91/modules/analog_ensemble/src'], # list or None, can be used to load modules
+                "executable"  : 'canalogsmp',        # specify the executable to be used
+                "uses_mpi"    : False         # mpi-enabled? True or False
+            },
+
+            "xsede.comet":                # to the resource
+            {
+                "environment" : None,         # dict or None, can be used to set env variables
+                "pre_exec"    : ['export PATH=$PATH:/home/vivek91/modules/hpc-workflows/scripts/application_AnEn/src'], # list or None, can be used to load modules
+                "executable"  : 'canalogsmp',        # specify the executable to be used
+                "uses_mpi"    : False         # mpi-enabled? True or False
+            },
+
         }
 }
 
@@ -39,7 +58,7 @@ class compute_analog_kernel(KernelBase):
     def __init__(self):
 
         super(compute_analog_kernel, self).__init__(_KERNEL_INFO)
-     	"""Le constructor."""
+        """Le constructor."""
 
     # --------------------------------------------------------------------------
     #
