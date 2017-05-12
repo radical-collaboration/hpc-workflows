@@ -34,8 +34,15 @@ class MyApp(PoE):
 
         k = Kernel(name="compute_analog_for_one_station")
         k.arguments = [ '--data=%s'%config[resource]['data'],
-                                '--output=%s'%config[resource]['output']
-                                '--stations=1']
+                                '--output=%s'%(config[resource]['output']),
+                                '--stations-ID=%s'%(instance-1),
+                                '--cores=4',
+                                '--train_start=0', 
+                                '--train_end=3649',
+                                '--test_start=3650', 
+                                '--test_end=4014',
+                                ]
+        k.cores = 4
         return k
 
 if __name__ == "__main__":
@@ -77,7 +84,7 @@ if __name__ == "__main__":
 
         # Set the 'instances' of the BagofTasks to 1. This means that 1 instance
         # of each BagofTasks step is executed.
-        app = MyApp(stages=1,instances=1)
+        app = MyApp(stages=1,instances=4)
 
         cluster.run(app)
 

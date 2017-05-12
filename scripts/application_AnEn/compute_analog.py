@@ -13,13 +13,39 @@ _KERNEL_INFO = {
                                 "description": "Location of output"
                             },
 
-                '--stations=': {
+                '--stations-ID=': {
                                 "mandatory": True,                # Mandatory argument? True or False
-                                "description": "Number of stations"
+                                "description": "Station ID"
                             },
 
+                 '--cores=': {
+                                "mandatory": True,                # Mandatory argument? True or False
+                                "description": "Number of cores to be used"
+                            },
+
+                '--test_start=': {
+                                "mandatory": True,                # Mandatory argument? True or False
+                                "description": "Number of cores to be used"
+                            },
+
+                '--test_end=': {
+                                "mandatory": True,                # Mandatory argument? True or False
+                                "description": "Number of cores to be used"
+                            },
+
+                '--train_start=': {
+                                "mandatory": True,                # Mandatory argument? True or False
+                                "description": "Number of cores to be used"
+                            },
+
+                '--train_end=': {
+                                "mandatory": True,                # Mandatory argument? True or False
+                                "description": "Number of cores to be used"
+                            },
 
     },
+
+    
     "machine_configs":                        # Use a dictionary with keys as
         {                                     # resource names and values specific
             "local.localhost":                # to the resource
@@ -77,7 +103,12 @@ class compute_analog_kernel(KernelBase):
         arguments  = ['-L','-l',
                       '-d', self.get_arg('--data='),
                       '-o', self.get_arg('--output='),
-                      '--stations',self.get_arg('--stations=')
+                      '--stations-ID',self.get_arg('--stations-ID='),
+                      '--number-of-cores', self.get_arg('--cores='),
+                      '--test-ID-start', self.get_arg('--test_start='),
+                      '--test-ID-end', self.get_arg('--test_end='),
+                      '--train-ID-start', self.get_arg('--train_start='),
+                      '--train-ID-end', self.get_arg('--train_end=')
                     ]
 
         self._executable  = cfg['executable']

@@ -15,17 +15,17 @@
 				"schema"   : "gsissh",
 				"cores": 16,
 				"username": "vivek91",
-				"data": "/Users/wuh20/data/data_windLuca/",
-				"output": "/Users/wuh20/Desktop/results_for_station_1.txt"
+				"data": "/work/02734/vivek91/data_anen/",
+				"output": "./results_for_station.txt"
 			},
 
 	"xsede.comet"  : {
 				"project"  : "unc100",
-				"queue"    : "compute",
+				"queue"    : "debug",
 				"schema"   : "gsissh",
-				"cores": 16,
+				"cores": 24,
 				"username": "vivek91",
-				"data": "/Users/wuh20/data/data_windLuca/",
-				"output": "/Users/wuh20/Desktop/results_for_station_1.txt"
+				"data": "/home/weiming/data/AnEn/",
+				"output": "$HOME/results_for_station_1.txt"
 			}
 }
