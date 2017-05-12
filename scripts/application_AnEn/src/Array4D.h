@@ -13,7 +13,7 @@
  *  */
 
 #ifndef ARRAY4D_H
-#define	ARRAY4D_H
+#define ARRAY4D_H
 
 #include <boost/multi_array.hpp>
 #include <iostream>
@@ -52,13 +52,16 @@ public:
     virtual ~Array4D();
 
     Array4D & operator=(const Array4D &rhs);
-    
-   
+
+
     /** GC: 
      * Used to set the data from a file when read one parameter at a time
      */
     void setFirstDimension(vector<double> const & data, int pos);
     //void setFirstDimension(string const & filename, int pos, bool big_endian = true);
+
+    void getDimension(vector<double> & data, int pos);
+
 
     bool isCircular(int pos) const;
     void setCircular(int pos);
@@ -68,16 +71,16 @@ public:
     int getSizeDim1() const;
     int getSizeDim2() const;
     int getSizeDim3() const;
-   
-    bool myresize(int,int,int,int);
-    
+
+    bool myresize(int, int, int, int);
+
     /** GC: 
      * Randomize the array
      */
     void randomize();
 
     void print(ostream &) const;
-    void print_size( ostream & ) const;
+    void print_size(ostream &) const;
     friend ostream & operator<<(ostream &, Array4D const &);
 
 private:
@@ -85,5 +88,5 @@ private:
     vector< bool > circular_;
 };
 
-#endif	/* ARRAY4D_H */
+#endif /* ARRAY4D_H */
 

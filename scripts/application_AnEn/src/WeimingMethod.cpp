@@ -73,7 +73,7 @@ WeimingMethod::compute_analogs(
         const Array4D& forecasts, const Array4D& observations,
         const std::vector<double>& weights,
         int parameter_ID,
-        const std::vector<int>& stations_ID,
+        const std::vector<unsigned int>& stations_ID,
         unsigned int test_ID_start, unsigned int test_ID_end,
         unsigned int train_ID_start, unsigned int train_ID_end,
         unsigned int members_size,
@@ -166,7 +166,7 @@ WeimingMethod::compute_analogs(
             // if rolling is used, training days will be changing for each test day
             if (rolling < 0) {
                 train_ID_end = test_ID + rolling;
-                
+
                 if (single_station_search) {
 
                     // compute sds in each loop because training dataset is changing
@@ -349,7 +349,7 @@ bool
 WeimingMethod::validate_parameters(
         const Array4D& forecasts, const Array4D& observations,
         const std::vector<double>& weights,
-        int parameter_ID, const std::vector<int>& stations_ID,
+        int parameter_ID, const std::vector<unsigned int>& stations_ID,
         unsigned int test_ID_start, unsigned int test_ID_end,
         unsigned int train_ID_start, unsigned int train_ID_end,
         unsigned int members_size, int rolling) const {
@@ -369,5 +369,146 @@ WeimingMethod::validate_parameters(
         return ( false);
     }
 
+    return true;
+}
+
+void printProgBar(int percent) {
+    // progress bar
+    // referenced from https://nakkaya.com/2009/11/08/command-line-progress-bar/
+    std::string bar;
+
+    for (int i = 0; i < 50; i++) {
+        if (i < (percent / 2)) {
+            bar.replace(i, 1, "=");
+        } else if (i == (percent / 2)) {
+            bar.replace(i, 1, ">");
+        } else {
+            bar.replace(i, 1, " ");
+        }
+    }
+
+    std::cout << "\r" "[" << bar << "] ";
+    std::cout.width(3);
+    std::cout << percent << "%     " << std::flush;
+}
+
+bool
+WeimingMethod::replicate_data(unsigned int num_stations, unsigned int num_days) {
+    // replicate observations and forecasts
+    // and write them to new binary files
+    //
+    string original_data_folder = "/Users/wuh20/data/data_windLuca/";
+    string output_folder = "/Users/wuh20/Desktop/write/";
+
+    // read original data
+    Array4D observations(1, 669, 457, 17);
+    Array4D forecasts(4, 669, 457, 17);
+
+    std::cout << "Read and Assign observations... ";
+    std::cout.flush();
+    vector<double> numbers;
+    string file_path;
+
+    file_path = original_data_folder + "obsWspd.bin";
+    if (boost::filesystem::exists(file_path)) {
+        FileIO::readBin(file_path, numbers);
+        observations.setFirstDimension(numbers, 0);
+    } else {
+        std::cout << "Error: " << file_path << " does not exist!" << std::endl;
+        return false;
+    }
+
+    file_path = original_data_folder + "modPRES.bin";
+    if (boost::filesystem::exists(file_path)) {
+        FileIO::readBin(file_path, numbers);
+        forecasts.setFirstDimension(numbers, 0);
+    } else {
+        std::cout << "Error: " << file_path << " does not exist!" << std::endl;
+        return false;
+    }
+
+    file_path = original_data_folder + "modTMP.bin";
+    if (boost::filesystem::exists(file_path)) {
+        FileIO::readBin(file_path, numbers);
+        forecasts.setFirstDimension(numbers, 1);
+    } else {
+        std::cout << "Error: " << file_path << " does not exist!" << std::endl;
+        return false;
+    }
+
+    file_path = original_data_folder + "modWspd.bin";
+    if (boost::filesystem::exists(file_path)) {
+        FileIO::readBin(file_path, numbers);
+        forecasts.setFirstDimension(numbers, 2);
+    } else {
+        std::cout << "Error: " << file_path << " does not exist!" << std::endl;
+        return false;
+    }
+
+    file_path = original_data_folder + "modWdir.bin";
+    if (boost::filesystem::exists(file_path)) {
+        FileIO::readBin(file_path, numbers);
+        forecasts.setFirstDimension(numbers, 3);
+    } else {
+        std::cout << "Error: " << file_path << " does not exist!" << std::endl;
+        return false;
+    }
+
+    forecasts.setCircular(3);
+    std::cout << "Done!" << std::endl;
+
+    // make new data
+    std::cout << "Preparing duplicated data ..." << std::endl;
+    Array4D observations_duplicate(1, num_stations, num_days, 17);
+    Array4D forecasts_duplicate(4, num_stations, num_days, 17);
+    int day, station;
+    double total = 17 * num_stations * num_days;
+    int count = 0;
+    for (int f = 0; f < 17; f++) {
+        for (unsigned int s = 0; s < num_stations; s++) {
+            for (unsigned int d = 0; d < num_days; d++) {
+                station = rand() % 669;
+                day = rand() % 457;
+                observations_duplicate[0][s][d][f] = observations[0][station][day][f];
+                forecasts_duplicate[0][s][d][f] = forecasts[0][station][day][f];
+                forecasts_duplicate[1][s][d][f] = forecasts[1][station][day][f];
+                forecasts_duplicate[2][s][d][f] = forecasts[2][station][day][f];
+                forecasts_duplicate[3][s][d][f] = forecasts[3][station][day][f];
+                count++;
+                printProgBar(int( count / total * 100));
+            }
+        }
+    }
+    std::cout << "Duplication done!" << endl;
+
+    std::cout << "Writing the data to " << output_folder << " ... ";
+    std::cout.flush();
+
+    numbers.clear();
+    forecasts_duplicate.getDimension(numbers, 0);
+    file_path = output_folder + "modPRES.bin";
+    FileIO::writeBin(file_path, numbers);
+
+    numbers.clear();
+    forecasts_duplicate.getDimension(numbers, 1);
+    file_path = output_folder + "modTMP.bin";
+    FileIO::writeBin(file_path, numbers);
+
+    numbers.clear();
+    forecasts_duplicate.getDimension(numbers, 2);
+    file_path = output_folder + "modWspd.bin";
+    FileIO::writeBin(file_path, numbers);
+
+    numbers.clear();
+    forecasts_duplicate.getDimension(numbers, 3);
+    file_path = output_folder + "modWdir.bin";
+    FileIO::writeBin(file_path, numbers);
+
+    numbers.clear();
+    observations_duplicate.getDimension(numbers, 0);
+    file_path = output_folder + "obsWspd.bin";
+    FileIO::writeBin(file_path, numbers);
+
+    std::cout << "Done!" << std::endl;
     return true;
 }

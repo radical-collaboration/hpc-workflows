@@ -25,7 +25,7 @@ AnEn::computeAnalogs(Array4D const & forecasts,
         Array4D const & observations,
         std::vector <double> const & weights, // The weights to use in the computations
         int parameter_ID, // The parameter for which we perform the analogs
-        std::vector < int > const & stations_ID, // For which stations should we perform the analogs            
+        std::vector < unsigned int > const & stations_ID, // For which stations should we perform the analogs            
         int test_ID_start, int test_ID_end, // the days for which we do the test (verification)
         int train_ID_start, int train_ID_end, // the days for which we perform the analogs
         int members_size, // how many analog members to keep
@@ -79,7 +79,7 @@ AnEn::computeAnalogs(Array4D const & forecasts,
     //
 
     for (unsigned int station_ID_index = 0; station_ID_index < stations_ID.size(); station_ID_index++) {
-        int station_ID = stations_ID[ station_ID_index];
+        unsigned int station_ID = stations_ID[ station_ID_index];
 
 
 

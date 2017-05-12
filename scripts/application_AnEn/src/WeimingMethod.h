@@ -10,12 +10,18 @@
 
 #include "Array4D.h"
 #include "Functions.h"
+#include "FileIO.h"
+#include "boost/multi_array.hpp"
+#include "boost/filesystem.hpp"
 
 #include <map>
 #include <vector>
 #include <cmath>
 #include <string>
 #include <sstream>
+#include <cstdlib>
+#include <iostream>
+
 
 class WeimingMethod {
 public:
@@ -28,7 +34,7 @@ public:
             Array4D const & observations,
             std::vector <double> const & weights, // the weights to use in computations
             int parameter_ID, // the parameter for which we perform the analogs
-            std::vector < int > const & stations_ID, // for which stations should we perform the analogs            
+            std::vector < unsigned int > const & stations_ID, // for which stations should we perform the analogs            
             unsigned int test_ID_start, unsigned int test_ID_end, // the days for which we do the test (verification)
             unsigned int train_ID_start, unsigned int train_ID_end, // the days for which we perform the analogs
             unsigned int members_size = 11, // how many members to keep
@@ -53,7 +59,7 @@ public:
             const Array4D& forecasts, const Array4D& observations,
             const std::vector<double>& weights,
             int parameter_ID,
-            const std::vector<int>& stations_ID,
+            const std::vector<unsigned int>& stations_ID,
             unsigned int test_ID_start, unsigned int test_ID_end,
             unsigned int train_ID_start, unsigned int train_ID_end,
             unsigned int members_size = 11,
@@ -62,6 +68,8 @@ public:
     bool fill_search_stations_map_from_file(
             std::map< unsigned int, vector< unsigned int> > &search_stations_map,
             int max);
+    
+    bool replicate_data(unsigned int num_stations, unsigned int num_days);
 
 };
 

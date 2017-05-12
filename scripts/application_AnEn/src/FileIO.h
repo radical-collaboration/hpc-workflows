@@ -21,6 +21,9 @@ public:
     
     static bool  readTxt( std::string const & filename, std::vector< double > & data );
     static bool  readBin( std::string const & filename, std::vector< double > & data, bool big_endian = true );
+    
+    static bool  writeBin(std::string const & filename, std::vector< double > & vec, bool big_endian = true );
+
         
 private:
 

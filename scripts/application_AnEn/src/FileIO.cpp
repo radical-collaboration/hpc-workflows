@@ -71,3 +71,19 @@ FileIO::readBin(std::string const & filename, std::vector< double > & vec, bool 
 
     return ( true);
 }
+
+bool
+FileIO::writeBin(std::string const & filename, std::vector< double > & vec, bool big_endian) {
+    // open the file
+    std::ofstream file(filename.c_str(), std::ios::binary);
+    double write;
+    
+    for (std::vector<double>::const_iterator it = vec.begin();
+            it != vec.end(); it++) {
+        write = *it;
+        if (big_endian) {
+            write = Functions::swap_endian(write);
+        }
+        file.write(reinterpret_cast<char*> (&write), sizeof(write));
+    }
+}
