@@ -6,7 +6,7 @@ from radical.entk import EoP, AppManager, Kernel, ResourceHandle, PoE
 import argparse
 
 pypaw_env = ['export PATH=/work/02734/vivek91/modules/miniconda2/envs/pypaw_env/bin:$PATH',
-             'source activate pypaw_env']
+             'source activate pypaw_env','module unload python']
 
 config = {
 
