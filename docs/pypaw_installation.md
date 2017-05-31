@@ -35,22 +35,22 @@ conda install -c obspy obspy
 
 git clone --branch devel https://github.com/wjlei1990/pyflex 
 cd pyflex
-pip install -v -e . (--user)
+pip install -v -e .
 cd ..
 
 git clone --branch dev https://github.com/chukren/pyadjoint 
 cd pyadjoint
-pip install -v -e . (--user)
+pip install -v -e .
 cd ..
 
 git clone https://github.com/wjlei1990/spaceweight
 cd spaceweight
-pip install -v -e . (--user)
+pip install -v -e .
 cd ..
 
 git clone https://github.com/wjlei1990/pytomo3d
 cd pytomo3d
-pip install -v -e . (--user)
+pip install -v -e .
 cd ..
 ```
  
@@ -99,11 +99,37 @@ git clone https://github.com/wjlei1990/pypaw
 cd pypaw
 pip install -v -e .
 cd ..
-````
+```
 
 
 ### Script to be run on Titan
 
 ```
+#!/bin/bash
+# Begin PBS directives
+#PBS -A BIP149
+#PBS -N test
+#PBS -j oe
+#PBS -l walltime=00:30:00,nodes=3
+#    End PBS directives and begin shell commands
+cd /lustre/atlas/scratch/vivekb/bip149/DATA_RADICAL
+export PATH=/lustre/atlas/scratch/vivekb/bip149/miniconda/envs/pypaw_att2/bin:$PATH
+source activate pypaw_att2
+#export PMI_NO_FORK=True
+
+module swap PrgEnv-pgi PrgEnv-gnu
+module load cmake
+module load boost
+module load fftw
+module load cudatoolkit
+module use --append /lustre/atlas/world-shared/csc230/openmpi/modules/
+module load openmpi/2017_05_04_539f71d
+module unload cray-mpich/7.5.2
+module load gcc/4.9.3
+module swap cray-libsci cray-libsci/13.2.0
+module load cmake
+module load boost
+
+mpirun -np 16 pypaw-process_asdf -f simpy/examples/titan_global_inv/paths/ProcessObserved/C201002060444A.proc_obsd_17_40.path.json -p simpy/examples/titan_global_inv/params/ProcessObserved/proc_obsd.17_40.param.yml
 
 ```
