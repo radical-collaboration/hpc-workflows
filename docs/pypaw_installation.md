@@ -31,18 +31,22 @@ module swap cray-libsci cray-libsci/13.2.0
  
 ```
 conda install -c obspy obspy
+
 git clone --branch devel https://github.com/wjlei1990/pyflex 
 cd pyflex
 pip install -v -e .
 cd ..
+
 git clone --branch dev https://github.com/chukren/pyadjoint 
 cd pyadjoint
 pip install -v -e .
 cd ..
+
 git clone https://github.com/wjlei1990/spaceweight
 cd spaceweight
 pip install -v -e .
 cd ..
+
 git clone https://github.com/wjlei1990/pytomo3d
 cd pytomo3d
 pip install -v -e .
@@ -67,7 +71,7 @@ make install
 
 ### Install h5py
 
-````
+```
 git clone https://github.com/h5py/h5py
 cd h5py
 export CC=mpicc
