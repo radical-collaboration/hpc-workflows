@@ -56,7 +56,7 @@ cd ..
 ### Install mpi4py
  
  ```
- env MPICC= pip install mpi4py
+ env MPICC=mpicc pip install mpi4py
  ```
 
 ### Install hdf5-parallel
