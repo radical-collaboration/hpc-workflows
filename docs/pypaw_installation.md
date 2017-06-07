@@ -6,23 +6,17 @@
 wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
 bash Miniconda2-latest-Linux-x86_64.sh
 export PATH=miniconda2/bin:$PATH
-conda create -n pypaw_env
-source activate pypwa_env
+conda create -n pypaw
+source activate pypwa
 ```
 
 ### Module loads
 
 ```
-module swap PrgEnv-pgi PrgEnv-gnu
-module load cmake
-module load boost
-module load fftw
-module load cudatoolkit
-module use --append /lustre/atlas/world-shared/csc230/openmpi/modules
-module load openmpi/2017_05_04_539f71d
-module unload cray-mpich/7.5.2
-module load gcc/4.9.3
-module swap cray-libsci cray-libsci/13.2.0
+module load PE-intel/14.0.4
+module load openmpi
+module load hdf5-parallel/1.8.11_shared
+module load mxml git vim szip
 ```
 
  Following instructions from [pypaw repo](https://github.com/wjlei1990/pypaw/blob/master/INSTALL.md)
@@ -36,9 +30,15 @@ git clone --branch devel https://github.com/wjlei1990/pyflex
 cd pyflex
 pip install -v -e .
 cd ..
-
+```
+```
 git clone --branch dev https://github.com/chukren/pyadjoint 
 cd pyadjoint
+```
+
+Had to edit line 74 from setup.py: ```"obspy>=1.0.0", "flake8==2.5.1", "pytest", "nose", "numpy", "scipy"``` to ```"obspy>=1.0.0", "flake8>=2.5.1", "pytest", "nose", "numpy", "scipy"```
+
+```
 pip install -v -e .
 cd ..
 
@@ -56,18 +56,8 @@ cd ..
 ### Install mpi4py
  
  ```
- env MPICC=mpicc pip install mpi4py
+ env MPICC=mpicc pip install mpi4py==1.3.1
  ```
-
-### Install hdf5-parallel
-
-```
-wget http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.10.1.tar
-tar -xvf hdf5-1.10.1.tar 
-CC=mpicc ./configure --enable-fortran --enable-parallel --prefix=<path to hdf5 dir> --enable-shared --enable-static
-make
-make install
-```
 
 ### Install h5py
 
@@ -76,8 +66,13 @@ git clone https://github.com/h5py/h5py
 cd h5py
 export CC=mpicc
 python setup.py configure --mpi
-python setup.py configure --hdf5=<path to hdf5 dir>
+python setup.py configure --hdf5=/sw/rhea/hdf5-parallel/1.8.11_shared/rehl6.6_intel14.0.4
 python setup.py build
+```
+
+Had to comment line 62 from h5py/__init__.py
+
+```
 python setup.py install
 ```
 
@@ -100,7 +95,7 @@ cd ..
 ```
 
 
-### Script to be run on Titan
+### Script to be run on Rhea
 
 ```
 #!/bin/bash
@@ -108,26 +103,17 @@ cd ..
 #PBS -A BIP149
 #PBS -N test
 #PBS -j oe
-#PBS -l walltime=00:30:00,nodes=3
+#PBS -l walltime=00:30:00,nodes=1
 #    End PBS directives and begin shell commands
-cd /lustre/atlas/scratch/vivekb/bip149/DATA_RADICAL
-export PATH=/lustre/atlas/scratch/vivekb/bip149/miniconda/envs/pypaw_att2/bin:$PATH
-source activate pypaw_att2
+export PATH=/lustre/atlas/scratch/vivekb/bip149/anaconda/bin:$PATH
+source activate pypaw
 #export PMI_NO_FORK=True
 
-module swap PrgEnv-pgi PrgEnv-gnu
-module load cmake
-module load boost
-module load fftw
-module load cudatoolkit
-module use --append /lustre/atlas/world-shared/csc230/openmpi/modules/
-module load openmpi/2017_05_04_539f71d
-module unload cray-mpich/7.5.2
-module load gcc/4.9.3
-module swap cray-libsci cray-libsci/13.2.0
-module load cmake
-module load boost
+module load PE-intel/14.0.4
+module load openmpi
+module load mxml git vim szip
+module load hdf5-parallel/1.8.11_shared
 
-mpirun -np 16 pypaw-process_asdf -f simpy/examples/titan_global_inv/paths/ProcessObserved/C201002060444A.proc_obsd_17_40.path.json -p simpy/examples/titan_global_inv/params/ProcessObserved/proc_obsd.17_40.param.yml
+mpirun -np 16 pypaw-process_asdf -f /lustre/atlas/scratch/vivekb/bip149/simpy/examples/titan_global_inv/paths/ProcessObserved/C201002060444A.proc_obsd_17_40.path.json -p /lustre/atlas/scratch/vivekb/bip149/simpy/examples/titan_global_inv/params/ProcessObserved/proc_obsd.17_40.param.yml
 
 ```
