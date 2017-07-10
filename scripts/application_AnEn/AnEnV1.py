@@ -20,7 +20,7 @@ resource = None
 # Set default verbosity
 
 if os.environ.get('RADICAL_ENTK_VERBOSE') == None:
-    os.environ['RADICAL_ENTK_VERBOSE'] = 'REPORT'
+    os.environ['RADICAL_ENTK_VERBOSE'] = 'INFO'
 
 
 class MyApp(PoE):
@@ -49,8 +49,6 @@ if __name__ == "__main__":
 
 
     # use the resource specified as argument, fall back to localhost
-    global resource
-
     if   len(sys.argv)  > 2:
         print 'Usage:\t%s [resource]\n\n' % sys.argv[0]
         sys.exit(1)
@@ -70,7 +68,7 @@ if __name__ == "__main__":
         cluster = ResourceHandle(
                 resource=resource,
                 cores=config[resource]["cores"],
-                walltime=15,
+                walltime=45,
                 username=config[resource]['username'],
                 project=config[resource]['project'],
                 access_schema = config[resource]['schema'],

@@ -61,8 +61,8 @@ _KERNEL_INFO = {
                 "environment" : None,         # dict or None, can be used to set env variables
                 "pre_exec"    : [   'module load gcc',
                                             'module load boost',
-                                            'export PATH=$PATH:/work/02734/vivek91/modules/analog_ensemble/src'], # list or None, can be used to load modules
-                "executable"  : 'canalogsmp',        # specify the executable to be used
+                                            'export PATH=/home1/04672/tg839717/git/Analogs-portable/build:$PATH'], # list or None, can be used to load modules
+                "executable"  : 'canalogs',        # specify the executable to be used
                 "uses_mpi"    : False         # mpi-enabled? True or False
             },
 

@@ -15,7 +15,7 @@
 				"schema"   : "gsissh",
 				"cores": 16,
 				"username": "vivek91",
-				"data": "/work/02734/vivek91/data_anen/",
+				"data": "/home1/04672/tg839717/data/Wind_Luca_duplicated/",
 				"output": "./results_for_station.txt"
 			},
 
