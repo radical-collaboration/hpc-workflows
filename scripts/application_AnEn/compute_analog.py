@@ -59,9 +59,10 @@ _KERNEL_INFO = {
             "xsede.stampede":                # to the resource
             {
                 "environment" : None,         # dict or None, can be used to set env variables
-                "pre_exec"    : [   'module load gcc',
-                                            'module load boost',
-                                            'export PATH=/home1/04672/tg839717/git/Analogs-portable/build:$PATH'], # list or None, can be used to load modules
+                "pre_exec"    : [
+                    'module purge'
+                    'module load gcc',
+                    'export PATH=/work/04672/tg839717/github/CAnalogsV2/install/bin:$PATH'], # list or None, can be used to load modules
                 "executable"  : 'canalogs',        # specify the executable to be used
                 "uses_mpi"    : False         # mpi-enabled? True or False
             },

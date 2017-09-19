@@ -14,7 +14,7 @@
 				"queue"    : "development",
 				"schema"   : "gsissh",
 				"cores": 16,
-				"username": "vivek91",
+				"username": "tg839717",
 				"data": "/home1/04672/tg839717/data/Wind_Luca_duplicated/",
 				"output": "./results_for_station.txt"
 			},
