@@ -1,6 +1,0 @@
-2017-08-12 14:22:07,958: umgr.reschedule.pubsub.bridge.0000.child: umgr.reschedule.pubsub.bridge.0000.child: MainThread     : INFO    : python.interpreter   version: 2.7.12 (default, Nov 19 2016, 06:48:10) [GCC 5.4.0 20160609]
-2017-08-12 14:22:07,959: umgr.reschedule.pubsub.bridge.0000.child: umgr.reschedule.pubsub.bridge.0000.child: MainThread     : INFO    :                      pid: 22781
-2017-08-12 14:22:07,959: umgr.reschedule.pubsub.bridge.0000.child: umgr.reschedule.pubsub.bridge.0000.child: MainThread     : INFO    :                      tid: MainThread
-2017-08-12 14:22:07,959: umgr.reschedule.pubsub.bridge.0000.child: umgr.reschedule.pubsub.bridge.0000.child: MainThread     : INFO    : radical.pilot        version: 0.46-v0.46.RC2@HEAD-detached-at-v0.46.RC2
-2017-08-12 14:22:07,960: umgr.reschedule.pubsub.bridge.0000.child: umgr.reschedule.pubsub.bridge.0000.child: MainThread     : INFO    : start bridge umgr.reschedule.pubsub.bridge.0000.child on tcp://*:*
-2017-08-12 14:22:07,964: umgr.reschedule.pubsub.bridge.0000.child: umgr.reschedule.pubsub.bridge.0000.child: MainThread     : INFO    : bound bridge umgr.reschedule.pubsub.bridge.0000.child to tcp://0.0.0.0:38443 : tcp://0.0.0.0:40707
