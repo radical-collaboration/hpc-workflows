@@ -1,0 +1,20 @@
+2017-08-12 12:55:23,658: log.pubsub.pub.0004 : umgr.staging.output.0           : MainThread     : INFO    : python.interpreter   version: 2.7.12 (default, Nov 19 2016, 06:48:10) [GCC 5.4.0 20160609]
+2017-08-12 12:55:23,659: log.pubsub.pub.0004 : umgr.staging.output.0           : MainThread     : INFO    :                      pid: 17720
+2017-08-12 12:55:23,659: log.pubsub.pub.0004 : umgr.staging.output.0           : MainThread     : INFO    :                      tid: MainThread
+2017-08-12 12:55:23,659: log.pubsub.pub.0004 : umgr.staging.output.0           : MainThread     : INFO    : radical.pilot        version: 0.46-v0.46.RC2@HEAD-detached-at-v0.46.RC2
+2017-08-12 12:55:23,659: log.pubsub.pub.0004 : umgr.staging.output.0           : MainThread     : INFO    : create log_pubsub - pub - tcp://192.168.1.14:43017
+2017-08-12 12:55:23,659: log.pubsub.pub.0004 : umgr.staging.output.0           : MainThread     : DEBUG   : start process
+2017-08-12 12:55:23,660: log.pubsub.pub.0004 : umgr.staging.output.0           : MainThread     : DEBUG   : ru_initialize_common (NOOP)
+2017-08-12 12:55:23,660: log.pubsub.pub.0004 : umgr.staging.output.0           : MainThread     : DEBUG   : ru_initialize_parent (NOOP)
+2017-08-12 12:55:23,660: log.pubsub.pub.0004 : umgr.staging.output.0           : MainThread     : DEBUG   : process class started (no child)
+2017-08-12 12:55:23,700: log.pubsub.pub.0004 : task-manager                    : MainThread     : INFO    : python.interpreter   version: 2.7.12 (default, Nov 19 2016, 06:48:10) [GCC 5.4.0 20160609]
+2017-08-12 12:55:23,700: log.pubsub.pub.0004 : task-manager                    : MainThread     : INFO    :                      pid: 17668
+2017-08-12 12:55:23,700: log.pubsub.pub.0004 : task-manager                    : MainThread     : INFO    :                      tid: MainThread
+2017-08-12 12:55:23,700: log.pubsub.pub.0004 : task-manager                    : MainThread     : INFO    : radical.pilot        version: 0.46-v0.46.RC2@HEAD-detached-at-v0.46.RC2
+2017-08-12 12:55:23,701: log.pubsub.pub.0004 : task-manager                    : MainThread     : INFO    : create log_pubsub - pub - tcp://192.168.1.14:43017
+2017-08-12 12:55:23,701: log.pubsub.pub.0004 : task-manager                    : MainThread     : DEBUG   : start process
+2017-08-12 12:55:23,701: log.pubsub.pub.0004 : task-manager                    : MainThread     : DEBUG   : ru_initialize_common (NOOP)
+2017-08-12 12:55:23,701: log.pubsub.pub.0004 : task-manager                    : MainThread     : DEBUG   : ru_initialize_parent (NOOP)
+2017-08-12 12:55:23,701: log.pubsub.pub.0004 : task-manager                    : MainThread     : DEBUG   : process class started (no child)
+2017-08-12 12:56:36,467: log.pubsub.pub.0004 : umgr.staging.output.0           : MainThread     : INFO    : parent stops child
+2017-08-12 12:56:36,467: log.pubsub.pub.0004 : umgr.staging.output.0           : MainThread     : DEBUG   : ru_finalize_parent (NOOP)

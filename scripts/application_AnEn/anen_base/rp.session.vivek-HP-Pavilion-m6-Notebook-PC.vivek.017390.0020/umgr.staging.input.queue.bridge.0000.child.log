@@ -1,0 +1,20 @@
+2017-08-12 13:40:27,011: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : INFO    : python.interpreter   version: 2.7.12 (default, Nov 19 2016, 06:48:10) [GCC 5.4.0 20160609]
+2017-08-12 13:40:27,011: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : INFO    :                      pid: 20954
+2017-08-12 13:40:27,011: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : INFO    :                      tid: MainThread
+2017-08-12 13:40:27,012: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : INFO    : radical.pilot        version: 0.46-v0.46.RC2@HEAD-detached-at-v0.46.RC2
+2017-08-12 13:40:27,012: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : INFO    : start bridge umgr.staging.input.queue.bridge.0000.child on tcp://*:*
+2017-08-12 13:40:27,014: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : INFO    : bound bridge umgr.staging.input.queue.bridge.0000.child to tcp://0.0.0.0:33271 : tcp://0.0.0.0:43129
+2017-08-12 13:40:27,583: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:40:27,671: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:40:27,741: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:40:27,791: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:40:27,857: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:40:27,919: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:40:27,987: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:40:28,039: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:40:28,084: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:40:28,132: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:41:10,450: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:41:42,493: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : WARNING : not alive anymore?
+2017-08-12 13:41:42,494: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : WARNING : send failed ([Errno 9] Bad file descriptor) - terminate
+2017-08-12 13:41:42,496: umgr.staging.input.queue.bridge.0000.child: umgr.staging.input.queue.bridge.0000.child: MainThread     : WARNING : send failed ([Errno 9] Bad file descriptor) - terminate

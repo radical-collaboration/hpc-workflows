@@ -1,0 +1,9 @@
+2017-08-12 14:22:08,387: umgr.staging.output.queue.input.0000: task-manager                    : MainThread     : INFO    : python.interpreter   version: 2.7.12 (default, Nov 19 2016, 06:48:10) [GCC 5.4.0 20160609]
+2017-08-12 14:22:08,387: umgr.staging.output.queue.input.0000: task-manager                    : MainThread     : INFO    :                      pid: 22779
+2017-08-12 14:22:08,387: umgr.staging.output.queue.input.0000: task-manager                    : MainThread     : INFO    :                      tid: MainThread
+2017-08-12 14:22:08,387: umgr.staging.output.queue.input.0000: task-manager                    : MainThread     : INFO    : radical.pilot        version: 0.46-v0.46.RC2@HEAD-detached-at-v0.46.RC2
+2017-08-12 14:22:08,388: umgr.staging.output.queue.input.0000: task-manager                    : MainThread     : INFO    : create umgr_staging_output_queue - input - tcp://192.168.1.14:35313
+2017-08-12 14:22:08,388: umgr.staging.output.queue.input.0000: task-manager                    : MainThread     : DEBUG   : start process
+2017-08-12 14:22:08,389: umgr.staging.output.queue.input.0000: task-manager                    : MainThread     : DEBUG   : ru_initialize_common (NOOP)
+2017-08-12 14:22:08,389: umgr.staging.output.queue.input.0000: task-manager                    : MainThread     : DEBUG   : ru_initialize_parent (NOOP)
+2017-08-12 14:22:08,389: umgr.staging.output.queue.input.0000: task-manager                    : MainThread     : DEBUG   : process class started (no child)

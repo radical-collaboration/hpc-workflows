@@ -1,0 +1,70 @@
+2017-08-12 12:55:23,450: umgr.staging.output.queue.bridge.0000: task-manager                    : MainThread     : INFO    : python.interpreter   version: 2.7.12 (default, Nov 19 2016, 06:48:10) [GCC 5.4.0 20160609]
+2017-08-12 12:55:23,451: umgr.staging.output.queue.bridge.0000: task-manager                    : MainThread     : INFO    :                      pid: 17668
+2017-08-12 12:55:23,452: umgr.staging.output.queue.bridge.0000: task-manager                    : MainThread     : INFO    :                      tid: MainThread
+2017-08-12 12:55:23,453: umgr.staging.output.queue.bridge.0000: task-manager                    : MainThread     : INFO    : radical.pilot        version: 0.46-v0.46.RC2@HEAD-detached-at-v0.46.RC2
+2017-08-12 12:55:23,454: umgr.staging.output.queue.bridge.0000: task-manager                    : MainThread     : INFO    : create umgr_staging_output_queue - bridge - tcp://*:*
+2017-08-12 12:55:23,456: umgr.staging.output.queue.bridge.0000: task-manager                    : MainThread     : DEBUG   : start process
+2017-08-12 12:55:23,473: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000: MainThread     : DEBUG   : ru_initialize_common (NOOP)
+2017-08-12 12:55:23,482: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: MainThread     : INFO    : child (me) initializing
+2017-08-12 12:55:23,482: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: MainThread     : DEBUG   : parent name: umgr.staging.output.queue.bridge.0000.child.watch
+2017-08-12 12:55:23,483: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: MainThread     : DEBUG   : start thread
+2017-08-12 12:55:23,483: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: umgr.staging.output.queue.bridge.0000.child.watch: DEBUG   : child name: umgr.staging.output.queue.bridge.0000.child.watch.thread
+2017-08-12 12:55:23,483: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: umgr.staging.output.queue.bridge.0000.child.watch: INFO    : child (me) initializing
+2017-08-12 12:55:23,484: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: umgr.staging.output.queue.bridge.0000.child.watch: DEBUG   : ru_initialize_common (NOOP)
+2017-08-12 12:55:23,484: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: umgr.staging.output.queue.bridge.0000.child.watch: DEBUG   : ru_initialize_child (NOOP)
+2017-08-12 12:55:23,484: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: umgr.staging.output.queue.bridge.0000.child.watch: INFO    : send alive
+2017-08-12 12:55:23,484: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: umgr.staging.output.queue.bridge.0000.child.watch: INFO    : put message: [umgr.staging.output.queue.bridge.0000.child.watch.thread] alive
+2017-08-12 12:55:23,484: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: MainThread     : INFO    : get msg: alive
+2017-08-12 12:55:23,484: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: MainThread     : DEBUG   : ru_initialize_common (NOOP)
+2017-08-12 12:55:23,484: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: MainThread     : DEBUG   : ru_initialize_parent (NOOP)
+2017-08-12 12:55:23,485: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: MainThread     : DEBUG   : child thread umgr.staging.output.queue.bridge.0000.child.watch started
+2017-08-12 12:55:23,485: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: MainThread     : INFO    : child (me) is alive
+2017-08-12 12:55:23,485: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: MainThread     : INFO    : send alive
+2017-08-12 12:55:23,485: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: MainThread     : INFO    : send message: [umgr.staging.output.queue.bridge.0000.child] alive
+2017-08-12 12:55:23,485: umgr.staging.output.queue.bridge.0000: task-manager                    : MainThread     : INFO    : recv message: alive
+2017-08-12 12:55:23,485: umgr.staging.output.queue.bridge.0000: task-manager                    : MainThread     : DEBUG   : ru_initialize_common (NOOP)
+2017-08-12 12:55:23,486: umgr.staging.output.queue.bridge.0000: task-manager                    : MainThread     : DEBUG   : ru_initialize_parent (NOOP)
+2017-08-12 12:55:23,486: umgr.staging.output.queue.bridge.0000: task-manager                    : MainThread     : DEBUG   : parent name: umgr.staging.output.queue.bridge.0000.watch
+2017-08-12 12:55:23,486: umgr.staging.output.queue.bridge.0000: task-manager                    : MainThread     : DEBUG   : start thread
+2017-08-12 12:55:23,487: umgr.staging.output.queue.bridge.0000: task-manager                    : umgr.staging.output.queue.bridge.0000.watch: DEBUG   : child name: umgr.staging.output.queue.bridge.0000.watch.thread
+2017-08-12 12:55:23,487: umgr.staging.output.queue.bridge.0000: task-manager                    : umgr.staging.output.queue.bridge.0000.watch: INFO    : child (me) initializing
+2017-08-12 12:55:23,488: umgr.staging.output.queue.bridge.0000: task-manager                    : umgr.staging.output.queue.bridge.0000.watch: DEBUG   : ru_initialize_common (NOOP)
+2017-08-12 12:55:23,488: umgr.staging.output.queue.bridge.0000: task-manager                    : umgr.staging.output.queue.bridge.0000.watch: DEBUG   : ru_initialize_child (NOOP)
+2017-08-12 12:55:23,488: umgr.staging.output.queue.bridge.0000: task-manager                    : umgr.staging.output.queue.bridge.0000.watch: INFO    : send alive
+2017-08-12 12:55:23,488: umgr.staging.output.queue.bridge.0000: task-manager                    : umgr.staging.output.queue.bridge.0000.watch: INFO    : put message: [umgr.staging.output.queue.bridge.0000.watch.thread] alive
+2017-08-12 12:55:23,488: umgr.staging.output.queue.bridge.0000: task-manager                    : MainThread     : INFO    : get msg: alive
+2017-08-12 12:55:23,489: umgr.staging.output.queue.bridge.0000: task-manager                    : MainThread     : DEBUG   : ru_initialize_common (NOOP)
+2017-08-12 12:55:23,489: umgr.staging.output.queue.bridge.0000: task-manager                    : MainThread     : DEBUG   : ru_initialize_parent (NOOP)
+2017-08-12 12:55:23,489: umgr.staging.output.queue.bridge.0000: task-manager                    : MainThread     : DEBUG   : child thread umgr.staging.output.queue.bridge.0000.watch started
+2017-08-12 12:55:23,489: umgr.staging.output.queue.bridge.0000: task-manager                    : MainThread     : INFO    : child is alive
+2017-08-12 12:55:23,489: umgr.staging.output.queue.bridge.0000: task-manager                    : MainThread     : DEBUG   : process class started child
+2017-08-12 12:56:36,467: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: MainThread     : ERROR   : abort: KeyboardInterrupt()
+Traceback (most recent call last):
+  File "/home/vivek/Research/ves/test_entk/local/lib/python2.7/site-packages/radical/utils/process.py", line 599, in _run
+    if not self.work_cb():
+  File "/home/vivek/Research/ves/test_entk/local/lib/python2.7/site-packages/radical/pilot/utils/queue.py", line 344, in work_cb
+    timeout=1000):
+  File "/home/vivek/Research/ves/test_entk/local/lib/python2.7/site-packages/radical/pilot/utils/queue.py", line 50, in _uninterruptible
+    return f(*args, **kwargs)
+  File "/home/vivek/Research/ves/test_entk/local/lib/python2.7/site-packages/zmq/sugar/socket.py", line 558, in poll
+    evts = dict(p.poll(timeout))
+  File "/home/vivek/Research/ves/test_entk/local/lib/python2.7/site-packages/zmq/sugar/poll.py", line 99, in poll
+    return zmq_poll(self.sockets, timeout=timeout)
+  File "zmq/backend/cython/_poll.pyx", line 116, in zmq.backend.cython._poll.zmq_poll (zmq/backend/cython/_poll.c:2036)
+  File "zmq/backend/cython/checkrc.pxd", line 12, in zmq.backend.cython.checkrc._check_rc (zmq/backend/cython/_poll.c:2418)
+    PyErr_CheckSignals()
+KeyboardInterrupt
+2017-08-12 12:56:36,470: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: MainThread     : INFO    : send message: [umgr.staging.output.queue.bridge.0000.child] abort: KeyboardInterrupt()
+2017-08-12 12:56:36,470: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: MainThread     : DEBUG   : ru_finalize_child (NOOP)
+2017-08-12 12:56:36,481: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: MainThread     : INFO    : send message: [umgr.staging.output.queue.bridge.0000.child] terminating
+2017-08-12 12:56:36,536: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: umgr.staging.output.queue.bridge.0000.child.watch: INFO    : watcher closes
+2017-08-12 12:56:36,536: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: umgr.staging.output.queue.bridge.0000.child.watch: INFO    : put message: [umgr.staging.output.queue.bridge.0000.child.watch.thread] work finished
+2017-08-12 12:56:36,537: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: umgr.staging.output.queue.bridge.0000.child.watch: DEBUG   : ru_finalize_child (NOOP)
+2017-08-12 12:56:36,537: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: umgr.staging.output.queue.bridge.0000.child.watch: DEBUG   : ru_finalize_common (NOOP)
+2017-08-12 12:56:36,537: umgr.staging.output.queue.bridge.0000: umgr.staging.output.queue.bridge.0000.child: umgr.staging.output.queue.bridge.0000.child.watch: INFO    : put message: [umgr.staging.output.queue.bridge.0000.child.watch.thread] terminating
+2017-08-12 12:56:36,661: umgr.staging.output.queue.bridge.0000: task-manager                    : umgr.staging.output.queue.bridge.0000.watch: WARNING : endpoint disappeard
+2017-08-12 12:56:36,661: umgr.staging.output.queue.bridge.0000: task-manager                    : umgr.staging.output.queue.bridge.0000.watch: INFO    : watcher closes
+2017-08-12 12:56:36,662: umgr.staging.output.queue.bridge.0000: task-manager                    : umgr.staging.output.queue.bridge.0000.watch: INFO    : put message: [umgr.staging.output.queue.bridge.0000.watch.thread] work finished
+2017-08-12 12:56:36,662: umgr.staging.output.queue.bridge.0000: task-manager                    : umgr.staging.output.queue.bridge.0000.watch: DEBUG   : ru_finalize_child (NOOP)
+2017-08-12 12:56:36,662: umgr.staging.output.queue.bridge.0000: task-manager                    : umgr.staging.output.queue.bridge.0000.watch: DEBUG   : ru_finalize_common (NOOP)
+2017-08-12 12:56:36,662: umgr.staging.output.queue.bridge.0000: task-manager                    : umgr.staging.output.queue.bridge.0000.watch: INFO    : put message: [umgr.staging.output.queue.bridge.0000.watch.thread] terminating

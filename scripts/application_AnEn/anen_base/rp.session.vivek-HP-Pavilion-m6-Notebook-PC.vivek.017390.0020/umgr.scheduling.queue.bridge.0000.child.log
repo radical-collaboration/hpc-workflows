@@ -1,0 +1,20 @@
+2017-08-12 13:40:27,110: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : INFO    : python.interpreter   version: 2.7.12 (default, Nov 19 2016, 06:48:10) [GCC 5.4.0 20160609]
+2017-08-12 13:40:27,111: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : INFO    :                      pid: 20972
+2017-08-12 13:40:27,111: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : INFO    :                      tid: MainThread
+2017-08-12 13:40:27,113: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : INFO    : radical.pilot        version: 0.46-v0.46.RC2@HEAD-detached-at-v0.46.RC2
+2017-08-12 13:40:27,113: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : INFO    : start bridge umgr.scheduling.queue.bridge.0000.child on tcp://*:*
+2017-08-12 13:40:27,115: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : INFO    : bound bridge umgr.scheduling.queue.bridge.0000.child to tcp://0.0.0.0:43659 : tcp://0.0.0.0:39165
+2017-08-12 13:40:27,579: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:40:27,669: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:40:27,739: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:40:27,787: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:40:27,854: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:40:27,916: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:40:27,984: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:40:28,036: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:40:28,076: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:40:28,126: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:41:10,445: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 13:41:41,477: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : WARNING : not alive anymore?
+2017-08-12 13:41:41,478: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : WARNING : send failed ([Errno 9] Bad file descriptor) - terminate
+2017-08-12 13:41:41,480: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : WARNING : send failed ([Errno 9] Bad file descriptor) - terminate

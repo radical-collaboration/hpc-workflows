@@ -1,0 +1,6 @@
+2017-08-12 13:39:06,174: state.pubsub.bridge.0000.child: state.pubsub.bridge.0000.child  : MainThread     : INFO    : python.interpreter   version: 2.7.12 (default, Nov 19 2016, 06:48:10) [GCC 5.4.0 20160609]
+2017-08-12 13:39:06,174: state.pubsub.bridge.0000.child: state.pubsub.bridge.0000.child  : MainThread     : INFO    :                      pid: 20788
+2017-08-12 13:39:06,175: state.pubsub.bridge.0000.child: state.pubsub.bridge.0000.child  : MainThread     : INFO    :                      tid: MainThread
+2017-08-12 13:39:06,176: state.pubsub.bridge.0000.child: state.pubsub.bridge.0000.child  : MainThread     : INFO    : radical.pilot        version: 0.46-v0.46.RC2@HEAD-detached-at-v0.46.RC2
+2017-08-12 13:39:06,176: state.pubsub.bridge.0000.child: state.pubsub.bridge.0000.child  : MainThread     : INFO    : start bridge state.pubsub.bridge.0000.child on tcp://*:*
+2017-08-12 13:39:06,178: state.pubsub.bridge.0000.child: state.pubsub.bridge.0000.child  : MainThread     : INFO    : bound bridge state.pubsub.bridge.0000.child to tcp://0.0.0.0:42529 : tcp://0.0.0.0:33861

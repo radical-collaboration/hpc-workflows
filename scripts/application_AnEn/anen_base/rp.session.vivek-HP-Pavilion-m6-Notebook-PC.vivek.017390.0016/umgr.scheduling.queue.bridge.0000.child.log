@@ -1,0 +1,16 @@
+2017-08-12 12:55:23,547: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : INFO    : python.interpreter   version: 2.7.12 (default, Nov 19 2016, 06:48:10) [GCC 5.4.0 20160609]
+2017-08-12 12:55:23,547: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : INFO    :                      pid: 17694
+2017-08-12 12:55:23,547: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : INFO    :                      tid: MainThread
+2017-08-12 12:55:23,548: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : INFO    : radical.pilot        version: 0.46-v0.46.RC2@HEAD-detached-at-v0.46.RC2
+2017-08-12 12:55:23,548: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : INFO    : start bridge umgr.scheduling.queue.bridge.0000.child on tcp://*:*
+2017-08-12 12:55:23,549: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : INFO    : bound bridge umgr.scheduling.queue.bridge.0000.child to tcp://0.0.0.0:40109 : tcp://0.0.0.0:46095
+2017-08-12 12:55:24,001: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 12:55:24,083: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 12:55:24,162: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 12:55:24,206: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 12:55:24,264: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 12:55:24,349: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 12:55:24,396: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 12:55:24,483: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 12:55:24,545: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
+2017-08-12 12:55:24,610: umgr.scheduling.queue.bridge.0000.child: umgr.scheduling.queue.bridge.0000.child: MainThread     : DEBUG   : sent  1 [hwm: 1]
