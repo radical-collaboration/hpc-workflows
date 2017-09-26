@@ -96,5 +96,3 @@ initial_config <- function () {
 
     return(list.init.config)
 }
-
-
