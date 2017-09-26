@@ -8,13 +8,12 @@ cut_pixels_along_y <- function(
     require(RAnEnExtra)
 
     # convert variable types
-    #pixels.compute <- as.numeric(pixels.compute)
-    #ycuts <- as.numeric(ycuts)
+    pixels.compute <- as.numeric(unlist(pixels.compute))
+    ycuts <- as.numeric(unlist(ycuts))
 
     xgrids.total <- as.numeric(xgrids.total)
     ygrids.total <- as.numeric(ygrids.total)
     start <- as.numeric(start)
-
 
     pixels.cut <- cut.pixels.along.y(pixels.compute, ycuts,
                                      xgrids.total, ygrids.total, 0)
