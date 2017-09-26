@@ -3,6 +3,8 @@ import rpy2
 import rpy2.robjects as robjects
 import traceback
 
+from rpy2.robjects.packages import importr
+
 from glob import glob
 from rpy2.robjects.packages import STAP
 #from radical.entk import Pipeline, Stage, Task, AppManager, ResourceManager, Profiler
@@ -82,7 +84,6 @@ def test_initial_config(d):
             print 'Expected key %s not in initial_config dictionary'%keys
             all_ok = False
 
-
     return all_ok
 
 
@@ -133,7 +134,7 @@ def process_initial_config(initial_config):
 
 
     for key, val in initial_config.iteritems():
-        if type(val) not in [str,int, float, list]:
+        if type(val) not in [str, int, float, list, bool]:
             sys.exit(1)
 
 
@@ -151,16 +152,17 @@ if __name__ == '__main__':
         with open('setup.R', 'r') as f:
             R_code = f.read()
         initial_config = STAP(R_code, 'initial_config')
+        RAnEnExtra = importr("RAnEnExtra")
         config = initial_config.initial_config()
-        #initial_config = dict(zip(config.names, list(config)))
+        initial_config = dict(zip(config.names, list(config)))
 
-        #if not test_initial_config(initial_config):
-            #sys.exit(1)
+        if not test_initial_config(initial_config):
+            sys.exit(1)
 
-        #initial_config = process_initial_config(initial_config)
+        initial_config = process_initial_config(initial_config)
     
-        #from pprint import pprint
-        #pprint(initial_config)
+        from pprint import pprint
+        pprint(initial_config)
 
     except Exception as ex:
         print 'Error: %s'%ex
