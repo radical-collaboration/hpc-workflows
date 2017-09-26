@@ -1,5 +1,7 @@
 # set up basic parameters that would be shared by all processes
 initial_config <- function () {
+    require(RAnEnExtra)
+
     command.exe <- '~/github/CAnalogsV2/install/bin/canalogs'
     command.verbose <- '--verbose 0'
     file.forecasts <- "~/geolab_storage_V2/data/NAM12KM/chunk_NAM/Forecasts_NAM_sliced.nc"
