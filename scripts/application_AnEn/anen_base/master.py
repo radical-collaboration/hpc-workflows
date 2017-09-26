@@ -105,8 +105,23 @@ if __name__ == '__main__':
     #################################################
 
     
-    # First stage corresponds to the AnEn computation
+    # First stage corresponds to rasterizing the observation data
+
     s1 = Stage()
+
+    t1 =  Task()
+    t1.pre_exec = resource_key['xsede.supermic']
+    t1.executable = []
+    t1.arguments = []
+    t1.cores = 1
+    t1.link_input_data = []
+
+
+    s1.add_tasks(t1)
+
+
+    # Second stage corresponds to the AnEn computation
+    s2 = Stage()
 
     # List to catch all the uids of the AnEn tasks
     anen_task_uids = list()
@@ -116,18 +131,32 @@ if __name__ == '__main__':
     for ind in range(10):
 
         # Create a new task
-        t1 = Task()
+        t2 = Task()
         # task executable
-        t1.executable    = ['canalogs']       
+        t2.executable    = ['canalogs']       
         # All modules to be loaded for the executable to be detected
-        t1.pre_exec      = resource_key['xsede.supermic']
+        t2.pre_exec      = resource_key['xsede.supermic']
         # Number of cores for this task
-        t1.cores         = int(initial_config['cores'])
+        t2.cores         = int(initial_config['cores'])
         # List of arguments to the executable      
-        t1.arguments     = [ '-N','-p',
+        t2.arguments     = [ '-N','-p',
                             '--forecast-nc', initial_config['file.forecast'],
                             '--observation-nc', initial_config['file.observation'],
-                            '-o', './' + os.path.basename(initial_config['output.AnEn']), '--stations-ID',
+                            '--test-ID-start', int(initial_config['test.ID.start']),
+                            '--test-ID-end', int(initial_config['test.ID.end']),
+                            '--train-ID-start', int(initial_config['train.ID.start']),
+                            '--train-ID-end', int(initial_config['train.ID.end']),
+                            '--observation-ID', int(initial_config['observation.ID']),
+                            '--members-size', int(initial_config['members.size']),
+                            '--weights', initial_config['members.size'],
+                            '--rolling', int(initial_config['rolling']),
+                            '--quick', int(initial_config['quick']),
+                            '--number-of-cores', int(initial_config['cores']),
+                            '-o', './' + os.path.basename(initial_config['output.AnEn']), '--stations-ID']
+
+        t2.arguments.extend(initial_config['stations.ID'][ind*10:(ind+1)*10])
+
+        t2.arguments.extend([
                             '--start-forecasts','0 %s 0 0'%initial_config['stations.ID'][ind*10],
                             '--count-forecasts','%s %s %s %s'%( initial_config['num.parameters'],
                                                                 # TODO: Needs to be fixed for case when number of stations is not multiple of 10
@@ -143,18 +172,9 @@ if __name__ == '__main__':
                                                                 initial_config['num.times'],
                                                                 initial_config['num.flts'],
                                                             )
-                            '--stride-observations','1 1 1 1']
-
-        t1.arguments.extend(initial_config['stations.ID'][ind*10:(ind+1)*10])
-
-        t1.arguments.extend([
-                            '--number-of-cores', int(initial_config['cores']),
-                            '--test-ID-start', int(initial_config['test.ID.start']),
-                            '--test-ID-end', int(initial_config['test.ID.end']),
-                            '--train-ID-start', int(initial_config['train.ID.start']),
-                            '--train-ID-end', int(initial_config['train.ID.end']),
-                            '--rolling', int(initial_config['rolling']),
-                            '--members-size',int(initial_config['members.size'])])
+                            '--stride-observations','1 1 1 1'
+                            
+                            ])
 
         #t1.copy_output_data = ['{0} > /home/vivek91/{1}-starts-{2}-ends-{3}.nc'.format( os.path.basename(initial_config['output.AnEn'],
         #                                                                            os.path.basename(initial_config['output.AnEn']).split('.')[0],
@@ -165,32 +185,31 @@ if __name__ == '__main__':
         if ind==1:
             stations_subset = initial_config['stations.ID'][ind*10:(ind+1)*10]
 
-        anen_task_uids.append(t1.uid)
+        anen_task_uids.append(t2.uid)
 
         # Add this task to our stage
-        s1.add_tasks(t1)
-
+        s2.add_tasks(t2)
     
     # Add the stage to our pipeline
-    p.add_stages(s1)
+    p.add_stages(s2)
     # --------------------------------------------------------------------------
 
 
-    # -------------------------- Stage 2 ---------------------------------------
+    # -------------------------- Stage 3 ---------------------------------------
 
-    s2 = Stage()
+    s3 = Stage()
 
-    t2 = Task()
-    t2.executable       = ['canalogs']
-    t2.pre_exec         = resource_key['xsede.supermic']
-    t2.arguments        = [ '-C',
-                            '--file-new','%s'%len(initial_config['output.AnEn']),
+    t3 = Task()
+    t3.executable       = ['canalogs']
+    t3.pre_exec         = resource_key['xsede.supermic']
+    t3.arguments        = [ '-C',
+                            '--file-new','iter1_%s.nc'%len(initial_config['output.AnEn']),
                             '--files-from']
 
-    t2.link_input_data = []
+    t3.link_input_data = []
 
     for ind in range(10):
-        t2.link_input_data += ['$Pipeline_%s_Stage_%s_Task_%s/%s-starts-%s-ends-%s.nc'%(
+        t3.link_input_data += ['$Pipeline_%s_Stage_%s_Task_%s/%s-starts-%s-ends-%s.nc'%(
                                                             p.uid,
                                                             s1.uid,
                                                             anen_task_uids[ind],
@@ -198,33 +217,34 @@ if __name__ == '__main__':
                                                             initial_config['stations.ID'][ind*10],
                                                             initial_config['stations.ID'][(ind+1)*10])]
 
-        t2.arguments.append('%s-starts-%s-ends-%s.nc'%(
+        t3.arguments.append('%s-starts-%s-ends-%s.nc'%(
                                                         os.path.basename(initial_config['output.AnEn']).split('.')[0],
                                                         initial_config['stations.ID'][ind*10],
                                                         initial_config['stations.ID'][(ind+1)*10])
                                                     )
                                                 
 
-    t2.arguments.extend(analog_files)
+    t3.arguments.extend(analog_files)
 
-
+    s3.add_tasks(t3)
+    p.add_stages(s3)
 
     # --------------------------------------------------------------------------
 
-    # -------------------------- Stage 3 ---------------------------------------
+    # -------------------------- Stage 4 ---------------------------------------
     
 
     # Third stage corresponds to evaluation of interpolated data
-    s3 = Stage()
+    s4 = Stage()
 
-    t3 = Task()
-    t3.executable    = ['python']
-    t3.pre_exec      =  [   'module load python/2.7.7/GCC-4.9.0',
+    t4 = Task()
+    t4.executable    = ['python']
+    t4.pre_exec      =  [   'module load python/2.7.7/GCC-4.9.0',
                             'source $HOME/ve_rpy2/bin/activate',
                             'module load r',
                             'module load netcdf']
-    t3.cores         = 1
-    t3.arguments     = [ 'evaluation.py', 
+    t4.cores         = 1
+    t4.arguments     = [ 'evaluation.py', 
                         '--file_observation', initial_config['file.observation'],
                         '--file_AnEn', initial_config['output.AnEn'],
                         '--stations_ID', stations_subset,
@@ -234,8 +254,8 @@ if __name__ == '__main__':
                         '--nrows', initial_config['nrows'],
                         '--ncols', initial_config['ncols']
                     ]
-    t3.upload_input_data = ['./evaluation.py', './evaluation.R']
-    t3.link_input_data = ['$Pipeline_%s_$Stage_%s_$Task_%s/%s'%(
+    t4.upload_input_data = ['./evaluation.py', './evaluation.R']
+    t4.link_input_data = ['$Pipeline_%s_$Stage_%s_$Task_%s/%s'%(
                                                                 p.uid,
                                                                 s2.uid,
                                                                 t2.uid,
@@ -243,9 +263,8 @@ if __name__ == '__main__':
                                                             )]
     
 
-    s3.add_tasks(t3)
-
-    p.add_stages(s3)
+    s4.add_tasks(t4)
+    p.add_stages(s4)
     # --------------------------------------------------------------------------
 
 
