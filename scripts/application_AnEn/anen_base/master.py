@@ -255,6 +255,7 @@ if __name__ == '__main__':
         # define the chunk to read
         subregion_pixel_start = (initial_config['ycuts'][ind] - initial_config['ycuts'][0]) * initial_config['xgrids.total']
         subregion_pixel_count = initial_config['yinterval'] * initial_config['xgrids.total']
+            
         if ind == len(pixels_list)-1:
             subregion_pixel_count = initial_config['grids.total'] - subregion_pixel_start
         
@@ -280,8 +281,10 @@ if __name__ == '__main__':
         t2.arguments.append('--weights')
         t2.arguments.extend(initial_config['weights'])
 
+        pixels_compute = pixels_list[ind]
+        pixels_compute = [int(val - subregion_pixel_start) for val in pixels_compute]
         t2.arguments.append('--stations-ID')
-        t2.arguments.extend(initial_config['pixels.compute'])
+        t2.arguments.extend(pixels_compute)
 
 
         t2.arguments.extend([
@@ -295,7 +298,7 @@ if __name__ == '__main__':
                                     '%s'%int(initial_config['num.times']), 
                                     '%s'%int(initial_config['num.flts'])])
 
-        #print t2.arguments
+        print t2.arguments
 
 
         anen_task_uids.append(t2.uid)
@@ -412,7 +415,7 @@ if __name__ == '__main__':
         appman.assign_workflow(set([p]))
 
         # Run the application manager -- blocking call
-        appman.run()        
+        #appman.run()        
 
     except Exception, ex:
 
