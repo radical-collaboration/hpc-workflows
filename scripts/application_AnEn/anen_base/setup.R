@@ -57,6 +57,13 @@ initial_config <- function () {
         }
     }
 
+    # randomly select pixels to compute
+    pixels.compute <- sample.int(grids.total,
+                                 init.num.pixels.compute)
+    pixels.compute <- include.corners(pixels.compute,
+                                      xgrids.total,
+                                      ygrids.total, 0)
+
     list.init.config <- list(command.exe = command.exe,
                              command.verbose = command.verbose,
                              file.forecasts = file.forecasts,
@@ -76,6 +83,7 @@ initial_config <- function () {
                              xgrids.total = xgrids.total,
                              grids.total = grids.total,
                              init.num.pixels.compute = init.num.pixels.compute,
+                             pixels.compute = pixels.compute,
                              yinterval = yinterval,
                              ycuts = ycuts,
                              quick = quick,
