@@ -1,13 +1,21 @@
 # set up basic parameters that would be shared by all processes
-initial_config <- function () {
+initial_config <- function (machine = 'supermic') {
     require(RAnEnExtra)
 
-    command.exe <- '~/github/CAnalogsV2/install/bin/canalogs'
+    if (machine == 'Weiming') {
+        command.exe <- '~/github/CAnalogsV2/install/bin/canalogs'
+        file.forecasts <- "~/geolab_storage_V2/data/NAM12KM/chunk_NAM/Forecasts_NAM_sliced.nc"
+        file.observations <- "~/geolab_storage_V2/data/NAM12KM/chunk_NAM/analysis_NAM.nc"
+        folder.prefix <- '~/geolab_storage_V2/data/NAM12KM/experiments_smart/'
+    } else if (machine == 'supermic')
+        # setup on supermic
+        command.exe <- '/home/whu/github/CAnalogsV2/install/bin/canalogs'
+        file.forecasts <- "/home/whu/data/chunk_NAM/Forecasts_NAM_sliced.nc"
+        file.observations <- "/home/whu/data/chunk_NAM/Analysis_NAM.nc"
+        folder.prefix <- '/home/whu/experiments/anen_smart/'
+    }
+
     command.verbose <- '--verbose 0'
-    file.forecasts <- "~/geolab_storage_V2/data/NAM12KM/chunk_NAM/Forecasts_NAM_sliced.nc"
-    file.observations <- "~/geolab_storage_V2/data/NAM12KM/chunk_NAM/analysis_NAM.nc"
-    #folder.prefix <- '~/Research/repos/hpc-workflows/scripts/application_AnEn/anen_base/temp/'
-    folder.prefix <- '~/Desktop/tmp'
     folder.accumulate <- paste(folder.prefix, 'anen_accumulate/', sep = '')
     folder.output <- paste(folder.prefix, 'anen_output/', sep = '')
     folder.raster.anen <- paste(folder.prefix, 'anen_raster/', sep = '')
