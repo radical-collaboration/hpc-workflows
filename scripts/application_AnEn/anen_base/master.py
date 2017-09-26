@@ -298,7 +298,7 @@ if __name__ == '__main__':
                                     '%s'%int(initial_config['num.times']), 
                                     '%s'%int(initial_config['num.flts'])])
 
-        print t2.arguments
+        #print t2.arguments
 
 
         anen_task_uids.append(t2.uid)
@@ -415,7 +415,7 @@ if __name__ == '__main__':
         appman.assign_workflow(set([p]))
 
         # Run the application manager -- blocking call
-        #appman.run()        
+        appman.run()        
 
     except Exception, ex:
 
