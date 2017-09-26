@@ -204,12 +204,27 @@ if __name__ == '__main__':
                     ]
 
     t1.copy_input_data = ['$SHARED/generate_observation_rasters.py','$SHARED/generate_observation_rasters.R']
+    # not needed in the first iteration
+    #t1.download_output_data = ['%s/pixels_computed_list.rdata'%initial_config['folder.prefix']] 
 
     t1.cores = 1
 
     s1.add_tasks(t1)
 
     p.add_stages(s1)
+
+
+    # Call R function locally on pixels_computed_list.rdata
+
+    with open('cut_pixels_along_y.R', 'r') as f:
+        R_code = f.read()
+    cut_pixels_along_y = STAP(R_code, 'cut_pixels_along_y')
+    pixels_list = cut_pixels_along_y(
+                                        initial_config['pixels.compute'],
+                                        initial_config['ycuts'],
+                                        initial_config['xgrids.total'],
+                                        initial_config['ygrids.total']
+                                    )
 
     '''
 
@@ -282,6 +297,7 @@ if __name__ == '__main__':
     p.add_stages(s2)
     # --------------------------------------------------------------------------
 
+    
 
     # -------------------------- Stage 3 ---------------------------------------
 
