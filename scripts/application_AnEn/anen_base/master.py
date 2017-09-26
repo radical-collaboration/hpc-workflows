@@ -7,7 +7,7 @@ from rpy2.robjects.packages import importr
 
 from glob import glob
 from rpy2.robjects.packages import STAP
-#from radical.entk import Pipeline, Stage, Task, AppManager, ResourceManager, Profiler
+from radical.entk import Pipeline, Stage, Task, AppManager, ResourceManager
 
 '''
 EnTK 0.6 script - Analog Ensemble application
@@ -145,28 +145,28 @@ if __name__ == '__main__':
 
 
 
-    try:
+    #try:
 
-        # -------------------------- Stage 1 ---------------------------------------
-        # Read initial configuration from R function
-        with open('setup.R', 'r') as f:
-            R_code = f.read()
-        initial_config = STAP(R_code, 'initial_config')
-        RAnEnExtra = importr("RAnEnExtra")
-        config = initial_config.initial_config()
-        initial_config = dict(zip(config.names, list(config)))
+    # -------------------------- Stage 1 ---------------------------------------
+    # Read initial configuration from R function
+    with open('setup.R', 'r') as f:
+        R_code = f.read()
+    initial_config = STAP(R_code, 'initial_config')
+    RAnEnExtra = importr("RAnEnExtra")
+    config = initial_config.initial_config()
+    initial_config = dict(zip(config.names, list(config)))
 
-        if not test_initial_config(initial_config):
-            sys.exit(1)
+    if not test_initial_config(initial_config):
+        sys.exit(1)
 
-        initial_config = process_initial_config(initial_config)
+    initial_config = process_initial_config(initial_config)
     
-        from pprint import pprint
-        pprint(initial_config)
+    from pprint import pprint
+    pprint(initial_config)
 
-    except Exception as ex:
-        print 'Error: %s'%ex
-        print traceback.format_exc()
+    #except Exception as ex:
+    #    print 'Error: %s'%ex
+    #    print traceback.format_exc()
 
 
     #################################################
@@ -349,7 +349,7 @@ if __name__ == '__main__':
     p.add_stages(s4)
     # --------------------------------------------------------------------------
 
-
+    '''
     # Create a dictionary to describe our resource request
     res_dict = {
 
@@ -361,6 +361,7 @@ if __name__ == '__main__':
             'schema': 'gsissh'
 
     }
+    
 
     try:
 
@@ -390,4 +391,4 @@ if __name__ == '__main__':
         for f in profs:
             os.remove(f)
 
-    '''
+    
