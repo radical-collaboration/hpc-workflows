@@ -110,11 +110,28 @@ if __name__ == '__main__':
     s1 = Stage()
 
     t1 =  Task()
-    t1.pre_exec = resource_key['xsede.supermic']
-    t1.executable = []
-    t1.arguments = []
+    t1.pre_exec = [    'module load python/2.7.7/GCC-4.9.0',
+                       'source $HOME/ve_rpy2/bin/activate',
+                       'module load r',
+                       'module load netcdf']
+
+    t1.executable = ['python']
+
+    t1.arguments = [
+                        'generate_observation_raster.py',
+                        '--folder',
+                        '--num_times_to_compute',
+                        '--num_flts', initial_config['num.flts'],
+                        '--file_observations', initial_config['file.observations'],
+                        '--test_ID_start', initial_config['test.ID.start'],
+                        '--xgrids_total', initial_config['xgrids.total'],
+                        '--ygrids_total', initial_config['ygrids.total']
+
+                    ]
     t1.cores = 1
-    t1.link_input_data = []
+    t1.link_input_data = [  '$SHARED/generate_observation_raster.py',
+                            '$SHARED/generate_observation_raster.R'
+                    ]
 
 
     s1.add_tasks(t1)
@@ -176,11 +193,6 @@ if __name__ == '__main__':
                             
                             ])
 
-        #t1.copy_output_data = ['{0} > /home/vivek91/{1}-starts-{2}-ends-{3}.nc'.format( os.path.basename(initial_config['output.AnEn'],
-        #                                                                            os.path.basename(initial_config['output.AnEn']).split('.')[0],
-        #                                                                            initial_config['stations.ID'][ind*10],
-        #                                                                            initial_config['stations.ID'][(ind+1)*10]), 
-        #                                                                            ind)]
 
         if ind==1:
             stations_subset = initial_config['stations.ID'][ind*10:(ind+1)*10]
@@ -295,14 +307,7 @@ if __name__ == '__main__':
         appman.assign_workflow(set([p]))
 
         # Run the application manager -- blocking call
-        appman.run()
-
-
-        # Once completed, use EnTK profiler to get the time between 'SCHEDULING' and 'EXECUTING' states for all
-        # tasks. This is the execution time of the tasks as seen by EnTK.
-        #p = Profiler()
-        #print 'Task uids: ', task_uids
-        #print 'Total execution time for all tasks: ', p.duration(objects = task_uids, states=['SCHEDULING', 'EXECUTED'])
+        appman.run()        
 
     except Exception, ex:
 
