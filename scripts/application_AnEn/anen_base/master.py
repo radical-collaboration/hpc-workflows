@@ -166,7 +166,6 @@ if __name__ == '__main__':
         print 'Error: %s'%ex
         print traceback.format_exc()
 
-    '''
 
     #################################################
     # additional conversion from for the dictionary #
@@ -207,6 +206,8 @@ if __name__ == '__main__':
 
     s1.add_tasks(t1)
 
+
+    '''
 
     # Second stage corresponds to the AnEn computation
     s2 = Stage()
