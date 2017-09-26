@@ -4,7 +4,7 @@ initial_config <- function () {
     command.verbose <- '--verbose 0'
     file.forecasts <- "~/geolab_storage_V2/data/NAM12KM/chunk_NAM/Forecasts_NAM_sliced.nc"
     file.observations <- "~/geolab_storage_V2/data/NAM12KM/chunk_NAM/analysis_NAM.nc"
-    folder.prefix <- '~/geolab_storage_V2/data/NAM12KM/experiments_smart/'
+    folder.prefix <- '~/Research/repos/hpc-workflows/scripts/application_AnEn/anen_base/temp/'
     folder.accumulate <- paste(folder.prefix, 'anen_accumulate/', sep = '')
     folder.output <- paste(folder.prefix, 'anen_output/', sep = '')
     folder.raster.anen <- paste(folder.prefix, 'anen_raster/', sep = '')

@@ -5,7 +5,7 @@ import traceback
 
 from glob import glob
 from rpy2.robjects.packages import STAP
-from radical.entk import Pipeline, Stage, Task, AppManager, ResourceManager, Profiler
+#from radical.entk import Pipeline, Stage, Task, AppManager, ResourceManager, Profiler
 
 '''
 EnTK 0.6 script - Analog Ensemble application
@@ -70,7 +70,7 @@ def test_initial_config(d):
                         'threshold.triangle',
                         'num.pixels.increase',
                         'debug',
-                        'stations.ID'
+                        'pixels.compute'
                     ]
 
     all_ok = True
@@ -88,7 +88,7 @@ def test_initial_config(d):
 
 def process_initial_config(initial_config):
 
-    initial_config['stations.ID'] = ["%s"%str(int(k)) for k in list(initial_config['stations.ID'])]
+    initial_config['pixels.compute'] = ["%s"%str(int(k)) for k in list(initial_config['pixels.compute'])]
 
     possible_keys = [   'command.exe',
                         'command.verbose',
@@ -144,30 +144,38 @@ if __name__ == '__main__':
 
 
 
-    # Our application currently will contain only one pipeline
-    p = Pipeline()
+    try:
 
+        # -------------------------- Stage 1 ---------------------------------------
+        # Read initial configuration from R function
+        with open('setup.R', 'r') as f:
+            R_code = f.read()
+        initial_config = STAP(R_code, 'initial_config')
+        config = initial_config.initial_config()
+        #initial_config = dict(zip(config.names, list(config)))
 
-    # -------------------------- Stage 1 ---------------------------------------
-    # Read initial configuration from R function
-    with open('setup.R', 'r') as f:
-        R_code = f.read()
-    initial_config = STAP(R_code, 'initial_config')
-    config = initial_config.initial_config(False)
-    initial_config = dict(zip(config.names, list(config)))
+        #if not test_initial_config(initial_config):
+            #sys.exit(1)
 
-
-    if not test_initial_config(initial_config):
-        sys.exit(1)
-
-    initial_config = process_initial_config(initial_config)
+        #initial_config = process_initial_config(initial_config)
     
+        #from pprint import pprint
+        #pprint(initial_config)
+
+    except Exception as ex:
+        print 'Error: %s'%ex
+        print traceback.format_exc()
+
+    '''
 
     #################################################
     # additional conversion from for the dictionary #
     #################################################
 
-    
+    # Our application currently will contain only one pipeline
+    p = Pipeline()
+
+
     # First stage corresponds to rasterizing the observation data
 
     s1 = Stage()
@@ -382,3 +390,5 @@ if __name__ == '__main__':
         profs = glob('./*.prof')
         for f in profs:
             os.remove(f)
+
+    '''
