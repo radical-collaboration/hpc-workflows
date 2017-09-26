@@ -21,7 +21,8 @@ initial_config <- function () {
     folder.output <- paste(folder.prefix, 'anen_output/', sep = '')
     folder.raster.anen <- paste(folder.prefix, 'anen_raster/', sep = '')
     folder.raster.obs <- paste(folder.prefix, 'obs_raster/', sep = '')
-    folder.tmp <- paste(folder.prefix, 'tmp/', sep = '')
+    #folder.tmp <- paste(folder.prefix, 'tmp/', sep = '')
+    folder.tmp <- '/tmp/'
 
     num.flts <- 4
     num.times <- 822
@@ -31,7 +32,7 @@ initial_config <- function () {
     xgrids.total <- 614
     grids.total <- xgrids.total*ygrids.total
     init.num.pixels.compute <- 100
-    yinterval <- 15
+    yinterval <- 200
     ycuts <- seq(from = 1, to = ygrids.total, by = yinterval)
 
     quick <- F

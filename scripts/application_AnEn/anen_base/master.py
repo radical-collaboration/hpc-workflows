@@ -88,9 +88,9 @@ def test_initial_config(d):
 
 def process_initial_config(initial_config):
 
-    initial_config['pixels.compute'] = ["%s"%str(int(k)) for k in list(initial_config['pixels.compute'])]
-    initial_config['ycuts'] = ["%s"%str(int(k)) for k in list(initial_config['ycuts'])]
-    initial_config['weights'] = ["%s"%str(int(k)) for k in list(initial_config['weights'])]
+    initial_config['pixels.compute'] = [int(k) for k in list(initial_config['pixels.compute'])]
+    initial_config['weights'] = [int(k) for k in list(initial_config['weights'])]
+    initial_config['ycuts'] = [int(k) for k in list(initial_config['ycuts'])]
 
     possible_keys = [   'command.exe',
                         'command.verbose',
@@ -124,7 +124,7 @@ def process_initial_config(initial_config):
                         'iteration',
                         'threshold.triangle',
                         'num.pixels.increase',
-                        'debug'
+                        'debug',
                     ]
 
     for keys in possible_keys:
@@ -221,12 +221,11 @@ if __name__ == '__main__':
     cut_pixels_along_y = STAP(R_code, 'cut_pixels_along_y')
     pixels_list = cut_pixels_along_y.cut_pixels_along_y(
                                         initial_config['pixels.compute'],
-                                        initial_config['ycuts'],
+                                        # TODO: how does the program know where to separate the string into numbers
+                                        [str(k) for k in initial_config['ycuts']],
                                         initial_config['xgrids.total'],
                                         initial_config['ygrids.total']
                                     )
-
-    '''
 
     # Second stage corresponds to the AnEn computation
     s2 = Stage()
@@ -236,57 +235,68 @@ if __name__ == '__main__':
 
     stations_subset = list()
 
-    for ind in range(10):
+    # define weights string
+    #weights_string = ''
+    #for w in initial_config['weights']:
+    #    weights_string += w + ' '
+
+    for ind in range(len(pixels_list)):
 
         # Create a new task
         t2 = Task()
         # task executable
-        t2.executable    = ['canalogs']       
+        t2.executable    = [initial_config['command.exe']]       
         # All modules to be loaded for the executable to be detected
         t2.pre_exec      = resource_key['xsede.supermic']
         # Number of cores for this task
         t2.cores         = int(initial_config['cores'])
         # List of arguments to the executable      
-        t2.arguments     = [ '-N','-p',
-                            '--forecast-nc', initial_config['file.forecast'],
-                            '--observation-nc', initial_config['file.observation'],
-                            '--test-ID-start', int(initial_config['test.ID.start']),
-                            '--test-ID-end', int(initial_config['test.ID.end']),
-                            '--train-ID-start', int(initial_config['train.ID.start']),
-                            '--train-ID-end', int(initial_config['train.ID.end']),
-                            '--observation-ID', int(initial_config['observation.ID']),
-                            '--members-size', int(initial_config['members.size']),
-                            '--weights', initial_config['members.size'],
-                            '--rolling', int(initial_config['rolling']),
-                            '--quick', int(initial_config['quick']),
-                            '--number-of-cores', int(initial_config['cores']),
-                            '-o', './' + os.path.basename(initial_config['output.AnEn']), '--stations-ID']
 
-        t2.arguments.extend(initial_config['stations.ID'][ind*10:(ind+1)*10])
+        # define the chunk to read
+        subregion_pixel_start = (initial_config['ycuts'][ind] - initial_config['ycuts'][0]) * initial_config['xgrids.total']
+        subregion_pixel_count = initial_config['yinterval'] * initial_config['xgrids.total']
+        if ind == len(pixels_list)-1:
+            subregion_pixel_count = initial_config['grids.total'] - subregion_pixel_start
+        
+
+        # define output anen
+        file_output_anen = initial_config['folder.tmp'] + 'iteration' + initial_config['iteration'] + '_chunk' + str(ind) + '.nc'
+
+        t2.arguments     = [ '-N','-p',
+                '--forecast-nc', initial_config['file.forecasts'],
+                '--observation-nc', initial_config['file.observations'],
+                '--test-ID-start', int(initial_config['test.ID.start']),
+                '--test-ID-end', int(initial_config['test.ID.end']),
+                '--train-ID-start', int(initial_config['train.ID.start']),
+                '--train-ID-end', int(initial_config['train.ID.end']),
+                '--observation-ID', int(initial_config['observation.ID']),
+                '--members-size', int(initial_config['members.size']),
+                '--rolling', int(initial_config['rolling']),
+                '--quick', int(initial_config['quick']),
+                '--number-of-cores', int(initial_config['cores']),
+                '-o', file_output_anen
+                ]
+
+        t2.arguments.append('--weights')
+        t2.arugments.extend(initial_config['weights'])
+
+        t2.arguments.append('--stations-ID')
+        t2.arugments.extend(initial_config['pixels.compute'])
+
 
         t2.arguments.extend([
-                            '--start-forecasts','0 %s 0 0'%initial_config['stations.ID'][ind*10],
-                            '--count-forecasts','%s %s %s %s'%( initial_config['num.parameters'],
-                                                                # TODO: Needs to be fixed for case when number of stations is not multiple of 10
-                                                                initial_config['num.stations.per.chunk'],
-                                                                initial_config['num.times'],
-                                                                initial_config['num.flts']
-                                                            ),  
-                            '--stride-forecasts','1 1 1 1',
-                            '--start-observations','0 %s 0 0'%initial_config['stations.ID'][ind*10],
-                            '--count-observations','1 %s %s %s'%(
-                                                                # TODO: Needs to be fixed for case when number of stations is not multiple of 10
-                                                                initial_config['num.stations.per.chunk'],
-                                                                initial_config['num.times'],
-                                                                initial_config['num.flts'],
-                                                            )
-                            '--stride-observations','1 1 1 1'
-                            
-                            ])
+            '--start-forecasts','0','%s'%subregion_pixel_start, '0', '0',
+            '--count-forecasts','%s'%initial_config['num.parameters'], 
+                                '%s'%subregion_pixel_count,
+                                '%s'%initial_config['num.times'],
+                                '%s'%initial_config['num.flts'],  
+            '--start-observations','0', '%s'%subregion_pixel_start, '0', '0',
+            '--count-observations','1', '%s'%subregion_pixel_count, 
+                                    '%s'%initial_config['num.times'], 
+                                    '%s'%initial_config['num.flts']])
 
+        #print t2.arguments
 
-        if ind==1:
-            stations_subset = initial_config['stations.ID'][ind*10:(ind+1)*10]
 
         anen_task_uids.append(t2.uid)
 
@@ -298,7 +308,7 @@ if __name__ == '__main__':
     # --------------------------------------------------------------------------
 
     
-
+    '''
     # -------------------------- Stage 3 ---------------------------------------
 
     s3 = Stage()

@@ -3,8 +3,9 @@
 # be called on supercomputers.
 #
 append_pixels <- function(
-    pixels, file.pixels.computed) {
+    pixels, folder.prefix) {
 
+    file.pixels.computed <- paste(folder.prefix, 'pixels_computed_list.rdata', sep = '')
     if (file.exists(file.pixels.computed)) {
         load(file.pixels.computed)
         pixels.computed.list <- c(pixels.computed.list,
