@@ -8,9 +8,6 @@ define_triangles <- function(
     require(maptools)
     require(RAnEnExtra)
 
-    folder.raster.iteration <- paste(folder.raster.anen, 'iteration',
-                                     iteration, '/', sep = '')
-
     # convert and prepare pixel coordinates
     x <- pixels.to.x.by.row(pixels.compute, xgrids.total, 0)
     y <- pixels.to.y.by.row(pixels.compute, xgrids.total, 0)
@@ -19,6 +16,9 @@ define_triangles <- function(
     df <- data.frame(x, y)
     W <- ripras(df, shape="rectangle")
     polys.triangle <- as(delaunay(as.ppp(df, W=W)), "SpatialPolygons")
+
+    folder.raster.iteration <- paste(folder.raster.anen, 'iteration',
+                                     iteration, '/', sep = '')
     save(polys.triangle, file = paste(folder.raster.iteration,
                                       'triangulations.rdata', sep = ''))
 }
