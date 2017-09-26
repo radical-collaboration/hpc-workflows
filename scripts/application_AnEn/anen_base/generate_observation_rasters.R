@@ -10,10 +10,28 @@
 # the evaluation stage
 #
 generate_observation_rasters <- function(
+    folder.prefix, folder.accumulate, 
+    folder.output, folder.raster.anen,
     folder.raster.obs, num.times.to.compute,
     num.flts, file.observations, test.ID.start,
     xgrids.total, ygrids.total) {
     require(ncdf4)
+
+
+    # create file to keep track of pixels computed
+    file.pixels.computed <- paste(folder.prefix, 'pixels_computed_list.rdata', sep = '')
+    if(!file.exists(file.pixels.computed)) {
+        pixels.computed.list <- list()
+        save(pixels.computed.list, file = file.pixels.computed)
+    }
+
+    # create multiple folders
+    for(folder in c(folder.accumulate, folder.output,
+                    folder.raster.anen, folder.raster.obs)) {
+        if (!dir.exists(folder)) {
+            dir.create(folder, recursive = T)
+        }
+    }
 
     rast.files <- list.files(folder.raster.obs)
     num.of.files <- length(rast.files)
