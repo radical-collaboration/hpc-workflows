@@ -22,7 +22,7 @@ initial_config <- function () {
     folder.raster.anen <- paste(folder.prefix, 'anen_raster/', sep = '')
     folder.raster.obs <- paste(folder.prefix, 'obs_raster/', sep = '')
     #folder.tmp <- paste(folder.prefix, 'tmp/', sep = '')
-    folder.tmp <- '/tmp/'
+    folder.tmp <- '/work/whu/tmp/'
 
     num.flts <- 4
     num.times <- 822

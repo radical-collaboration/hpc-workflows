@@ -192,6 +192,7 @@ if __name__ == '__main__':
                         '--folder_prefix', initial_config['folder.prefix'],
                         '--folder_accumulate', initial_config['folder.accumulate'],
                         '--folder_output', initial_config['folder.output'],
+                        '--folder_tmp', initial_config['folder.tmp'],
                         '--folder_raster_anen', initial_config['folder.raster.anen'],
                         '--folder_raster_obs', initial_config['folder.raster.obs'],
                         '--num_times_to_compute', initial_config['num.times.to.compute'],
