@@ -278,7 +278,7 @@ if __name__ == '__main__':
                 '--weights', weights_string,
                 '--rolling', int(initial_config['rolling']),
                 '--quick', int(initial_config['quick']),
-                '--number-of-cores', int(initial_config['cores']),
+                '--cores', int(initial_config['cores']),
                 '--stations-ID', pixels_list_string,
                 '-o', file_output_anen
                 ]
