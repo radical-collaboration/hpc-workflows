@@ -285,15 +285,15 @@ if __name__ == '__main__':
 
 
         t2.arguments.extend([
-            '--start-forecasts','0','%s'%subregion_pixel_start, '0', '0',
-            '--count-forecasts','%s'%initial_config['num.parameters'], 
-                                '%s'%subregion_pixel_count,
-                                '%s'%initial_config['num.times'],
-                                '%s'%initial_config['num.flts'],  
-            '--start-observations','0', '%s'%subregion_pixel_start, '0', '0',
-            '--count-observations','1', '%s'%subregion_pixel_count, 
-                                    '%s'%initial_config['num.times'], 
-                                    '%s'%initial_config['num.flts']])
+            '--start-forecasts','0','%s'%int(subregion_pixel_start), '0', '0',
+            '--count-forecasts','%s'%int(initial_config['num.parameters']), 
+                                '%s'%int(subregion_pixel_count),
+                                '%s'%int(initial_config['num.times']),
+                                '%s'%int(initial_config['num.flts']),  
+            '--start-observations','0', '%s'%int(subregion_pixel_start), '0', '0',
+            '--count-observations','1', '%s'%int(subregion_pixel_count), 
+                                    '%s'%int(initial_config['num.times']), 
+                                    '%s'%int(initial_config['num.flts'])])
 
         print t2.arguments
 
