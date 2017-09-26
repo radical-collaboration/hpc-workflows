@@ -28,7 +28,7 @@ resource_key = {
                     'xsede.supermic': 
                                     [   'module load netcdf',      
                                         'module load gcc',
-                                        'export PATH=/home/whu/git/CAnalogsV2/install/bin:$PATH']
+                                        'module load r']
                                 
 
                 }
@@ -145,10 +145,9 @@ if __name__ == '__main__':
 
 
 
-    #try:
-
     # -------------------------- Stage 1 ---------------------------------------
     # Read initial configuration from R function
+
     with open('setup.R', 'r') as f:
         R_code = f.read()
     initial_config = STAP(R_code, 'initial_config')
@@ -160,9 +159,10 @@ if __name__ == '__main__':
         sys.exit(1)
 
     initial_config = process_initial_config(initial_config)
-    
+
     from pprint import pprint
     pprint(initial_config)
+
 
     #except Exception as ex:
     #    print 'Error: %s'%ex
@@ -191,7 +191,11 @@ if __name__ == '__main__':
 
     t1.arguments = [
                         'generate_observation_raster.py',
-                        '--folder', initial_config['folder.raster.obs'],
+                        '--folder_prefix', initial_config['folder.prefix'],
+                        '--folder_accumulate', initial_config['folder.accumulate'],
+                        '--folder_output', initial_config['folder.output'],
+                        '--folder_raster_anen', initial_config['folder.raster.anen'],
+                        '--folder_raster_obs', initial_config['folder.raster.obs'],
                         '--num_times_to_compute', initial_config['num.times.to.compute'],
                         '--num_flts', initial_config['num.flts'],
                         '--file_observations', initial_config['file.observations'],
@@ -391,4 +395,3 @@ if __name__ == '__main__':
         for f in profs:
             os.remove(f)
 
-    

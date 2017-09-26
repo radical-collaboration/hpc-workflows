@@ -2,23 +2,26 @@
 initial_config <- function () {
     require(RAnEnExtra)
 
-    command.exe <- '~/github/CAnalogsV2/install/bin/canalogs'
+    machine = 'supermic'
+    if (machine == 'Weiming') {
+        command.exe <- '~/github/CAnalogsV2/install/bin/canalogs'
+        file.forecasts <- "~/geolab_storage_V2/data/NAM12KM/chunk_NAM/Forecasts_NAM_sliced.nc"
+        file.observations <- "~/geolab_storage_V2/data/NAM12KM/chunk_NAM/analysis_NAM.nc"
+        folder.prefix <- '~/geolab_storage_V2/data/NAM12KM/experiments_smart/'
+    } else if (machine == 'supermic') {
+        # setup on supermic
+        command.exe <- '/home/whu/github/CAnalogsV2/install/bin/canalogs'
+        file.forecasts <- "/home/whu/data/chunk_NAM/Forecasts_NAM_sliced.nc"
+        file.observations <- "/home/whu/data/chunk_NAM/Analysis_NAM.nc"
+        folder.prefix <- '/home/whu/experiments/anen_smart/'
+    }
+
     command.verbose <- '--verbose 0'
-    file.forecasts <- "~/geolab_storage_V2/data/NAM12KM/chunk_NAM/Forecasts_NAM_sliced.nc"
-    file.observations <- "~/geolab_storage_V2/data/NAM12KM/chunk_NAM/analysis_NAM.nc"
-    #folder.prefix <- '~/Research/repos/hpc-workflows/scripts/application_AnEn/anen_base/temp/'
-    folder.prefix <- '~/Desktop/tmp'
     folder.accumulate <- paste(folder.prefix, 'anen_accumulate/', sep = '')
     folder.output <- paste(folder.prefix, 'anen_output/', sep = '')
     folder.raster.anen <- paste(folder.prefix, 'anen_raster/', sep = '')
     folder.raster.obs <- paste(folder.prefix, 'obs_raster/', sep = '')
     folder.tmp <- paste(folder.prefix, 'tmp/', sep = '')
-
-    file.pixels.computed <- paste(folder.prefix, 'pixels_computed_list.rdata', sep = '')
-    if(!file.exists(file.pixels.computed)) {
-        pixels.computed.list <- list()
-        save(pixels.computed.list, file = file.pixels.computed)
-    }
 
     num.flts <- 4
     num.times <- 822
@@ -52,13 +55,6 @@ initial_config <- function () {
     #rast.base <- raster(nrows = ygrids.total, ncols = xgrids.total,
     #                    xmn = 0.5, xmx = xgrids.total+.5,
     #                    ymn = 0.5, ymx = ygrids.total+.5)
-
-    for(folder in c(folder.accumulate, folder.output,
-                    folder.raster.anen, folder.raster.obs)) {
-        if (!dir.exists(folder)) {
-            dir.create(folder, recursive = T)
-        }
-    }
 
     # randomly select pixels to compute
     pixels.compute <- sample.int(grids.total,

@@ -8,7 +8,11 @@ if __name__ == '__main__':
 
 
     parser = argparse.ArgumentParser(description='Process some integers.')
-    parser.add_argument('--folder')
+    parser.add_argument('--folder_prefix'),
+    parser.add_argument('--folder_accumulate'), 
+    parser.add_argument('--folder_output'), 
+    parser.add_argument('--folder_raster_anen'),
+    parser.add_argument('--folder_raster_obs')
     parser.add_argument('--num_times_to_compute')
     parser.add_argument('--num_flts')    
     parser.add_argument('--file_observations')
@@ -23,7 +27,13 @@ if __name__ == '__main__':
         R_code = f.read()
     generate_observation_rasters = STAP(R_code, 'generate_observation_rasters')
     ncdf4 = importr("ncdf4")
-    generate_observation_rasters.generate_observation_rasters(  args.folder,
+    raster = importr("raster")
+    generate_observation_rasters.generate_observation_rasters(  
+                                                                args.folder_prefix, 
+                                                                args.folder_accumulate, 
+                                                                args.folder_output, 
+                                                                args.folder_raster_anen,
+                                                                args.folder_raster_obs,
                                                                 args.num_times_to_compute,
                                                                 args.num_flts,
                                                                 args.file_observations,
