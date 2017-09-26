@@ -191,8 +191,8 @@ if __name__ == '__main__':
 
     t1.arguments = [
                         'generate_observation_raster.py',
-                        '--folder',
-                        '--num_times_to_compute',
+                        '--folder', initial_config['folder.raster.obs'],
+                        '--num_times_to_compute', initial_config['num.times.to.compute'],
                         '--num_flts', initial_config['num.flts'],
                         '--file_observations', initial_config['file.observations'],
                         '--test_ID_start', initial_config['test.ID.start'],
@@ -201,10 +201,6 @@ if __name__ == '__main__':
 
                     ]
     t1.cores = 1
-    t1.link_input_data = [  '$SHARED/generate_observation_raster.py',
-                            '$SHARED/generate_observation_raster.R'
-                    ]
-
 
     s1.add_tasks(t1)
 

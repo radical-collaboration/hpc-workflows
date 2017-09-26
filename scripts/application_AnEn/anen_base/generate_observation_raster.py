@@ -1,8 +1,8 @@
-
 from rpy2.robjects.packages import STAP
 import rpy2
 import rpy2.robjects as robjects
 import argparse
+from rpy2.robjects.packages import importr
 
 if __name__ == '__main__':
 
@@ -22,6 +22,7 @@ if __name__ == '__main__':
     with open('generate_observation_rasters.R', 'r') as f:
         R_code = f.read()
     generate_observation_rasters = STAP(R_code, 'generate_observation_rasters')
+    ncdf4 = importr("ncdf4")
     generate_observation_rasters.generate_observation_rasters(  args.folder,
                                                                 args.num_times_to_compute,
                                                                 args.num_flts,
