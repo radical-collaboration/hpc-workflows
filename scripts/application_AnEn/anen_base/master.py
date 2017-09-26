@@ -88,8 +88,8 @@ def test_initial_config(d):
 
 def process_initial_config(initial_config):
 
-    initial_config['pixels.compute'] = ["%s"%str(int(k)) for k in list(initial_config['pixels.compute'])]
-    initial_config['weights'] = ["%s"%str(int(k)) for k in list(initial_config['weights'])]
+    initial_config['pixels.compute'] = [int(k) for k in list(initial_config['pixels.compute'])]
+    initial_config['weights'] = [int(k) for k in list(initial_config['weights'])]
     initial_config['ycuts'] = [int(k) for k in list(initial_config['ycuts'])]
 
     possible_keys = [   'command.exe',
@@ -236,9 +236,9 @@ if __name__ == '__main__':
     stations_subset = list()
 
     # define weights string
-    weights_string = ''
-    for w in initial_config['weights']:
-        weights_string += w + ' '
+    #weights_string = ''
+    #for w in initial_config['weights']:
+    #    weights_string += w + ' '
 
     for ind in range(len(pixels_list)):
 
@@ -257,11 +257,7 @@ if __name__ == '__main__':
         subregion_pixel_count = initial_config['yinterval'] * initial_config['xgrids.total']
         if ind == len(pixels_list)-1:
             subregion_pixel_count = initial_config['grids.total'] - subregion_pixel_start
-
-        # define pixels
-        pixels_list_string = ''
-        for pixels in pixels_list[ind]:
-            pixels_list_string += str(pixels) + ' '
+        
 
         # define output anen
         file_output_anen = initial_config['folder.tmp'] + 'iteration' + initial_config['iteration'] + '_chunk' + str(ind) + '.nc'
@@ -275,31 +271,31 @@ if __name__ == '__main__':
                 '--train-ID-end', int(initial_config['train.ID.end']),
                 '--observation-ID', int(initial_config['observation.ID']),
                 '--members-size', int(initial_config['members.size']),
-                '--weights', weights_string,
                 '--rolling', int(initial_config['rolling']),
                 '--quick', int(initial_config['quick']),
                 '--cores', int(initial_config['cores']),
-                '--stations-ID', pixels_list_string,
                 '-o', file_output_anen
                 ]
 
-        t2.arguments.extend([
-            '--start-forecasts','0 %s 0 0'%subregion_pixel_start,
-            '--count-forecasts','%s %s %s %s'%(
-                initial_config['num.parameters'],
-                subregion_pixel_count,
-                initial_config['num.times'],
-                initial_config['num.flts']
-                ),  
-            '--start-observations','0 %s 0 0'%subregion_pixel_start,
-            '--count-observations','1 %s %s %s'%(
-                subregion_pixel_count,
-                initial_config['num.times'],
-                initial_config['num.flts']
-                )
-            ])
+        t2.arguments.append('--weights')
+        t2.arguments.extend(initial_config['weights'])
 
-        #print t2.arguments
+        t2.arguments.append('--stations-ID')
+        t2.arguments.extend(initial_config['pixels.compute'])
+
+
+        t2.arguments.extend([
+            '--start-forecasts','0','%s'%subregion_pixel_start, '0', '0',
+            '--count-forecasts','%s'%initial_config['num.parameters'], 
+                                '%s'%subregion_pixel_count,
+                                '%s'%initial_config['num.times'],
+                                '%s'%initial_config['num.flts'],  
+            '--start-observations','0', '%s'%subregion_pixel_start, '0', '0',
+            '--count-observations','1', '%s'%subregion_pixel_count, 
+                                    '%s'%initial_config['num.times'], 
+                                    '%s'%initial_config['num.flts']])
+
+        print t2.arguments
 
 
         anen_task_uids.append(t2.uid)
@@ -416,7 +412,7 @@ if __name__ == '__main__':
         appman.assign_workflow(set([p]))
 
         # Run the application manager -- blocking call
-        appman.run()        
+        #appman.run()        
 
     except Exception, ex:
 
