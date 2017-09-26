@@ -89,6 +89,8 @@ def test_initial_config(d):
 def process_initial_config(initial_config):
 
     initial_config['pixels.compute'] = ["%s"%str(int(k)) for k in list(initial_config['pixels.compute'])]
+    initial_config['ycuts'] = ["%s"%str(int(k)) for k in list(initial_config['ycuts'])]
+    initial_config['weights'] = ["%s"%str(int(k)) for k in list(initial_config['weights'])]
 
     possible_keys = [   'command.exe',
                         'command.verbose',
@@ -109,7 +111,6 @@ def process_initial_config(initial_config):
                         'grids.total',
                         'init.num.pixels.compute',
                         'yinterval',
-                        'ycuts',
                         'quick',
                         'cores',
                         'rolling',
@@ -118,7 +119,6 @@ def process_initial_config(initial_config):
                         'train.ID.end',
                         'test.ID.start',
                         'test.ID.end',
-                        'weights',
                         'members.size',
                         'num.neighbors',
                         'iteration',
@@ -219,7 +219,7 @@ if __name__ == '__main__':
     with open('cut_pixels_along_y.R', 'r') as f:
         R_code = f.read()
     cut_pixels_along_y = STAP(R_code, 'cut_pixels_along_y')
-    pixels_list = cut_pixels_along_y(
+    pixels_list = cut_pixels_along_y.cut_pixels_along_y(
                                         initial_config['pixels.compute'],
                                         initial_config['ycuts'],
                                         initial_config['xgrids.total'],
