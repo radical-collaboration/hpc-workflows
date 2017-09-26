@@ -1,13 +1,10 @@
-###############################
-# prepare observation rasters #
-###############################
-# this can be viewed as a preprocessing stage
+# generate_observation_rasters complete the following steps
+# - generate multiple folders for output
+# - generate a rdata file to keep track of the pixels computed
+# - generate observation rasters for each test day and flt
 #
-# this stage reads data from the observations file and
-# convert the data for each test day and flt to a raster
-#
-# this stage will save time from file I/O during
-# the evaluation stage
+# This should be run on supercomputers because it generates 
+# folders and files on supercomputers
 #
 generate_observation_rasters <- function(
     folder.prefix, folder.accumulate, 
@@ -16,7 +13,14 @@ generate_observation_rasters <- function(
     num.flts, file.observations, test.ID.start,
     xgrids.total, ygrids.total) {
     require(ncdf4)
+    require(raster)
 
+    # convert variable types
+    num.times.to.compute <- as.numeric(num.times.to.compute)
+    num.flts <- as.numeric(num.flts)
+    test.ID.start <- as.numeric(test.ID.start)
+    xgrids.total <- as.numeric(xgrids.total)
+    ygrids.total <- as.numeric(ygrids.total)
 
     # create file to keep track of pixels computed
     file.pixels.computed <- paste(folder.prefix, 'pixels_computed_list.rdata', sep = '')
@@ -28,9 +32,10 @@ generate_observation_rasters <- function(
     # create multiple folders
     for(folder in c(folder.accumulate, folder.output,
                     folder.raster.anen, folder.raster.obs)) {
-        if (!dir.exists(folder)) {
-            dir.create(folder, recursive = T)
-        }
+        #if (!dir.exists(folder)) {
+        # dir.exists function does not exist in older R
+
+        dir.create(folder, recursive = T)
     }
 
     rast.files <- list.files(folder.raster.obs)

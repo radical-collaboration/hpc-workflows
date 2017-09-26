@@ -39,4 +39,4 @@ if __name__ == '__main__':
                                                                 args.file_observations,
                                                                 args.test_ID_start,
                                                                 args.xgrids_total,
-                                                                args.ygrids_total
+                                                                args.ygrids_total)

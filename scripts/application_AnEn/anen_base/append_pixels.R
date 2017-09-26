@@ -1,4 +1,6 @@
-# append the pixels to the list of pixels.computed.list
+# append_pixels appends the pixels to the list of
+# pixels.computed.list. Thus, this function should
+# be called on supercomputers.
 #
 append_pixels <- function(
     pixels, file.pixels.computed) {

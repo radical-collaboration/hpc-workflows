@@ -46,7 +46,6 @@ def test_initial_config(d):
                         'folder.raster.anen',
                         'folder.raster.obs',
                         'folder.tmp',
-                        'file.pixels.computed',
                         'num.flts',
                         'num.times',
                         'num.times.to.compute',
@@ -101,7 +100,6 @@ def process_initial_config(initial_config):
                         'folder.raster.anen',
                         'folder.raster.obs',
                         'folder.tmp',
-                        'file.pixels.computed',
                         'num.flts',
                         'num.times',
                         'num.times.to.compute',
@@ -160,8 +158,8 @@ if __name__ == '__main__':
 
     initial_config = process_initial_config(initial_config)
 
-    from pprint import pprint
-    pprint(initial_config)
+    #from pprint import pprint
+    #pprint(initial_config)
 
 
     #except Exception as ex:
@@ -183,14 +181,14 @@ if __name__ == '__main__':
 
     t1 =  Task()
     t1.pre_exec = [    'module load python/2.7.7/GCC-4.9.0',
-                       'source $HOME/ve_rpy2/bin/activate',
+                       #'source $HOME/ve_rpy2/bin/activate',
                        'module load r',
                        'module load netcdf']
 
     t1.executable = ['python']
 
     t1.arguments = [
-                        'generate_observation_raster.py',
+                        'generate_observation_rasters.py',
                         '--folder_prefix', initial_config['folder.prefix'],
                         '--folder_accumulate', initial_config['folder.accumulate'],
                         '--folder_output', initial_config['folder.output'],
@@ -204,10 +202,14 @@ if __name__ == '__main__':
                         '--ygrids_total', initial_config['ygrids.total']
 
                     ]
+
+    t1.copy_input_data = ['$SHARED/generate_observation_rasters.py','$SHARED/generate_observation_rasters.R']
+
     t1.cores = 1
 
     s1.add_tasks(t1)
 
+    p.add_stages(s1)
 
     '''
 
@@ -358,8 +360,8 @@ if __name__ == '__main__':
     res_dict = {
 
             'resource': 'xsede.supermic',
-            'walltime': 60,
-            'cores': 180,
+            'walltime': 10,
+            'cores': 20,
             'project': 'TG-MCB090174',
             #'queue': 'development',
             'schema': 'gsissh'
@@ -372,8 +374,10 @@ if __name__ == '__main__':
         # Create a Resource Manager using the above description
         rman = ResourceManager(res_dict)
 
+        rman.shared_data = ['./generate_observation_rasters.py', './generate_observation_rasters.R']
+
         # Create an Application Manager for our application
-        appman = AppManager()
+        appman = AppManager(port = 32769)
 
         # Assign the resource manager to be used by the application manager
         appman.resource_manager = rman

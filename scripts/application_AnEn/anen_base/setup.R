@@ -63,6 +63,8 @@ initial_config <- function () {
                                       xgrids.total,
                                       ygrids.total, 0)
 
+    # this file will be generated in stage 1
+
     list.init.config <- list(command.exe = command.exe,
                              command.verbose = command.verbose,
                              file.forecasts = file.forecasts,
@@ -73,7 +75,6 @@ initial_config <- function () {
                              folder.raster.anen = folder.raster.anen,
                              folder.raster.obs = folder.raster.obs,
                              folder.tmp = folder.tmp,
-                             file.pixels.computed = file.pixels.computed,
                              num.flts = num.flts,
                              num.times = num.times,
                              num.times.to.compute = num.times.to.compute,
