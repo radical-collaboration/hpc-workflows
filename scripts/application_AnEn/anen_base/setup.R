@@ -31,7 +31,7 @@ initial_config <- function () {
     xgrids.total <- 614
     grids.total <- xgrids.total*ygrids.total
     init.num.pixels.compute <- 100
-    yinterval <- 200
+    yinterval <- 15
     ycuts <- seq(from = 1, to = ygrids.total, by = yinterval)
 
     quick <- F
