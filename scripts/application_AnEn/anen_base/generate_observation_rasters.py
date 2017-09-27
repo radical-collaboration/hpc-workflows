@@ -12,6 +12,7 @@ if __name__ == '__main__':
     parser.add_argument('--folder_accumulate'), 
     parser.add_argument('--folder_output'), 
     parser.add_argument('--folder_raster_anen'),
+    parser.add_argument('--folder_tmp')
     parser.add_argument('--folder_raster_obs')
     parser.add_argument('--num_times_to_compute')
     parser.add_argument('--num_flts')    
@@ -33,6 +34,7 @@ if __name__ == '__main__':
                                                                 args.folder_accumulate, 
                                                                 args.folder_output, 
                                                                 args.folder_raster_anen,
+                                                                args.folder_tmp,
                                                                 args.folder_raster_obs,
                                                                 args.num_times_to_compute,
                                                                 args.num_flts,
