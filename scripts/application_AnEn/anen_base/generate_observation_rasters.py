@@ -7,9 +7,9 @@ from rpy2.robjects.packages import importr
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Process some integers.')
-    parser.add_argument('--folder_prefix'),
-    parser.add_argument('--folder_accumulate'), 
-    parser.add_argument('--folder_raster_anen'),
+    parser.add_argument('--folder_prefix')
+    parser.add_argument('--folder_accumulate')
+    parser.add_argument('--folder_raster_anen')
     parser.add_argument('--folder_output')
     parser.add_argument('--folder_raster_obs')
     parser.add_argument('--folder_triangles')
@@ -22,22 +22,15 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    # Read evaluation functions from R function
     with open('func_generate_observation_rasters.R', 'r') as f:
         R_code = f.read()
     generate_observation_rasters = STAP(R_code, 'generate_observation_rasters')
+
     ncdf4 = importr("ncdf4")
     raster = importr("raster")
+    
     generate_observation_rasters.generate_observation_rasters(  
-                                                                args.folder_prefix, 
-                                                                args.folder_accumulate, 
-                                                                args.folder_raster_anen,
-                                                                args.folder_output,
-                                                                args.folder_raster_obs,
-                                                                args.folder_triangles,
-                                                                args.num_times_to_compute,
-                                                                args.num_flts,
-                                                                args.file_observations,
-                                                                args.test_ID_start,
-                                                                args.xgrids_total,
-                                                                args.ygrids_total)
+            args.folder_prefix, args.folder_accumulate, args.folder_raster_anen,
+            args.folder_output, args.folder_raster_obs, args.folder_triangles,
+            args.num_times_to_compute, args.num_flts, args.file_observations,
+            args.test_ID_start, args.xgrids_total, args.ygrids_total)

@@ -112,7 +112,6 @@ if __name__ == '__main__':
     p = Pipeline()
     # -------------------------- End of Setup ----------------------------------
 
-
     # -------------------------- Stage 1 ---------------------------------------
     # rasterize the observation data for each test day and flt
     t1 = Task()
@@ -285,26 +284,35 @@ if __name__ == '__main__':
             initial_config['file.pixels.computed'], iteration)
 
     # define pixels for the next iteration
-    s4 = Stage()
     t4 = Task()
     t4.cores = 1
     t4.executable = ['python']
     t4.pre_exec = [
             'module load python/2.7.7/GCC-4.9.0',
-            'module load netcdf',
-            'module load r']
-
+            'module load netcdf', 'module load r']
+    t4.copy_input_data= [
+            '$SHARED/define_pixels.py',
+            '$SHARED/func_define_pixels.R']
     t4.arguments = [
-            'define_pixels.R', 
-            '--stations_ID', stations_subset,
-            '--file_observation', initial_config['file.observation']]
+            'define_pixels.py', 
+            '--iteration', iteration,
+            '--folder_raster_obs', initial_config['folder.raster.obs'],
+            '--folder_accumulate', initial_config['folder.accumulate'],
+            '--folder_triangles', initial_config['folder.triangles'],
+            '--xgrids_total', initial_config['xgrids.total'],
+            '--ygrids_total', initial_config['ygrids.total'],
+            '--test_ID_start', initial_config['test.ID.start'],
+            '--num_flts', initial_config['num.flts'],
+            '--num_pixels_increase', initial_config['num.pixels.increase'],
+            '--num_times_to_compute', initial_config['num.times.to.compute'],
+            '--members_size', initial_config['members.size'],
+            '--threshold_triangle', initial_config['threshold.triangle'],
+            '--pixels_computed', [str(int(k)) for k in pixels_accumulated]]
 
-    t4.upload_input_data = [
-            'define_pixels.R',
-            'define_pixels.py']
-
+    s4 = Stage()
     s4.add_tasks(t4)
     p.add_stages(s4)
+    sys.exit()
     # -------------------------- End of Stage 4 --------------------------------
 
 
@@ -324,7 +332,9 @@ if __name__ == '__main__':
 
         rman.shared_data = [
                 './generate_observation_rasters.py',
-                './func_generate_observation_rasters.R']
+                './func_generate_observation_rasters.R',
+                './define_pixels.py',
+                './func_define_pixels.R']
 
         # Create an Application Manager for our application
         appman = AppManager(port = 32769)
