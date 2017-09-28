@@ -259,25 +259,8 @@ if __name__ == '__main__':
 
     t3.link_input_data = []
 
-    '''
-    # Weiming: I don't know what this is doing
-    #          So I commented it
-    #
-    for ind in range(10):
-        t3.link_input_data += \
-                ['$Pipeline_%s_Stage_%s_Task_%s/%s-starts-%s-ends-%s.nc'%(
-                    p.uid, s1.uid, anen_task_uids[ind],
-                    os.path.basename(initial_config['output.AnEn']).split('.')[0],
-                    initial_config['stations.ID'][ind*10],
-                    initial_config['stations.ID'][(ind+1)*10])]
-
-        t3.arguments.append('%s-starts-%s-ends-%s.nc'%(
-            os.path.basename(initial_config['output.AnEn']).split('.')[0],
-            initial_config['stations.ID'][ind*10],
-            initial_config['stations.ID'][(ind+1)*10]))
-    '''
-
     s3.add_tasks(t3)
+
     p.add_stages(s3)
     # -------------------------- End of Stage 3 --------------------------------
 
