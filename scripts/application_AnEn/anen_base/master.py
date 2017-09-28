@@ -32,13 +32,14 @@ def test_initial_config(d):
             'command.exe', 'command.verbose', 'file.forecasts',
             'file.observations', 'file.pixels.computed', 'folder.prefix',
             'folder.accumulate', 'folder.output', 'folder.raster.anen',
-            'folder.raster.obs', 'folder.tmp', 'num.flts', 'num.times',
-            'num.times.to.compute', 'num.parameters', 'ygrids.total',
-            'xgrids.total', 'grids.total', 'init.num.pixels.compute',
+            'folder.raster.obs', 'folder.local', 'folder.triangles',
+            'num.flts', 'num.times', 'num.times.to.compute',
+            'num.parameters', 'ygrids.total', 'xgrids.total',
+            'grids.total', 'init.num.pixels.compute',
             'yinterval', 'ycuts', 'quick', 'cores', 'rolling',
             'observation.ID', 'train.ID.start', 'train.ID.end',
             'test.ID.start', 'test.ID.end', 'weights', 'members.size',
-            'num.neighbors', 'iteration', 'threshold.triangle',
+            'num.neighbors', 'init.iteration', 'threshold.triangle',
             'num.pixels.increase', 'debug', 'pixels.compute']
 
     all_ok = True
@@ -66,12 +67,12 @@ def process_initial_config(initial_config):
             'command.exe', 'command.verbose', 'file.forecasts',
             'file.observations', 'file.pixels.computed', 'folder.prefix',
             'folder.accumulate', 'folder.output', 'folder.raster.anen',
-            'folder.raster.obs', 'folder.tmp', 'num.flts', 'num.times',
-            'num.times.to.compute', 'num.parameters', 'ygrids.total',
-            'xgrids.total', 'grids.total', 'init.num.pixels.compute',
+            'folder.raster.obs', 'folder.local', 'folder.triangles',
+            'num.flts', 'num.times', 'num.times.to.compute', 'num.parameters',
+            'ygrids.total', 'xgrids.total', 'grids.total', 'init.num.pixels.compute',
             'yinterval', 'quick', 'cores', 'rolling', 'observation.ID',
             'train.ID.start', 'train.ID.end', 'test.ID.start', 'test.ID.end',
-            'members.size', 'num.neighbors', 'iteration', 'threshold.triangle',
+            'members.size', 'num.neighbors', 'init.iteration', 'threshold.triangle',
             'num.pixels.increase', 'debug']
 
     for keys in possible_keys:
@@ -87,11 +88,13 @@ def process_initial_config(initial_config):
 if __name__ == '__main__':
 
     # -------------------------- Setup -----------------------------------------
+    # ENTK and AnEn parameters setup
+
     # Read initial configuration from R function
-    with open('setup.R', 'r') as f:
+    with open('func_setup.R', 'r') as f:
         R_code = f.read()
-    initial_config = STAP(R_code, 'initial_config')
     RAnEnExtra = importr("RAnEnExtra")
+    initial_config = STAP(R_code, 'initial_config')
     config = initial_config.initial_config()
     initial_config = dict(zip(config.names, list(config)))
 
@@ -100,7 +103,10 @@ if __name__ == '__main__':
 
     initial_config = process_initial_config(initial_config)
 
-    iteration = initial_config['iteration']
+    iteration = initial_config['init.iteration']
+    
+    # list to keep track of the combined output AnEn files to be accumulated
+    files_output = list()
 
     # Our application currently will contain only one pipeline
     p = Pipeline()
@@ -117,25 +123,21 @@ if __name__ == '__main__':
             'module load python/2.7.7/GCC-4.9.0']
     t1.copy_input_data = [
             '$SHARED/generate_observation_rasters.py',
-            '$SHARED/generate_observation_rasters.R']
+            '$SHARED/func_generate_observation_rasters.R']
     t1.arguments = [
             'generate_observation_rasters.py',
             '--folder_prefix', initial_config['folder.prefix'],
             '--folder_accumulate', initial_config['folder.accumulate'],
             '--folder_output', initial_config['folder.output'],
-            '--folder_tmp', initial_config['folder.tmp'],
             '--folder_raster_anen', initial_config['folder.raster.anen'],
             '--folder_raster_obs', initial_config['folder.raster.obs'],
+            '--folder_triangles', initial_config['folder.triangles'],
             '--num_times_to_compute', initial_config['num.times.to.compute'],
             '--num_flts', initial_config['num.flts'],
             '--file_observations', initial_config['file.observations'],
             '--test_ID_start', initial_config['test.ID.start'],
             '--xgrids_total', initial_config['xgrids.total'],
             '--ygrids_total', initial_config['ygrids.total']]
-
-    # not needed in the first iteration
-    #t1.download_output_data = ['%s/pixels_computed_list.rdata'%initial_config['folder.prefix']] 
-    # Call R function locally on pixels_computed_list.rdata
 
     s1 = Stage()
     s1.add_tasks(t1)
@@ -146,7 +148,7 @@ if __name__ == '__main__':
     # compute AnEn for each subregion 
 
     # get the pixels to compute for each subregion
-    with open('cut_pixels_along_y.R', 'r') as f:
+    with open('func_cut_pixels_along_y.R', 'r') as f:
         R_code = f.read()
     cut_pixels_along_y = STAP(R_code, 'cut_pixels_along_y')
     pixels_list = cut_pixels_along_y.cut_pixels_along_y(
@@ -156,7 +158,7 @@ if __name__ == '__main__':
             initial_config['ygrids.total'])
 
     # save the pixels to be computed for the 1st iteration
-    with open('save_pixels_computed.R', 'r') as f:
+    with open('func_save_pixels_computed.R', 'r') as f:
         R_code = f.read()
     save_pixels_computed = STAP(R_code, 'save_pixels_computed')
     save_pixels_computed.save_pixels_computed(  
@@ -196,7 +198,7 @@ if __name__ == '__main__':
 
         # define output anen
         file_subregion = (
-                initial_config['folder.tmp'] +
+                initial_config['folder.output'] +
                 'iteration' + iteration +
                 '_chunk' + str(ind).zfill(4) + '.nc')
 
@@ -245,99 +247,84 @@ if __name__ == '__main__':
     # -------------------------- End of Stage 2 --------------------------------
 
     # -------------------------- Stage 3 ---------------------------------------
-    # combine the AnEn output files for different subregions from stage 1 
+    # combine the AnEn output files for different subregions from the current iteration
+    # and the AnEn output files from the previous iterations
+    #
     s3 = Stage()
     t3 = Task()
     t3.executable = [initial_config['command.exe']]
     t3.pre_exec = resource_key['xsede.supermic']
 
-    file_output = '%siteration%s.nc' % (initial_config['folder.output'], iteration)
+    file_output = '%siteration%s.nc' % (initial_config['folder.accumulate'], iteration)
 
     t3.arguments = ['-C', '--file-new', file_output]
     t3.arguments.append('--files-from')
+
+    # combine files from previous iterations
+    t3.arguments.extend([k for k in files_output])
+
+    # combine files from subregions of the current iteration
     t3.arguments.extend([k for k in files_subregion])
 
-    t3.link_input_data = []
-
-    '''
-    # Weiming: I don't know what this is doing
-    #          So I commented it
-    #
-    for ind in range(10):
-        t3.link_input_data += \
-                ['$Pipeline_%s_Stage_%s_Task_%s/%s-starts-%s-ends-%s.nc'%(
-                    p.uid, s1.uid, anen_task_uids[ind],
-                    os.path.basename(initial_config['output.AnEn']).split('.')[0],
-                    initial_config['stations.ID'][ind*10],
-                    initial_config['stations.ID'][(ind+1)*10])]
-
-        t3.arguments.append('%s-starts-%s-ends-%s.nc'%(
-            os.path.basename(initial_config['output.AnEn']).split('.')[0],
-            initial_config['stations.ID'][ind*10],
-            initial_config['stations.ID'][(ind+1)*10]))
-    '''
+    # add the output file of this stage to the tracking list
+    files_output.append(file_output)
 
     s3.add_tasks(t3)
     p.add_stages(s3)
     # -------------------------- End of Stage 3 --------------------------------
 
-    '''
     # -------------------------- Stage 4 ---------------------------------------
+    # define triangles and evaluate the errors of the triangle vertices;
+    # then define the pixels to compute for the next iteration
+    #
+    # read accumulated pixels computed
+    with open('func_read_pixels_computed.R', 'r') as f:
+        R_code = f.read()
+    read_pixels_computed = STAP(R_code, 'read_pixels_computed')
+    pixels_accumulated = read_pixels_computed.read_pixels_computed(
+            initial_config['file.pixels.computed'], iteration)
 
-
-    # Third stage corresponds to evaluation of interpolated data
+    # define pixels for the next iteration
     s4 = Stage()
-
     t4 = Task()
-    t4.executable    = ['python']
-    t4.pre_exec      =  [   'module load python/2.7.7/GCC-4.9.0',
-                            'source $HOME/ve_rpy2/bin/activate',
-                            'module load r',
-                            'module load netcdf']
-    t4.cores         = 1
-    t4.arguments     = [ 'evaluation.py', 
-                        '--file_observation', initial_config['file.observation'],
-                        '--file_AnEn', initial_config['output.AnEn'],
-                        '--stations_ID', stations_subset,
-                        '--test_ID_start', initial_config['test.ID.start'],
-                        '--test_ID_end', initial_config['test.ID.end'],
-                        '--nflts', initial_config['num.flts'],
-                        '--nrows', initial_config['nrows'],
-                        '--ncols', initial_config['ncols']
-                    ]
-    t4.upload_input_data = ['./evaluation.py', './evaluation.R']
-    t4.link_input_data = ['$Pipeline_%s_$Stage_%s_$Task_%s/%s'%(
-                                                                p.uid,
-                                                                s2.uid,
-                                                                t2.uid,
-                                                                initial_config['output.AnEn']
-                                                            )]
+    t4.cores = 1
+    t4.executable = ['python']
+    t4.pre_exec = [
+            'module load python/2.7.7/GCC-4.9.0',
+            'module load netcdf',
+            'module load r']
 
+    t4.arguments = [
+            'define_pixels.R', 
+            '--stations_ID', stations_subset,
+            '--file_observation', initial_config['file.observation']]
+
+    t4.upload_input_data = [
+            'define_pixels.R',
+            'define_pixels.py']
 
     s4.add_tasks(t4)
     p.add_stages(s4)
-    # --------------------------------------------------------------------------
+    # -------------------------- End of Stage 4 --------------------------------
 
-    '''
+
     # Create a dictionary to describe our resource request
     res_dict = {
-
             'resource': 'xsede.supermic',
             'walltime': 10,
             'cores': 20,
             'project': 'TG-MCB090174',
             #'queue': 'development',
-            'schema': 'gsissh'
-
-            }
-
+            'schema': 'gsissh'}
 
     try:
 
         # Create a Resource Manager using the above description
         rman = ResourceManager(res_dict)
 
-        rman.shared_data = ['./generate_observation_rasters.py', './generate_observation_rasters.R']
+        rman.shared_data = [
+                './generate_observation_rasters.py',
+                './func_generate_observation_rasters.R']
 
         # Create an Application Manager for our application
         appman = AppManager(port = 32769)

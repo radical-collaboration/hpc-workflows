@@ -8,8 +8,8 @@
 #
 generate_observation_rasters <- function(
     folder.prefix, folder.accumulate, 
-    folder.output, folder.raster.anen,
-    folder.tmp, folder.raster.obs,
+    folder.raster.anen, folder.output,
+    folder.raster.obs, folder.triangles,
     num.times.to.compute, num.flts,
     file.observations, test.ID.start,
     xgrids.total, ygrids.total) {
@@ -19,7 +19,7 @@ generate_observation_rasters <- function(
     # some setup work
     # create multiple folders
     #
-    for(folder in c(folder.tmp, folder.accumulate, folder.output,
+    for(folder in c(folder.accumulate, folder.output, folder.triangles,
                     folder.raster.anen, folder.raster.obs)) {
         #if (!dir.exists(folder)) {
         # dir.exists function does not exist in older R

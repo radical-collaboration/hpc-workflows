@@ -1,10 +1,9 @@
 # set up basic parameters that would be shared by all processes
-initial_config <- function () {
+initial_config <- function (machine = 'supermic') {
     require(RAnEnExtra)
 
     prefix_time <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S")
 
-    machine = 'supermic'
     if (machine == 'Weiming') {
         command.exe <- '~/github/CAnalogsV2/install/bin/canalogs'
         file.forecasts <- "~/geolab_storage_V2/data/NAM12KM/chunk_NAM/Forecasts_NAM_sliced.nc"
@@ -19,14 +18,17 @@ initial_config <- function () {
                                prefix_time, '/', sep = '')
     }
 
-    file.pixels.computed <- paste('./pixels_computed_list_', prefix_time, '.rdata', sep = '')
+    folder.local <- paste('./local_', prefix_time, '/', sep = '')
+    dir.create(folder.local, recursive = T)
+    
+    file.pixels.computed <- paste(folder.local, 'pixels_computed_list.rdata', sep = '')
 
     command.verbose <- '--verbose 0'
     folder.accumulate <- paste(folder.prefix, 'anen_accumulate/', sep = '')
     folder.output <- paste(folder.prefix, 'anen_output/', sep = '')
     folder.raster.anen <- paste(folder.prefix, 'anen_raster/', sep = '')
     folder.raster.obs <- paste(folder.prefix, 'obs_raster/', sep = '')
-    folder.tmp <- paste(folder.prefix, 'tmp/', sep = '')
+    folder.triangles <- paste(folder.prefix, 'triangles/', sep = '')
 
     num.flts <- 4
     num.times <- 822
@@ -51,7 +53,7 @@ initial_config <- function () {
     members.size <- 20
 
     num.neighbors <- 2
-    iteration <- '0001'
+    init.iteration <- '0001'
     threshold.triangle <- 2
     num.pixels.increase <- 10
 
@@ -74,11 +76,12 @@ initial_config <- function () {
                              file.observations = file.observations,
                              file.pixels.computed = file.pixels.computed,
                              folder.prefix = folder.prefix,
+                             folder.local = folder.local,
                              folder.accumulate = folder.accumulate,
                              folder.output = folder.output,
                              folder.raster.anen = folder.raster.anen,
                              folder.raster.obs = folder.raster.obs,
-                             folder.tmp = folder.tmp,
+                             folder.triangles = folder.triangles,
                              num.flts = num.flts,
                              num.times = num.times,
                              num.times.to.compute = num.times.to.compute,
@@ -101,7 +104,7 @@ initial_config <- function () {
                              weights = weights,
                              members.size = members.size,
                              num.neighbors = num.neighbors,
-                             iteration = iteration,
+                             init.iteration = init.iteration,
                              threshold.triangle = threshold.triangle,
                              num.pixels.increase = num.pixels.increase,
                              debug = debug)
