@@ -16,21 +16,9 @@ generate_observation_rasters <- function(
     require(ncdf4)
     require(raster)
 
-    # convert variable types
-    num.times.to.compute <- as.numeric(num.times.to.compute)
-    num.flts <- as.numeric(num.flts)
-    test.ID.start <- as.numeric(test.ID.start)
-    xgrids.total <- as.numeric(xgrids.total)
-    ygrids.total <- as.numeric(ygrids.total)
-
-    # create file to keep track of pixels computed
-    file.pixels.computed <- paste(folder.prefix, 'pixels_computed_list.rdata', sep = '')
-    if(!file.exists(file.pixels.computed)) {
-        pixels.computed.list <- list()
-        save(pixels.computed.list, file = file.pixels.computed)
-    }
-
+    # some setup work
     # create multiple folders
+    #
     for(folder in c(folder.tmp, folder.accumulate, folder.output,
                     folder.raster.anen, folder.raster.obs)) {
         #if (!dir.exists(folder)) {
@@ -38,6 +26,13 @@ generate_observation_rasters <- function(
 
         dir.create(folder, recursive = T)
     }
+
+    # convert variable types
+    num.times.to.compute <- as.numeric(num.times.to.compute)
+    num.flts <- as.numeric(num.flts)
+    test.ID.start <- as.numeric(test.ID.start)
+    xgrids.total <- as.numeric(xgrids.total)
+    ygrids.total <- as.numeric(ygrids.total)
 
     rast.files <- list.files(folder.raster.obs)
     num.of.files <- length(rast.files)

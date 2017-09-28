@@ -2,6 +2,8 @@
 initial_config <- function () {
     require(RAnEnExtra)
 
+    prefix_time <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S")
+
     machine = 'supermic'
     if (machine == 'Weiming') {
         command.exe <- '~/github/CAnalogsV2/install/bin/canalogs'
@@ -13,8 +15,11 @@ initial_config <- function () {
         command.exe <- '/home/whu/github/CAnalogsV2/install/bin/canalogs'
         file.forecasts <- "/home/whu/data/chunk_NAM/Forecasts_NAM_sliced.nc"
         file.observations <- "/home/whu/data/chunk_NAM/Analysis_NAM.nc"
-        folder.prefix <- '/home/whu/experiments/anen_smart/'
+        folder.prefix <- paste('/home/whu/experiments/anen_smart/',
+                               prefix_time, '/', sep = '')
     }
+
+    file.pixels.computed <- paste('./pixels_computed_list_', prefix_time, '.rdata', sep = '')
 
     command.verbose <- '--verbose 0'
     folder.accumulate <- paste(folder.prefix, 'anen_accumulate/', sep = '')
@@ -63,12 +68,11 @@ initial_config <- function () {
                                       xgrids.total,
                                       ygrids.total, 0)
 
-    # this file will be generated in stage 1
-
     list.init.config <- list(command.exe = command.exe,
                              command.verbose = command.verbose,
                              file.forecasts = file.forecasts,
                              file.observations = file.observations,
+                             file.pixels.computed = file.pixels.computed,
                              folder.prefix = folder.prefix,
                              folder.accumulate = folder.accumulate,
                              folder.output = folder.output,

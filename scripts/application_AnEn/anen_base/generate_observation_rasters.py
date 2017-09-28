@@ -1,11 +1,10 @@
-from rpy2.robjects.packages import STAP
+import argparse
 import rpy2
 import rpy2.robjects as robjects
-import argparse
+from rpy2.robjects.packages import STAP
 from rpy2.robjects.packages import importr
 
 if __name__ == '__main__':
-
 
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('--folder_prefix'),
