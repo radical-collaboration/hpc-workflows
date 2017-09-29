@@ -66,6 +66,7 @@ if __name__ == '__main__':
     flag = preprocess(initial_config, res_dict, resource_key['xsede.supermic'])
     
     if not flag:
+        print "Preprocess didn't return True"
         sys.exit(1)
     # -------------------------- End of Preprocess  ----------------------------
 
@@ -81,5 +82,6 @@ if __name__ == '__main__':
             res_dict, pixels_compute, files_output)
 
     if not flag:
+        print "Iteration didn't return True"
         sys.exit(1)
     # -------------------------- End of Iteration  -----------------------------

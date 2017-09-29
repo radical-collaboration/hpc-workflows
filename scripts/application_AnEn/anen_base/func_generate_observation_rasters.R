@@ -22,16 +22,14 @@ generate_observation_rasters <- function(
     #
     for(folder in c(folder.accumulate, folder.output, folder.triangles,
                     folder.raster.anen, folder.raster.obs)) {
-        #if (!dir.exists(folder)) {
-        # dir.exists function does not exist in older R
-
-        dir.create(folder, recursive = T)
+        dir.create(folder, showWarnings = FALSE, recursive = T)
     }
 
     # convert variable types
-    num.times.to.compute <- as.numeric(num.times.to.compute)
     num.flts <- as.numeric(num.flts)
+    num.times.to.compute <- as.numeric(num.times.to.compute)
     test.ID.start <- as.numeric(test.ID.start)
+    test.ID.index<- as.numeric(test.ID.index)
     xgrids.total <- as.numeric(xgrids.total)
     ygrids.total <- as.numeric(ygrids.total)
 
