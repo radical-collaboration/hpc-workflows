@@ -167,10 +167,6 @@ if __name__ == '__main__':
     # Second stage corresponds to the AnEn computation
     s2 = Stage()
 
-    # List to catch all the uids of the AnEn tasks
-    anen_task_uids = list()
-    stations_subset = list()
-
     # list to keep track of the AnEn subregion output files
     files_subregion = list()
 
@@ -235,8 +231,6 @@ if __name__ == '__main__':
             '--count-observations','1', '%s'%int(subregion_pixel_count), 
             '%s'%int(initial_config['num.times']), 
             '%s'%int(initial_config['num.flts'])])
-
-        anen_task_uids.append(t2.uid)
 
         # Add this task to our stage
         s2.add_tasks(t2)
@@ -321,8 +315,8 @@ if __name__ == '__main__':
     # Create a dictionary to describe our resource request
     res_dict = {
             'resource': 'xsede.supermic',
-            'walltime': 20,
-            'cores': 30,
+            'walltime': 60,
+            'cores': 40,
             'project': 'TG-MCB090174',
             #'queue': 'development',
             'schema': 'gsissh'}
