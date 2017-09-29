@@ -140,4 +140,5 @@ define_pixels <- function(
 
     write(pixels.next.iteration , file = 'pixels_next_iteration.txt',
           ncolumns = length(pixels.next.iteration))
+    print("Done!")
 }
