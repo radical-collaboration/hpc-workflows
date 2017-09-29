@@ -5,7 +5,7 @@
 #
 define_pixels <- function(
     iteration, folder.raster.obs, folder.accumulate, folder.triangles,
-    pixels.computed, xgrids.total, ygrids.total, test.ID.start,
+    pixels.computed, xgrids.total, ygrids.total,
     num.flts, num.pixels.increase, num.times.to.compute, members.size,
     threshold.triangle) {
 
@@ -14,32 +14,35 @@ define_pixels <- function(
     require(spatstat) 
     require(maptools)
     require(RAnEnExtra)
+    require(stringr)
+    require(ncdf4)
 
     # convert argument types
     iteration <- str_pad(as.numeric(iteration), 4, pad = '0')
+    pixels.computed <- as.numeric(unlist(pixels.computed))
 
     xgrids.total <- as.numeric(xgrids.total)
     ygrids.total <- as.numeric(ygrids.total)
-    test.ID.start <- as.numeric(test.ID.start)
     num.flts <- as.numeric(num.flts)
     num.times.to.compute <- as.numeric(num.times.to.compute)
     num.pixels.increase <- as.numeric(num.pixels.increase)
     members.size <- as.numeric(members.size)
     threshold.triangle <- as.numeric(threshold.triangle)
 
-    pixels.computed <- as.numeric(unlist(pixels.computed))
-    
 
     #############################
     # define and save triangles #
     #############################
+    print("Define and save triangles")
+
     # convert pixel indices to x and y coordinates
     x <- pixels.to.x.by.row(pixels.computed, xgrids.total, 0)
     y <- pixels.to.y.by.row(pixels.computed, xgrids.total, 0)
 
     # define triangles
     df <- data.frame(x, y)
-    W <- ripras(df, shape = 'rectangle')
+    #W <- ripras(df, shape = 'rectangle')
+    W <- owin(xrange = c(1, xgrids.total), yrange = c(1, ygrids.total))
     polys.triangles <- as(delaunay(as.ppp(df, W = W)), "SpatialPolygons")
 
     # save triangles
@@ -51,10 +54,13 @@ define_pixels <- function(
     #############################################
     # compute errors over the triangle vertices #
     #############################################
+    print("Compute errors over the triangle vertices")
+
     errors.triangle <- array(NA, dim = c(num.times.to.compute, num.flts,
                                          length(polys.triangles)))
     for (i in 1:num.times.to.compute) {
         for (j in 1:num.flts) {
+            print(paste("Processing test day ", i, " flt ", j, sep = ''))
 
             # read anen accumulated NetCDF file
             file.anen <- paste(folder.accumulate, 'iteration',
@@ -62,7 +68,7 @@ define_pixels <- function(
             if (file.exists(file.anen)) {
                 nc <- nc_open(file.anen)
                 data.anen <- ncvar_get(nc, 'Data',
-                                       start = c(0, test_ID_start + i - 1, j - 1, 0),
+                                       start = c(1, i, j, 1),
                                        count = c(length(pixels.computed), 1, 1, members.size))
             } else {
                 stop(paste("Can't find AnEn file", file.anen))
@@ -75,7 +81,7 @@ define_pixels <- function(
             file.raster.obs <- paste(folder.raster.obs, 'day', i,
                                      '_flt', j, '.rdata', sep = '')
             if (file.exists(file.raster.obs)) {
-                rast.obs <- raster(file.raster.obs)
+                load(file.raster.obs)
                 data.obs <- rast.obs[(y-1) + x]
             } else {
                 stop(paste("Can't find observation raster", file.raster.obs))
@@ -109,12 +115,14 @@ define_pixels <- function(
     #################
     # define pixels #
     #################
+    print("Define pixels to compute for the next iteration")
+
     # find out the triangles that have too large errors
     triangles.index.to.continue <- which(errors.triangle.average > threshold.triangle)
 
     # define pixels for the next iteration
     pixels.next.iteration <- vector(mode = 'numeric')
-    for (in in triangles.index.to.continue) {
+    for (i in triangles.index.to.continue) {
         triangle <- polys.triangles[i]
         pts.selected <- random.points.in.triangle(triangle, num.pixels.increase)
         pixels.next.iteration <- c(pixels.next.iteration,
@@ -126,6 +134,9 @@ define_pixels <- function(
                                                         pixels.next.iteration))
     pixels.next.iteration <- pixels.next.iteration[length(pixels.computed)+1 :
                                                    length(pixels.next.iteration)]
+
+    print(paste("The amount of the pixels for the next iteration is",
+                length(pixels.next.iteration)))
 
     write(pixels.next.iteration , file = 'pixels_next_iteration.txt',
           ncolumns = length(pixels.next.iteration))

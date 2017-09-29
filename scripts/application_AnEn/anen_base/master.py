@@ -282,6 +282,7 @@ if __name__ == '__main__':
     read_pixels_computed = STAP(R_code, 'read_pixels_computed')
     pixels_accumulated = read_pixels_computed.read_pixels_computed(
             initial_config['file.pixels.computed'], iteration)
+    pixels_accumulated_str = ' '.join([str(int(k)) for k in pixels_accumulated])
 
     # define pixels for the next iteration
     t4 = Task()
@@ -299,28 +300,29 @@ if __name__ == '__main__':
             '--folder_raster_obs', initial_config['folder.raster.obs'],
             '--folder_accumulate', initial_config['folder.accumulate'],
             '--folder_triangles', initial_config['folder.triangles'],
-            '--xgrids_total', initial_config['xgrids.total'],
-            '--ygrids_total', initial_config['ygrids.total'],
-            '--test_ID_start', initial_config['test.ID.start'],
-            '--num_flts', initial_config['num.flts'],
-            '--num_pixels_increase', initial_config['num.pixels.increase'],
-            '--num_times_to_compute', initial_config['num.times.to.compute'],
-            '--members_size', initial_config['members.size'],
+            '--xgrids_total', int(initial_config['xgrids.total']),
+            '--ygrids_total', int(initial_config['ygrids.total']),
+            '--num_flts', int(initial_config['num.flts']),
+            '--num_pixels_increase', int(initial_config['num.pixels.increase']),
+            '--num_times_to_compute', int(initial_config['num.times.to.compute']),
+            '--members_size', int(initial_config['members.size']),
             '--threshold_triangle', initial_config['threshold.triangle'],
-            '--pixels_computed', [str(int(k)) for k in pixels_accumulated]]
+            '--pixels_computed', pixels_accumulated_str]
+    t4.download_output_data = [
+            'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (
+                initial_config['folder.local'], iteration)]
 
     s4 = Stage()
     s4.add_tasks(t4)
     p.add_stages(s4)
-    sys.exit()
     # -------------------------- End of Stage 4 --------------------------------
 
 
     # Create a dictionary to describe our resource request
     res_dict = {
             'resource': 'xsede.supermic',
-            'walltime': 10,
-            'cores': 20,
+            'walltime': 20,
+            'cores': 30,
             'project': 'TG-MCB090174',
             #'queue': 'development',
             'schema': 'gsissh'}

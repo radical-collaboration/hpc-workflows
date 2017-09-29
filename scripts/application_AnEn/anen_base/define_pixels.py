@@ -14,7 +14,6 @@ if __name__ == '__main__':
     parser.add_argument('--pixels_computed')
     parser.add_argument('--xgrids_total')
     parser.add_argument('--ygrids_total')
-    parser.add_argument('--test_ID_start')
     parser.add_argument('--num_flts')
     parser.add_argument('--num_pixels_increase')
     parser.add_argument('--num_times_to_compute')
@@ -23,19 +22,22 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    pixels_computed = [k for k in args.pixels_computed.split(' ')]
+
     with open('func_define_pixels.R', 'r') as f:
         R_code = f.read()
-    define_pixels = STAP(R_code, 'define_pixels')
 
+    ncdf4 = importr("ncdf4")
     raster = importr("raster")
     deldir = importr("deldir")
+    stringr = importr("stringr")
     spatstat = importr("spatstat") 
     maptools = importr("maptools")
     RAnEnExtra = importr("RAnEnExtra")
 
+    define_pixels = STAP(R_code, 'define_pixels')
     define_pixels.define_pixels(
             args.iteration, args.folder_raster_obs, args.folder_accumulate,
-            args.triangles, args.pixels_computed, args.xgrids_total,
-            args.ygrids_total, args.test_ID_start, args.num_flts,
-            args.num_pixels_increase, args.num_times_to_compute,
-            args.members_size, args.threshold_triangle)
+            args.folder_triangles, pixels_computed, args.xgrids_total,
+            args.ygrids_total, args.num_flts, args.num_pixels_increase,
+            args.num_times_to_compute, args.members_size, args.threshold_triangle)
