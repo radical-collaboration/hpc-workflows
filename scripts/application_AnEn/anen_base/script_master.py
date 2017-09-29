@@ -121,10 +121,10 @@ if __name__ == '__main__':
             'module load r', 'module load netcdf',
             'module load python/2.7.7/GCC-4.9.0']
     t1.copy_input_data = [
-            '$SHARED/generate_observation_rasters.py',
+            '$SHARED/script_generate_observation_rasters.py',
             '$SHARED/func_generate_observation_rasters.R']
     t1.arguments = [
-            'generate_observation_rasters.py',
+            'script_generate_observation_rasters.py',
             '--folder_prefix', initial_config['folder.prefix'],
             '--folder_accumulate', initial_config['folder.accumulate'],
             '--folder_output', initial_config['folder.output'],
@@ -286,10 +286,10 @@ if __name__ == '__main__':
             'module load python/2.7.7/GCC-4.9.0',
             'module load netcdf', 'module load r']
     t4.copy_input_data= [
-            '$SHARED/define_pixels.py',
+            '$SHARED/script_define_pixels.py',
             '$SHARED/func_define_pixels.R']
     t4.arguments = [
-            'define_pixels.py', 
+            'script_define_pixels.py', 
             '--iteration', iteration,
             '--folder_raster_obs', initial_config['folder.raster.obs'],
             '--folder_accumulate', initial_config['folder.accumulate'],
@@ -327,9 +327,9 @@ if __name__ == '__main__':
         rman = ResourceManager(res_dict)
 
         rman.shared_data = [
-                './generate_observation_rasters.py',
+                './script_generate_observation_rasters.py',
                 './func_generate_observation_rasters.R',
-                './define_pixels.py',
+                './script_define_pixels.py',
                 './func_define_pixels.R']
 
         # Create an Application Manager for our application
