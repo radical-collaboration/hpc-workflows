@@ -15,6 +15,7 @@ def preprocess (configs, res_dict, pre_exec):
     p = Pipeline()
 
     # -------------------------- Stage 1 ---------------------------------------
+    for ind in range(configs['num.times.to.compute']):
     t = Task()
     t.cores = 1
     t.pre_exec = pre_exec
@@ -24,6 +25,8 @@ def preprocess (configs, res_dict, pre_exec):
             '$SHARED/func_generate_observation_rasters.R']
     t.arguments = [
             'script_generate_observation_rasters.py',
+            '--test_ID_index', ind+1,
+            '--test_ID_start', configs['test.ID.start'],
             '--folder_prefix', configs['folder.prefix'],
             '--folder_accumulate', configs['folder.accumulate'],
             '--folder_output', configs['folder.output'],
@@ -33,7 +36,6 @@ def preprocess (configs, res_dict, pre_exec):
             '--num_times_to_compute', configs['num.times.to.compute'],
             '--num_flts', configs['num.flts'],
             '--file_observations', configs['file.observations'],
-            '--test_ID_start', configs['test.ID.start'],
             '--xgrids_total', configs['xgrids.total'],
             '--ygrids_total', configs['ygrids.total']]
 
@@ -61,7 +63,10 @@ def preprocess (configs, res_dict, pre_exec):
         appman.assign_workflow(set([p]))
 
         # Run the application manager -- blocking call
-        appman.run()
+        if configs['debug']:
+            print "preprocess debug mode ..."
+        else:
+            appman.run()
 
     except Exception, ex:
 

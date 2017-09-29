@@ -4,6 +4,7 @@ import rpy2.robjects as robjects
 from glob import glob
 from py_func_preprocess import preprocess
 from rpy2.robjects.packages import STAP, importr
+from py_func_start_iteration import start_iteration
 from py_func_initial_config import test_initial_config
 from py_func_initial_config import process_initial_config
 from radical.entk import Pipeline, Stage, Task, AppManager, ResourceManager
@@ -66,3 +67,19 @@ if __name__ == '__main__':
     
     if not flag:
         sys.exit(1)
+    # -------------------------- End of Preprocess  ----------------------------
+
+    # -------------------------- Iteration  ------------------------------------
+    iteration = int(initial_config['init.iteration'])
+    pixels_compute = initial_config['pixels.compute']
+
+    # a list to keep track of the AnEn combined output files
+    files_output = list()
+
+    flag = start_iteration(
+            iteration, initial_config, resource_key['xsede.supermic'],
+            res_dict, pixels_compute, files_output)
+
+    if not flag:
+        sys.exit(1)
+    # -------------------------- End of Iteration  -----------------------------

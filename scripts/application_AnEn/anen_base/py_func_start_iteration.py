@@ -13,24 +13,45 @@ supercomputers and evaluate the results
 '''
 
 def start_iteration (
-        iteration, pixels_compute, ycuts, yinterval,
-        xgrids_total, ygrids_total, grids_total,
-        num_parameters, num_times, num_flts,
-        num_pixels_increase, threashold_triangle,
-        str_folder_output, str_folder_accumulate,
-        str_folder_raster_obs, str_folder_triangles,
-        str_file_forecasts, str_file_observations,
-        str_folder_local, str_file_pixels_computed,
-        str_cores, str_command_exe,
-        test_ID_start, test_ID_end,
-        train_ID_start, train_ID_end,
-        observation_ID, members_size,
-        rolling, quik, cores, weights,
-        pre_exec, res_dict):
+        iteration, configs, pre_exec, res_dict,
+        pixels_compute, files_output):
 
     # setup
-    p = Pipeline()
+    ycuts = configs['ycuts']
+    yinterval = configs['yinterval']
+    xgrids_total = configs['xgrids.total']
+    ygrids_total = configs['ygrids.total']
+    grids_total = configs['grids.total']
+    num_parameters = configs['num.parameters']
+    num_times = configs['num.times']
+    num_flts = configs['num.flts']
+    num_times_to_compute = configs['num.times.to.compute']
+    num_pixels_increase = configs['num.pixels.increase']
+    threashold_triangle = configs['threshold.triangle']
+    test_ID_start = configs['test.ID.start']
+    test_ID_end = configs['test.ID.end']
+    train_ID_start = configs['train.ID.start']
+    train_ID_end = configs['train.ID.end']
+    observation_ID = configs['observation.ID']
+    members_size = configs['members.size']
+    rolling = configs['rolling']
+    quick = configs['quick']
+    cores = configs['cores']
+    weights = configs['weights']
+
     str_iteration = str(iteration).zfill(4)
+    str_folder_output = configs['folder.output']
+    str_folder_accumulate = configs['folder.accumulate']
+    str_folder_raster_obs = configs['folder.raster.obs']
+    str_folder_triangles = configs['folder.triangles']
+    str_file_forecasts = configs['file.forecasts']
+    str_file_observations = configs['file.observations']
+    str_folder_local = configs['folder.local']
+    str_file_pixels_computed = configs['file.pixels.computed']
+    str_command_exe = configs['command.exe']
+    str_command_verbose = configs['command.verbose']
+
+    p = Pipeline()
 
 
     # -------------------------- Stage 1 ---------------------------------------
@@ -52,7 +73,7 @@ def start_iteration (
     save_pixels_computed = STAP(R_code, 'save_pixels_computed')
     save_pixels_computed.save_pixels_computed(  
             [str(int(k)) for sublist in pixels_list for k in sublist],
-            file_pixels_computed)
+            str_file_pixels_computed)
 
     # create tasks for each subregion and 
     # each subregion will generate one subregion file
@@ -89,8 +110,9 @@ def start_iteration (
                 '--observation-ID', observation_ID,
                 '--members-size', members_size,
                 '--rolling', rolling,
-                '--cores', cores
-                '-o', file_subregion]
+                '--cores', cores,
+                '-o', file_subregion,
+                str_command_verbose]
 
         if quick:
             t2.arguments.append('--quick')
@@ -143,6 +165,8 @@ def start_iteration (
     # combine files from subregions of the current iteration
     t3.arguments.extend([k for k in files_subregion])
 
+    t3.arguments.append(str_command_verbose)
+
     # add the output file of this stage to the tracking list
     files_output.append(file_output)
 
@@ -159,7 +183,7 @@ def start_iteration (
         R_code = f.read()
     read_pixels_computed = STAP(R_code, 'read_pixels_computed')
     pixels_accumulated = read_pixels_computed.read_pixels_computed(
-            initial_config['file.pixels.computed'], iteration)
+            str_file_pixels_computed, str_iteration)
     str_pixels_accumulated = ' '.join([str(int(k)) for k in pixels_accumulated])
 
     # define pixels for the next iteration
@@ -174,7 +198,7 @@ def start_iteration (
             '$SHARED/func_define_pixels.R']
     t4.arguments = [
             'script_define_pixels.py', 
-            '--iteration', iteration,
+            '--iteration', str_iteration,
             '--folder_raster_obs', str_folder_raster_obs,
             '--folder_accumulate', str_folder_accumulate,
             '--folder_triangles', str_folder_triangles,
@@ -186,9 +210,9 @@ def start_iteration (
             '--members_size', members_size,
             '--threshold_triangle', threashold_triangle,
             '--pixels_computed', str_pixels_accumulated]
-    t4.download_output_data = [
-            'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (
-                initial_config['folder.local'], iteration)]
+    #t4.download_output_data = [
+    #        'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (
+    #            str_folder_local, str_iteration)]
 
     s4 = Stage()
     s4.add_tasks(t4)
@@ -215,7 +239,10 @@ def start_iteration (
         appman.assign_workflow(set([p]))
 
         # Run the application manager -- blocking call
-        appman.run()
+        if configs['debug']:
+            print "Iteration debug mode ..."
+        else:
+            appman.run()
 
     except Exception, ex:
 
