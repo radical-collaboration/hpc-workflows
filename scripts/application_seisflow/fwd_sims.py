@@ -1,6 +1,6 @@
 from radical.entk import Pipeline, Stage, Task, AppManager, ResourceManager
 
-NUM_SPECFEM_TASKS = 4
+NUM_SPECFEM_TASKS = 1
 
 if __name__ == '__main__':
 
@@ -23,20 +23,22 @@ if __name__ == '__main__':
                         'module load boost/1.57.0 ',
                         'module load vim/7.4',
 
+                        # Untar the input data
+                        'tar xf meshfem_data.tar',
+
                         # Preprocessing
                         'mkdir DATABASES_MPI',
-                        'mkdir OUTPUT_FILES'
+                        'mkdir OUTPUT_FILES',
                         'cp DATA/Par_file OUTPUT_FILES/',
-                        'cp DATA/CMTSOLUTION OUTPUT_FILES/'
+                        'cp DATA/CMTSOLUTION OUTPUT_FILES/',
                         'cp DATA/STATIONS OUTPUT_FILES/',
                         
                 ]
     t1.executable = ['./bin/xmeshfem3D']
-    t2.cpu_reqs = {'process': 24, 'process_type': 'MPI', 'threads_per_process': 0, 'thread_type': 'OpenMP'}
-    #t2.gpu_reqs = {'process': 24, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
-    #t1.cores = 4
-    #t1.mpi = True
-    t1.copy_input_data = ['/lustre/atlas/scratch/vivekb/bip149/specfem3d_globe_gpu/DATA']
+    t1.cpu_reqs = {'process': 4, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
+    #t1.gpu_reqs = {'process': 24, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
+    t1.copy_input_data = ['/ccs/proj/bip149/specfem-test.small/data.tar > meshfem_data.tar']
+    t1.post_exec = ['tar cfz specfem_data.tar *']
 
     s1.add_tasks(t1)
 
@@ -65,16 +67,14 @@ if __name__ == '__main__':
                         'module load boost/1.57.0 ',
                         'module load vim/7.4',
 
+                        # Untar the input data
+                        'tar xf specfem_data.tar'    
+
                     ]
-        t2.executable = ['./bin/specfem3D']
+        t2.executable = ['./bin/xspecfem3D']
         #t2.cpu_reqs = {'process': 0, 'process_type': 'MPI', 'threads_per_process': 0, 'thread_type': 'OpenMP'}
-        t2.gpu_reqs = {'process': 24, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
-        #t2.cores = 8
-        #t2.mpi = True
-        t2.post_exec = []
-        t2.copy_input_data = [  '$Pipeline_%s_Stage_%s_Task_%s/DATA'%(p.uid, s1.uid, t1.uid),
-                                '$Pipeline_%s_Stage_%s_Task_%s/OUTPUT_FILES'%(p.uid, s1.uid, t1.uid),
-                                '$Pipeline_%s_Stage_%s_Task_%s/DATABASES_MPI'%(p.uid, s1.uid, t1.uid)]
+        t2.gpu_reqs = {'process': 4, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
+        t2.copy_input_data = ['$Pipeline_%s_Stage_%s_Task_%s/specfem_data.tar'%(p.uid,s1.uid,t1.uid)]
 
         s2.add_tasks(t2)
 
