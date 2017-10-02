@@ -132,7 +132,7 @@ define_pixels <- function(
     }
     pixels.next.iteration <- remove.vector.duplicates(c(pixels.computed,
                                                         pixels.next.iteration))
-    pixels.next.iteration <- pixels.next.iteration[length(pixels.computed)+1 :
+    pixels.next.iteration <- pixels.next.iteration[(length(pixels.computed)+1) :
                                                    length(pixels.next.iteration)]
 
     print(paste("The amount of the pixels for the next iteration is",

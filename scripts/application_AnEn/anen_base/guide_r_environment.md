@@ -2,15 +2,13 @@
 
 This document guides you to set up the R environment for the ENTK AnEn use case on supercomputers.
 
-Local:
+### Local
 
-A good installation guide for installing R and other packages: 
-```https://www.digitalocean.com/community/tutorials/how-to-set-up-r-on-ubuntu-14-04```
+A good installation guide for installing R and other packages [How To Set Up R on Ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-set-up-r-on-ubuntu-14-04)
 
-HDF5, NetCDF installation guide: https://gist.github.com/perrette/cd815d03830b53e24c82
+HDF5, NetCDF installation guide [install_netcdf4.sh](https://gist.github.com/perrette/cd815d03830b53e24c82)
 
-
-SuperMIC: 
+### SuperMIC
 
 First, load modules.
 

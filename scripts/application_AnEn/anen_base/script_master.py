@@ -3,6 +3,8 @@ import rpy2.robjects as robjects
 
 from glob import glob
 from rpy2.robjects.packages import STAP, importr
+from py_func_initial_config import test_initial_config
+from py_func_initial_config import process_initial_config
 from radical.entk import Pipeline, Stage, Task, AppManager, ResourceManager
 
 '''
@@ -24,65 +26,6 @@ resource_key = {
             'module load gcc',
             'module load r']
         }
-
-
-def test_initial_config(d):
-
-    possible_keys = [
-            'command.exe', 'command.verbose', 'file.forecasts',
-            'file.observations', 'file.pixels.computed', 'folder.prefix',
-            'folder.accumulate', 'folder.output', 'folder.raster.anen',
-            'folder.raster.obs', 'folder.local', 'folder.triangles',
-            'num.flts', 'num.times', 'num.times.to.compute',
-            'num.parameters', 'ygrids.total', 'xgrids.total',
-            'grids.total', 'init.num.pixels.compute',
-            'yinterval', 'ycuts', 'quick', 'cores', 'rolling',
-            'observation.ID', 'train.ID.start', 'train.ID.end',
-            'test.ID.start', 'test.ID.end', 'weights', 'members.size',
-            'num.neighbors', 'init.iteration', 'threshold.triangle',
-            'num.pixels.increase', 'debug', 'pixels.compute']
-
-    all_ok = True
-
-    for keys in possible_keys:
-
-        if keys not in d:
-
-            print 'Expected key %s not in initial_config dictionary'%keys
-            all_ok = False
-
-    return all_ok
-
-
-def process_initial_config(initial_config):
-
-    # arguments treated as lists
-    initial_config['pixels.compute'] = \
-            [int(k) for k in list(initial_config['pixels.compute'])]
-    initial_config['weights'] = [int(k) for k in list(initial_config['weights'])]
-    initial_config['ycuts'] = [int(k) for k in list(initial_config['ycuts'])]
-
-    # arguments treated as numeric 
-    possible_keys = [
-            'command.exe', 'command.verbose', 'file.forecasts',
-            'file.observations', 'file.pixels.computed', 'folder.prefix',
-            'folder.accumulate', 'folder.output', 'folder.raster.anen',
-            'folder.raster.obs', 'folder.local', 'folder.triangles',
-            'num.flts', 'num.times', 'num.times.to.compute', 'num.parameters',
-            'ygrids.total', 'xgrids.total', 'grids.total', 'init.num.pixels.compute',
-            'yinterval', 'quick', 'cores', 'rolling', 'observation.ID',
-            'train.ID.start', 'train.ID.end', 'test.ID.start', 'test.ID.end',
-            'members.size', 'num.neighbors', 'init.iteration', 'threshold.triangle',
-            'num.pixels.increase', 'debug']
-
-    for keys in possible_keys:
-        initial_config[keys] = initial_config[keys][0]
-
-    for key, val in initial_config.iteritems():
-        if type(val) not in [str, int, float, list, bool]:
-            sys.exit(1)
-
-    return initial_config
 
 
 if __name__ == '__main__':
@@ -113,33 +56,37 @@ if __name__ == '__main__':
     # -------------------------- End of Setup ----------------------------------
 
     # -------------------------- Stage 1 ---------------------------------------
-    # rasterize the observation data for each test day and flt
-    t1 = Task()
-    t1.cores = 1
-    t1.executable = ['python']
-    t1.pre_exec = [
-            'module load r', 'module load netcdf',
-            'module load python/2.7.7/GCC-4.9.0']
-    t1.copy_input_data = [
-            '$SHARED/generate_observation_rasters.py',
-            '$SHARED/func_generate_observation_rasters.R']
-    t1.arguments = [
-            'generate_observation_rasters.py',
-            '--folder_prefix', initial_config['folder.prefix'],
-            '--folder_accumulate', initial_config['folder.accumulate'],
-            '--folder_output', initial_config['folder.output'],
-            '--folder_raster_anen', initial_config['folder.raster.anen'],
-            '--folder_raster_obs', initial_config['folder.raster.obs'],
-            '--folder_triangles', initial_config['folder.triangles'],
-            '--num_times_to_compute', initial_config['num.times.to.compute'],
-            '--num_flts', initial_config['num.flts'],
-            '--file_observations', initial_config['file.observations'],
-            '--test_ID_start', initial_config['test.ID.start'],
-            '--xgrids_total', initial_config['xgrids.total'],
-            '--ygrids_total', initial_config['ygrids.total']]
-
     s1 = Stage()
-    s1.add_tasks(t1)
+
+    for ind in range(initial_config['num.times.to.compute']):
+        # rasterize the observation data for each test day and flt
+        t1 = Task()
+        t1.cores = 1
+        t1.executable = ['python']
+        t1.pre_exec = [
+                'module load r', 'module load netcdf',
+                'module load python/2.7.7/GCC-4.9.0']
+        t1.copy_input_data = [
+                '$SHARED/script_generate_observation_rasters.py',
+                '$SHARED/func_generate_observation_rasters.R']
+        t1.arguments = [
+                'script_generate_observation_rasters.py',
+                '--test_ID_index', ind+1,
+                '--test_ID_start', initial_config['test.ID.start'],
+                '--folder_prefix', initial_config['folder.prefix'],
+                '--folder_accumulate', initial_config['folder.accumulate'],
+                '--folder_output', initial_config['folder.output'],
+                '--folder_raster_anen', initial_config['folder.raster.anen'],
+                '--folder_raster_obs', initial_config['folder.raster.obs'],
+                '--folder_triangles', initial_config['folder.triangles'],
+                '--num_times_to_compute', initial_config['num.times.to.compute'],
+                '--num_flts', initial_config['num.flts'],
+                '--file_observations', initial_config['file.observations'],
+                '--xgrids_total', initial_config['xgrids.total'],
+                '--ygrids_total', initial_config['ygrids.total']]
+
+        s1.add_tasks(t1)
+
     p.add_stages(s1)
     # -------------------------- End of Stage 1 --------------------------------
 
@@ -194,7 +141,7 @@ if __name__ == '__main__':
         # define output anen
         file_subregion = (
                 initial_config['folder.output'] +
-                'iteration' + iteration +
+                'iteration' + str(iteration).zfill(4) +
                 '_chunk' + str(ind).zfill(4) + '.nc')
 
         t2.arguments = ['-N','-p',
@@ -248,7 +195,7 @@ if __name__ == '__main__':
     t3.executable = [initial_config['command.exe']]
     t3.pre_exec = resource_key['xsede.supermic']
 
-    file_output = '%siteration%s.nc' % (initial_config['folder.accumulate'], iteration)
+    file_output = '%siteration%s.nc' % (initial_config['folder.accumulate'], str(iteration).zfill(4))
 
     t3.arguments = ['-C', '--file-new', file_output]
     t3.arguments.append('--files-from')
@@ -275,7 +222,7 @@ if __name__ == '__main__':
         R_code = f.read()
     read_pixels_computed = STAP(R_code, 'read_pixels_computed')
     pixels_accumulated = read_pixels_computed.read_pixels_computed(
-            initial_config['file.pixels.computed'], iteration)
+            initial_config['file.pixels.computed'], str(iteration).zfill(4))
     pixels_accumulated_str = ' '.join([str(int(k)) for k in pixels_accumulated])
 
     # define pixels for the next iteration
@@ -286,10 +233,10 @@ if __name__ == '__main__':
             'module load python/2.7.7/GCC-4.9.0',
             'module load netcdf', 'module load r']
     t4.copy_input_data= [
-            '$SHARED/define_pixels.py',
+            '$SHARED/script_define_pixels.py',
             '$SHARED/func_define_pixels.R']
     t4.arguments = [
-            'define_pixels.py', 
+            'script_define_pixels.py', 
             '--iteration', iteration,
             '--folder_raster_obs', initial_config['folder.raster.obs'],
             '--folder_accumulate', initial_config['folder.accumulate'],
@@ -327,9 +274,9 @@ if __name__ == '__main__':
         rman = ResourceManager(res_dict)
 
         rman.shared_data = [
-                './generate_observation_rasters.py',
+                './script_generate_observation_rasters.py',
                 './func_generate_observation_rasters.R',
-                './define_pixels.py',
+                './script_define_pixels.py',
                 './func_define_pixels.R']
 
         # Create an Application Manager for our application

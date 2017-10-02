@@ -53,11 +53,11 @@ initial_config <- function (machine = 'supermic') {
     members.size <- 20
 
     num.neighbors <- 2
-    init.iteration <- '0001'
+    init.iteration <- 1
     threshold.triangle <- 2
     num.pixels.increase <- 10
 
-    debug <- FALSE
+    debug <- 0
 
     #rast.base <- raster(nrows = ygrids.total, ncols = xgrids.total,
     #                    xmn = 0.5, xmx = xgrids.total+.5,
