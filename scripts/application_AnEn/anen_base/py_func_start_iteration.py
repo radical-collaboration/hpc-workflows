@@ -189,11 +189,9 @@ def start_iteration (
     # define pixels for the next iteration
     t4 = Task()
     t4.cores = 1
+    t4.pre_exec = pre_exec
     t4.executable = ['python']
-    t4.pre_exec = [
-            'module load python/2.7.7/GCC-4.9.0',
-            'module load netcdf', 'module load r']
-    t4.copy_input_data= [
+    t4.copy_input_data = [
             '$SHARED/script_define_pixels.py',
             '$SHARED/func_define_pixels.R']
     t4.arguments = [

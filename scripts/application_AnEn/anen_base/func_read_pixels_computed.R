@@ -9,10 +9,11 @@ read_pixels_computed <- function(
     if (file.exists(file.pixels.computed)) {
         load(file.pixels.computed)
 
-        if (as.numeric(iteration) <= length(pixels.computed.list)) {
-            res <- unlist(pixels.computed.list[1 : as.numeric(iteration)])
+        iteration <- as.numeric(iteration)
+        if (iteration <= length(pixels.computed.list)) {
+            res <- unlist(pixels.computed.list[1 : iteration])
         } else {
-            stop(paste("Given iteration index [" , as.numeric(iteration),
+            stop(paste("Given iteration index [" , iteration,
                        "] is larger than the number of sublists [",
                        length(pixels.computed.list), "] in the file ",
                        file.pixels.computed, sep = ''))
