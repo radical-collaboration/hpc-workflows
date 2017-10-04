@@ -35,7 +35,7 @@ if __name__ == '__main__':
                         
                 ]
     t1.executable = ['./bin/xmeshfem3D']
-    t1.cpu_reqs = {'process': 4, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
+    t1.cpu_reqs = {'processes': 4, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
     #t1.gpu_reqs = {'process': 24, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
     t1.copy_input_data = ['/ccs/proj/bip149/specfem-test.small/data.tar > meshfem_data.tar']
     t1.post_exec = ['tar cfz specfem_data.tar *']
@@ -73,8 +73,11 @@ if __name__ == '__main__':
                     ]
         t2.executable = ['./bin/xspecfem3D']
         #t2.cpu_reqs = {'process': 0, 'process_type': 'MPI', 'threads_per_process': 0, 'thread_type': 'OpenMP'}
-        t2.gpu_reqs = {'process': 4, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
-        t2.copy_input_data = ['$Pipeline_%s_Stage_%s_Task_%s/specfem_data.tar'%(p.uid,s1.uid,t1.uid)]
+        t2.gpu_reqs = {'processes': 4, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
+        t2.copy_input_data = [  '$Pipeline_%s_Stage_%s_Task_%s/specfem_data.tar'%(p.uid,s1.uid,t1.uid),
+                                '$SHARED/specfem_validator.py'
+                            ]
+        t2.post_exec = ['python specfem_validator.py']
 
         s2.add_tasks(t2)
 
@@ -101,6 +104,8 @@ if __name__ == '__main__':
 
         # Create a Resource Manager using the above description
         rman = ResourceManager(res_dict)
+
+        rman.shared_data = ['./specfem_validator.py']
 
         # Create an Application Manager for our application
         appman = AppManager()
