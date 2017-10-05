@@ -3,6 +3,7 @@ import rpy2.robjects as robjects
 
 from glob import glob
 from py_func_preprocess import preprocess
+from py_func_postprocess import postprocess
 from rpy2.robjects.packages import STAP, importr
 from py_func_start_iteration import start_iteration
 from py_func_initial_config import test_initial_config
@@ -85,3 +86,15 @@ if __name__ == '__main__':
         print "Iteration didn't return True"
         sys.exit(1)
     # -------------------------- End of Iteration  -----------------------------
+
+    # -------------------------- Post Processing -------------------------------
+    if not initial_config['interpolate.AnEn.rasters']:
+        # exit the process if AnEn ouput raster interpolation is not needed
+        sys.exit(0)
+
+    flag = postprocess(initial_config, resource_key['xsede.supermic'], res_dict)
+
+    if not flag:
+        print "Post processing didn't return True"
+        sys.exit(1)
+    # -------------------------- End of Post Processing ------------------------

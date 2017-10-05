@@ -58,6 +58,7 @@ initial_config <- function (machine = 'supermic') {
     num.pixels.increase <- 10
 
     debug <- 0
+    interpolate.AnEn.rasters <- 0
 
     #rast.base <- raster(nrows = ygrids.total, ncols = xgrids.total,
     #                    xmn = 0.5, xmx = xgrids.total+.5,
@@ -107,6 +108,7 @@ initial_config <- function (machine = 'supermic') {
                              init.iteration = init.iteration,
                              threshold.triangle = threshold.triangle,
                              num.pixels.increase = num.pixels.increase,
+                             interpolate.AnEn.rasters = interpolate.AnEn.rasters,
                              debug = debug)
 
     return(list.init.config)

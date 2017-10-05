@@ -1,4 +1,5 @@
 from radical.entk import Pipeline, Stage, Task, AppManager, ResourceManager
+import traceback
 
 NUM_SPECFEM_TASKS = 1
 
@@ -36,9 +37,12 @@ if __name__ == '__main__':
                 ]
     t1.executable = ['./bin/xmeshfem3D']
     t1.cpu_reqs = {'processes': 4, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
+<<<<<<< HEAD
     #t1.gpu_reqs = {'process': 24, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
+=======
+>>>>>>> a2a76828685e68c7397071c009cb6acd69462c29
     t1.copy_input_data = ['/ccs/proj/bip149/specfem-test.small/data.tar > meshfem_data.tar']
-    t1.post_exec = ['tar cfz specfem_data.tar *']
+    t1.post_exec = ['tar cfz specfem_data.tar bin DATA DATABASES_MPI OUTPUT_FILES']
 
     s1.add_tasks(t1)
 
@@ -50,10 +54,8 @@ if __name__ == '__main__':
 
     t2_uids = []
 
-    for ind in range(len(NUM_SPECFEM_TASKS)):
-
-        t2 = Task()
-        t2.pre_exec = [
+    t2 = Task()
+    t2.pre_exec = [
 
                         # Modules to be loaded
                         'module swap PrgEnv-pgi/5.2.82 PrgEnv-gnu/5.2.82',
@@ -71,6 +73,7 @@ if __name__ == '__main__':
                         'tar xf specfem_data.tar'    
 
                     ]
+<<<<<<< HEAD
         t2.executable = ['./bin/xspecfem3D']
         #t2.cpu_reqs = {'process': 0, 'process_type': 'MPI', 'threads_per_process': 0, 'thread_type': 'OpenMP'}
         t2.gpu_reqs = {'processes': 4, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
@@ -78,11 +81,19 @@ if __name__ == '__main__':
                                 '$SHARED/specfem_validator.py'
                             ]
         t2.post_exec = ['python specfem_validator.py']
+=======
+    t2.executable = ['./bin/xspecfem3D']
+    t2.cpu_reqs = {'processes': 0, 'process_type': 'MPI', 'threads_per_process': 0, 'thread_type': 'OpenMP'}
+    t2.gpu_reqs = {'processes': 4, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
+    t2.copy_input_data = ['$Pipeline_%s_Stage_%s_Task_%s/specfem_data.tar'%(p.uid,s1.uid,t1.uid)]
 
-        s2.add_tasks(t2)
+    s2.add_tasks(t2)
+>>>>>>> a2a76828685e68c7397071c009cb6acd69462c29
 
-        t2_uids.append(t2.uid)
+    #t2_uids.append(t2.uid)
 
+
+    #print t2.to_dict()
     p.add_stages(s2)
 
 
@@ -90,9 +101,9 @@ if __name__ == '__main__':
     res_dict = {
 
             'resource': 'ornl.titan_aprun',
-            'walltime': 10,
-            'cores': 400,
-            'gpus':  25,
+            'walltime': 30,
+            'cpus': 80,
+            'gpus':  5,
             'project': 'BIP149',
             #'queue': 'development',
             'schema': 'local'
