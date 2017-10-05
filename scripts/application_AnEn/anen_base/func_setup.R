@@ -11,10 +11,10 @@ initial_config <- function (machine = 'supermic') {
         folder.prefix <- '~/geolab_storage_V2/data/NAM12KM/experiments_smart/'
     } else if (machine == 'supermic') {
         # setup on supermic
-        command.exe <- '/home/whu/github/CAnalogsV2/install/bin/canalogs'
-        file.forecasts <- "/home/whu/data/chunk_NAM/Forecasts_NAM_sliced.nc"
-        file.observations <- "/home/whu/data/chunk_NAM/Analysis_NAM.nc"
-        folder.prefix <- paste('/home/whu/experiments/anen_smart/',
+        command.exe <- '/work/vivek91/modules/CAnalogsV2/build/canalogs'
+        file.forecasts <- "/work/vivek91/chunk_NAM/Forecasts_NAM_sliced.nc"
+        file.observations <- "/work/vivek91/chunk_NAM/Analysis_NAM.nc"
+        folder.prefix <- paste('/work/vivek91/anen_smart/',
                                prefix_time, '/', sep = '')
     }
 
