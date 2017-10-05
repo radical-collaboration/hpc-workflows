@@ -57,12 +57,8 @@ initial_config <- function (machine = 'supermic') {
     threshold.triangle <- 2
     num.pixels.increase <- 10
 
-    debug <- 1
+    debug <- 0
     interpolate.AnEn.rasters <- 1
-
-    #rast.base <- raster(nrows = ygrids.total, ncols = xgrids.total,
-    #                    xmn = 0.5, xmx = xgrids.total+.5,
-    #                    ymn = 0.5, ymx = ygrids.total+.5)
 
     # randomly select pixels to compute
     pixels.compute <- sample.int(grids.total,
