@@ -28,80 +28,73 @@ resource_key = {
         }
 
 
-if __name__ == '__main__':
-
-    # -------------------------- Setup -----------------------------------------
-    # ENTK and AnEn parameters setup
-
-    # Read initial configuration from R function
-    with open('func_setup.R', 'r') as f:
-        R_code = f.read()
-    RAnEnExtra = importr("RAnEnExtra")
-    initial_config = STAP(R_code, 'initial_config')
-    config = initial_config.initial_config()
-    initial_config = dict(zip(config.names, list(config)))
-
-    if not test_initial_config(initial_config):
-        sys.exit(1)
-
-    initial_config = process_initial_config(initial_config)
-
-    iteration = initial_config['init.iteration']
-    
-    # list to keep track of the combined output AnEn files to be accumulated
-    files_output = list()
+def generate_pipeline(iteration, pixels_compute=None):
 
     # Our application currently will contain only one pipeline
     p = Pipeline()
     # -------------------------- End of Setup ----------------------------------
 
-    # -------------------------- Stage 1 ---------------------------------------
-    s1 = Stage()
 
-    for ind in range(initial_config['num.times.to.compute']):
-        # rasterize the observation data for each test day and flt
-        t1 = Task()
-        t1.cores = 1
-        t1.executable = ['python']
-        t1.pre_exec = [
-                'module load r', 'module load netcdf',
-                'module load python/2.7.7/GCC-4.9.0']
-        t1.copy_input_data = [
+    if not pixels_compute:
+
+        # -------------------------- Stage 1 ---------------------------------------
+        s1 = Stage()
+
+        for ind in range(initial_config['num.times.to.compute']):
+            # rasterize the observation data for each test day and flt
+            t1 = Task()
+            t1.cores = 1
+            t1.executable = ['python']
+            t1.pre_exec = [
+                    'module load r', 'module load netcdf',
+                    'module load python/2.7.7/GCC-4.9.0']
+            t1.copy_input_data = [
                     '/home/vivek91/work/chunk_NAM/script_generate_observation_rasters.py',
                     '/home/vivek91/work/chunk_NAM/func_generate_observation_rasters.R']
-        t1.arguments = [
-                'script_generate_observation_rasters.py',
-                '--test_ID_index', ind+1,
-                '--test_ID_start', initial_config['test.ID.start'],
-                '--folder_prefix', initial_config['folder.prefix'],
-                '--folder_accumulate', initial_config['folder.accumulate'],
-                '--folder_output', initial_config['folder.output'],
-                '--folder_raster_anen', initial_config['folder.raster.anen'],
-                '--folder_raster_obs', initial_config['folder.raster.obs'],
-                '--folder_triangles', initial_config['folder.triangles'],
-                '--num_times_to_compute', initial_config['num.times.to.compute'],
-                '--num_flts', initial_config['num.flts'],
-                '--file_observations', initial_config['file.observations'],
-                '--xgrids_total', initial_config['xgrids.total'],
-                '--ygrids_total', initial_config['ygrids.total']]
+            t1.arguments = [
+                    'script_generate_observation_rasters.py',
+                    '--test_ID_index', ind+1,
+                    '--test_ID_start', initial_config['test.ID.start'],
+                    '--folder_prefix', initial_config['folder.prefix'],
+                    '--folder_accumulate', initial_config['folder.accumulate'],
+                    '--folder_output', initial_config['folder.output'],
+                    '--folder_raster_anen', initial_config['folder.raster.anen'],
+                    '--folder_raster_obs', initial_config['folder.raster.obs'],
+                    '--folder_triangles', initial_config['folder.triangles'],
+                    '--num_times_to_compute', initial_config['num.times.to.compute'],
+                    '--num_flts', initial_config['num.flts'],
+                    '--file_observations', initial_config['file.observations'],
+                    '--xgrids_total', initial_config['xgrids.total'],
+                    '--ygrids_total', initial_config['ygrids.total']]
 
-        s1.add_tasks(t1)
+            s1.add_tasks(t1)
 
-    p.add_stages(s1)
-    # -------------------------- End of Stage 1 --------------------------------
+        p.add_stages(s1)
+        # -------------------------- End of Stage 1 --------------------------------
 
-    # -------------------------- Stage 2 ---------------------------------------
-    # compute AnEn for each subregion 
+        # -------------------------- Stage 2 ---------------------------------------
+        # compute AnEn for each subregion 
 
-    # get the pixels to compute for each subregion
-    with open('func_cut_pixels_along_y.R', 'r') as f:
-        R_code = f.read()
-    cut_pixels_along_y = STAP(R_code, 'cut_pixels_along_y')
-    pixels_list = cut_pixels_along_y.cut_pixels_along_y(
-            initial_config['pixels.compute'],
-            [str(k) for k in initial_config['ycuts']],
-            initial_config['xgrids.total'],
-            initial_config['ygrids.total'])
+        # get the pixels to compute for each subregion
+        with open('func_cut_pixels_along_y.R', 'r') as f:
+            R_code = f.read()
+        cut_pixels_along_y = STAP(R_code, 'cut_pixels_along_y')
+        pixels_list = cut_pixels_along_y.cut_pixels_along_y(
+                initial_config['pixels.compute'],
+                [str(k) for k in initial_config['ycuts']],
+                initial_config['xgrids.total'],
+                initial_config['ygrids.total'])
+    else:
+
+        # get the pixels to compute for each subregion
+        with open('func_cut_pixels_along_y.R', 'r') as f:
+            R_code = f.read()
+        cut_pixels_along_y = STAP(R_code, 'cut_pixels_along_y')
+        pixels_list = cut_pixels_along_y.cut_pixels_along_y(
+                pixels_compute,
+                [str(k) for k in initial_config['ycuts']],
+                initial_config['xgrids.total'],
+                initial_config['ygrids.total'])
 
     # save the pixels to be computed for the 1st iteration
     with open('func_save_pixels_computed.R', 'r') as f:
@@ -258,6 +251,38 @@ if __name__ == '__main__':
     p.add_stages(s4)
     # -------------------------- End of Stage 4 --------------------------------
 
+    return p
+
+
+def read_pixels(pixel_file):
+    with open(pixel_file, 'r') as fh:
+        lines = fh.readlines()
+    pixels_compute = [int(val) for val in lines[0].strip().split(' ')]
+    return pixels_compute
+
+
+if __name__ == '__main__':
+
+    # -------------------------- Setup -----------------------------------------
+    # ENTK and AnEn parameters setup
+
+    # Read initial configuration from R function
+    with open('func_setup.R', 'r') as f:
+        R_code = f.read()
+    RAnEnExtra = importr("RAnEnExtra")
+    initial_config = STAP(R_code, 'initial_config')
+    config = initial_config.initial_config()
+    initial_config = dict(zip(config.names, list(config)))
+
+    if not test_initial_config(initial_config):
+        sys.exit(1)
+
+    initial_config = process_initial_config(initial_config)
+
+    iteration = initial_config['init.iteration']
+    
+    # list to keep track of the combined output AnEn files to be accumulated
+    files_output = list()
 
     # Create a dictionary to describe our resource request
     res_dict = {
@@ -285,11 +310,24 @@ if __name__ == '__main__':
         # Assign the resource manager to be used by the application manager
         appman.resource_manager = rman
 
-        # Assign the workflow to be executed by the application manager
-        appman.assign_workflow(set([p]))
+        iter_cnt = 1
+        pixels_compute = None
+        while len(pixels_compute) != 0:
 
-        # Run the application manager -- blocking call
-        appman.run()
+            p = generate_pipeline(iter_cnt, pixels_compute)
+
+            # Assign the workflow to be executed by the application manager
+            appman.assign_workflow(set([p]))
+
+            # Run the application manager -- blocking call
+            appman.run()
+
+            # Process pixels_defined_after_iteration%s.txt to get new list of 
+            # pixels. Generate new pipeline with this new list.
+
+            pixels_compute = read_pixels('%spixels_defined_after_iteration%s.txt'%(
+                                                            initial_config['folder.local'],
+                                                            iter_cnt))
 
     except Exception, ex:
 
