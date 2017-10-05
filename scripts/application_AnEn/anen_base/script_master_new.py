@@ -60,7 +60,8 @@ if __name__ == '__main__':
     # list to keep track of the combined output AnEn files to be accumulated
     files_output = list()
 
-    # Create an Application Manager for our application
+    # Create the Manager for our application
+    rman = ResourceManager(res_dict)
     appman = AppManager(port = 32769)
 
 
@@ -71,7 +72,6 @@ if __name__ == '__main__':
     pipeline_preprocess = preprocess(initial_config, resource_key['xsede.supermic'])
     
     try:
-        rman = ResourceManager(res_dict)
         rman.shared_data = [
                 './script_generate_observation_rasters.py',
                 './func_generate_observation_rasters.R']
@@ -107,7 +107,6 @@ if __name__ == '__main__':
             pixels_compute, files_output)
 
     try:
-        rman = ResourceManager(res_dict)
         rman.shared_data = [
                 './script_define_pixels.py',
                 './func_define_pixels.R']
@@ -139,7 +138,6 @@ if __name__ == '__main__':
     pipeline_postprocess = postprocess(initial_config, resource_key['xsede.supermic'])
 
     try:
-        rman = ResourceManager(res_dict)
         rman.shared_data = [
                 './script_interpolate_anen.py',
                 './func_interpolate_anen.R']
