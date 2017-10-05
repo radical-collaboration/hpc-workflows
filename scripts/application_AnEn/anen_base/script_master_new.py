@@ -60,15 +60,39 @@ if __name__ == '__main__':
     # list to keep track of the combined output AnEn files to be accumulated
     files_output = list()
 
+    # Create an Application Manager for our application
+    appman = AppManager(port = 32769)
+
+
     # -------------------------- End of Setup ----------------------------------
 
     # -------------------------- Preprocess  -----------------------------------
     # generate observation raster files and create required folders
-    flag = preprocess(initial_config, res_dict, resource_key['xsede.supermic'])
+    pipeline_preprocess = preprocess(initial_config, resource_key['xsede.supermic'])
     
-    if not flag:
-        print "Preprocess didn't return True"
+    try:
+        rman = ResourceManager(res_dict)
+        rman.shared_data = [
+                './script_generate_observation_rasters.py',
+                './func_generate_observation_rasters.R']
+
+        appman.resource_manager = rman
+        appman.assign_workflow(set([pipeline_preprocess]))
+
+        if initial_config['debug']:
+            print "preprocess debug mode ..."
+        else:
+            appman.run()
+
+    except Exception, ex:
+        print 'Execution failed, error: %s'%ex
+        print traceback.format_exc()
         sys.exit(1)
+
+    finally:
+        profs = glob('./*.prof')
+        for f in profs:
+            os.remove(f)
     # -------------------------- End of Preprocess  ----------------------------
 
     # -------------------------- Iteration  ------------------------------------
@@ -78,13 +102,33 @@ if __name__ == '__main__':
     # a list to keep track of the AnEn combined output files
     files_output = list()
 
-    flag = start_iteration(
+    pipeline_iteration = start_iteration(
             iteration, initial_config, resource_key['xsede.supermic'],
-            res_dict, pixels_compute, files_output)
+            pixels_compute, files_output)
 
-    if not flag:
-        print "Iteration didn't return True"
+    try:
+        rman = ResourceManager(res_dict)
+        rman.shared_data = [
+                './script_define_pixels.py',
+                './func_define_pixels.R']
+
+        appman.resource_manager = rman
+        appman.assign_workflow(set([pipeline_iteration]))
+
+        if initial_config['debug']:
+            print "Iteration debug mode ..."
+        else:
+            appman.run()
+
+    except Exception, ex:
+        print 'Execution failed, error: %s'%ex
+        print traceback.format_exc()
         sys.exit(1)
+
+    finally:
+        profs = glob('./*.prof')
+        for f in profs:
+            os.remove(f)
     # -------------------------- End of Iteration  -----------------------------
 
     # -------------------------- Post Processing -------------------------------
@@ -92,9 +136,29 @@ if __name__ == '__main__':
         # exit the process if AnEn ouput raster interpolation is not needed
         sys.exit(0)
 
-    flag = postprocess(initial_config, resource_key['xsede.supermic'], res_dict)
+    pipeline_postprocess = postprocess(initial_config, resource_key['xsede.supermic'])
 
-    if not flag:
-        print "Post processing didn't return True"
+    try:
+        rman = ResourceManager(res_dict)
+        rman.shared_data = [
+                './script_interpolate_anen.py',
+                './func_interpolate_anen.R']
+
+        appman.resource_manager = rman
+        appman.assign_workflow(set([pipeline_postprocess]))
+
+        if initial_config['debug']:
+            print "Postprocess debug mode ..."
+        else:
+            appman.run()
+
+    except Exception, ex:
+        print 'Execution failed, error: %s'%ex
+        print traceback.format_exc()
         sys.exit(1)
+
+    finally:
+        profs = glob('./*.prof')
+        for f in profs:
+            os.remove(f)
     # -------------------------- End of Post Processing ------------------------

@@ -11,7 +11,7 @@ environment for the subsequent pipelines
 '''
 
 
-def preprocess (configs, res_dict, pre_exec):
+def preprocess (configs, pre_exec):
     p = Pipeline()
 
     # -------------------------- Stage 1 ---------------------------------------
@@ -46,41 +46,4 @@ def preprocess (configs, res_dict, pre_exec):
     p.add_stages(s)
     # -------------------------- End of Stage 1 --------------------------------
 
-    try:
-
-        # Create a Resource Manager using the above description
-        rman = ResourceManager(res_dict)
-
-        rman.shared_data = [
-                './script_generate_observation_rasters.py',
-                './func_generate_observation_rasters.R']
-
-        # Create an Application Manager for our application
-        appman = AppManager(port = 32769)
-
-        # Assign the resource manager to be used by the application manager
-        appman.resource_manager = rman
-
-        # Assign the workflow to be executed by the application manager
-        appman.assign_workflow(set([p]))
-
-        # Run the application manager -- blocking call
-        if configs['debug']:
-            print "preprocess debug mode ..."
-        else:
-            appman.run()
-
-    except Exception, ex:
-
-        print 'Execution failed, error: %s'%ex
-        print traceback.format_exc()
-
-        return False
-
-    finally:
-
-        profs = glob('./*.prof')
-        for f in profs:
-            os.remove(f)
-
-    return True
+    return p

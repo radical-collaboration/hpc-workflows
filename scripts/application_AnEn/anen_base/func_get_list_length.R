@@ -4,7 +4,7 @@
 #
 get_list_length <- function(file.pixels.computed) {
     if (!file.exists(file.pixels.computed)) {
-        error(paste("File not found", file.pixels.computed))
+        stop(paste("File not found", file.pixels.computed))
         return(-1)
     }
 
