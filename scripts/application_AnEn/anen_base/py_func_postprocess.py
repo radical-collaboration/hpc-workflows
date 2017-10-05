@@ -12,19 +12,20 @@ Interpolate rasters for AnEn. This will make the visualization of
 AnEn output easier 
 '''
 
-def postprocess (configs, pre_exec, res_dict):
+def postprocess (configs, pre_exec):
 
     # set up
     str_folder_accumulate = configs['folder.accumulate']
-    str_folder_raster_anen = configs['folder.anen.raster']
+    str_folder_raster_anen = configs['folder.raster.anen']
     str_file_pixels_computed = configs['file.pixels.computed']
 
     # get number of iterations
     with open('func_get_list_length.R', 'r') as f:
         R_code = f.read()
     get_list_length = STAP(R_code, 'get_list_length')
-    num_iterations = int(get_list_length.get_list_length(
-        str_file_pixels_computed))
+    num_iterations = get_list_length.get_list_length(
+        str_file_pixels_computed)
+    num_iterations = num_iterations[0]
 
     if num_iterations == -1:
         print "Error while getting list length of " + str_file_pixels_computed
@@ -73,8 +74,8 @@ def postprocess (configs, pre_exec, res_dict):
                 '--pixels_computed', str_file_pixels_computed,
                 '--num_flts', configs['num.flts'],
                 '--num_times_to_compute', configs['num.times.to.compute'],
-                '--members_size', configs['members.size']
-                '--num_neighbors', configs['num.neighbors']
+                '--members_size', configs['members.size'],
+                '--num_neighbors', configs['num.neighbors'],
                 '--xgrids_total', configs['xgrids.total'],
                 '--ygrids_total', configs['ygrids.total']]
 
@@ -83,40 +84,4 @@ def postprocess (configs, pre_exec, res_dict):
     p.add_stages(s)
     # -------------------------- End of Stage 1 --------------------------------
 
-
-    try:
-
-        # Create a Resource Manager using the above description
-        rman = ResourceManager(res_dict)
-
-        rman.shared_data = [
-                './script_interpolate_anen.py',
-                './func_interpolate_anen.R']
-
-        # Create an Application Manager for our application
-        appman = AppManager(port = 32769)
-
-        # Assign the resource manager to be used by the application manager
-        appman.resource_manager = rman
-
-        # Assign the workflow to be executed by the application manager
-        appman.assign_workflow(set([p]))
-
-        # Run the application manager -- blocking call
-        if configs['debug']:
-            print "Postprocess debug mode ..."
-        else:
-            appman.run()
-
-    except Exception, ex:
-
-        print 'Execution failed, error: %s'%ex
-        print traceback.format_exc()
-
-    finally:
-
-        profs = glob('./*.prof')
-        for f in profs:
-            os.remove(f)
-
-    return True
+    return p

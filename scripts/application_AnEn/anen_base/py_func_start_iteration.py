@@ -13,7 +13,7 @@ supercomputers and evaluate the results
 '''
 
 def start_iteration (
-        iteration, configs, pre_exec, res_dict,
+        iteration, configs, pre_exec,
         pixels_compute, files_output):
 
     # setup
@@ -217,40 +217,4 @@ def start_iteration (
     p.add_stages(s4)
     # -------------------------- End of Stage 3 --------------------------------
 
-
-    try:
-
-        # Create a Resource Manager using the above description
-        rman = ResourceManager(res_dict)
-
-        rman.shared_data = [
-                './script_define_pixels.py',
-                './func_define_pixels.R']
-
-        # Create an Application Manager for our application
-        appman = AppManager(port = 32769)
-
-        # Assign the resource manager to be used by the application manager
-        appman.resource_manager = rman
-
-        # Assign the workflow to be executed by the application manager
-        appman.assign_workflow(set([p]))
-
-        # Run the application manager -- blocking call
-        if configs['debug']:
-            print "Iteration debug mode ..."
-        else:
-            appman.run()
-
-    except Exception, ex:
-
-        print 'Execution failed, error: %s'%ex
-        print traceback.format_exc()
-
-    finally:
-
-        profs = glob('./*.prof')
-        for f in profs:
-            os.remove(f)
-
-    return True
+    return p

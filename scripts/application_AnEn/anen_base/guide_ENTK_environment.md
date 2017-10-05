@@ -1,6 +1,8 @@
 Prepare docker for ENTK
 
 ```
+docker ps
+docker rm [name]
 docker run -d --name rabbitmq1 -P rabbitmq:3
 ```
 
