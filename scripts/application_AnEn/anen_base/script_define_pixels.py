@@ -22,7 +22,11 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    pixels_computed = [k for k in args.pixels_computed.split(' ')]
+
+    with open(args.pixels_computed_file,'r') as fh:
+        pixels_computed = fh.readlines()[0].strip()
+
+    pixels_computed = [k for k in pixels_computed.split(' ')]
 
     with open('func_define_pixels.R', 'r') as f:
         R_code = f.read()

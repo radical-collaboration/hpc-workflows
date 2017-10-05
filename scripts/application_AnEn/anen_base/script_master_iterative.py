@@ -222,6 +222,13 @@ def generate_pipeline(iteration, pixels_compute=None):
             initial_config['file.pixels.computed'], str(iteration).zfill(4))
     pixels_accumulated_str = ' '.join([str(int(k)) for k in pixels_accumulated])
 
+    # Write to file and read on remote -- this is because we hit the limit
+    # on the character limit for the arguments when accumulated pixels
+    # is really really long!
+    with open('pixels_computed_file.txt','w') as fh:        
+        fh.write(pixels_accumulated_str)
+
+
     # define pixels for the next iteration
     t4 = Task()
     t4.cores = 1
@@ -245,7 +252,8 @@ def generate_pipeline(iteration, pixels_compute=None):
             '--num_times_to_compute', int(initial_config['num.times.to.compute']),
             '--members_size', int(initial_config['members.size']),
             '--threshold_triangle', initial_config['threshold.triangle'],
-            '--pixels_computed', pixels_accumulated_str]
+            '--pixels_computed_file', 'pixels_computed_file.txt']
+    t4.upload_input_data = ['pixels_computed_file.txt']
     t4.download_output_data = [
             'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (
                 '/'.join(initial_config['folder.local'].split('/')[1:]), iteration)]
