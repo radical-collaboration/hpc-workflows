@@ -7,6 +7,8 @@ from py_func_initial_config import test_initial_config
 from py_func_initial_config import process_initial_config
 from radical.entk import Pipeline, Stage, Task, AppManager, ResourceManager
 
+import traceback
+
 '''
 EnTK 0.6 script - Analog Ensemble application
 
@@ -109,6 +111,8 @@ def generate_pipeline(iteration, pixels_compute=None):
 
     # list to keep track of the AnEn subregion output files
     files_subregion = list()
+
+    print 'Num of canalogs CUs: ', len(pixels_list)
 
     for ind in range(len(pixels_list)):
 
@@ -244,7 +248,7 @@ def generate_pipeline(iteration, pixels_compute=None):
             '--pixels_computed', pixels_accumulated_str]
     t4.download_output_data = [
             'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (
-                initial_config['folder.local'], iteration)]
+                '/'.join(initial_config['folder.local'].split('/')[1:]), iteration)]
 
     s4 = Stage()
     s4.add_tasks(t4)
@@ -257,7 +261,7 @@ def generate_pipeline(iteration, pixels_compute=None):
 def read_pixels(pixel_file):
     with open(pixel_file, 'r') as fh:
         lines = fh.readlines()
-    pixels_compute = [int(val) for val in lines[0].strip().split(' ')]
+    pixels_compute = [int(float(val)) for val in lines[0].strip().split(' ')]
     return pixels_compute
 
 
@@ -290,7 +294,7 @@ if __name__ == '__main__':
             'walltime': 60,
             'cores': 40,
             'project': 'TG-MCB090174',
-            #'queue': 'development',
+            'queue': 'hybrid',
             'schema': 'gsissh'}
 
     try:
@@ -305,29 +309,45 @@ if __name__ == '__main__':
         #         './func_define_pixels.R']
 
         # Create an Application Manager for our application
-        appman = AppManager(port = 32769)
+        appman = AppManager(port = 32773, autoterminate=False)
 
         # Assign the resource manager to be used by the application manager
         appman.resource_manager = rman
 
-        iter_cnt = 1
-        pixels_compute = None
-        while len(pixels_compute) != 0:
 
-            p = generate_pipeline(iter_cnt, pixels_compute)
+        try:
 
-            # Assign the workflow to be executed by the application manager
-            appman.assign_workflow(set([p]))
+            iter_cnt = 1
+            pixels_compute = None
+            #while len(pixels_compute) != 0:
+            while iter_cnt <= 3:
 
-            # Run the application manager -- blocking call
-            appman.run()
+                p = generate_pipeline(iter_cnt, pixels_compute)
 
-            # Process pixels_defined_after_iteration%s.txt to get new list of 
-            # pixels. Generate new pipeline with this new list.
+                # Assign the workflow to be executed by the application manager
+                appman.assign_workflow(set([p]))
 
-            pixels_compute = read_pixels('%spixels_defined_after_iteration%s.txt'%(
+                # Run the application manager -- blocking call
+                appman.run()
+
+                # Process pixels_defined_after_iteration%s.txt to get new list of 
+                # pixels. Generate new pipeline with this new list.
+
+                pixels_compute = read_pixels('%spixels_defined_after_iteration%s.txt'%(
                                                             initial_config['folder.local'],
                                                             iter_cnt))
+                print 'Pixels to compute: ', len(pixels_compute)
+                iter_cnt += 1
+
+
+        except Exception as ex:
+            print 'Error: ', ex
+
+            print traceback.format_exc()
+
+        finally:
+            appman.resource_terminate()
+
 
     except Exception, ex:
 
