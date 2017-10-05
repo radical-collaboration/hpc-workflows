@@ -254,8 +254,10 @@ def generate_pipeline(iteration, pixels_compute=None):
     return p
 
 
-def read_pixels():
-    pixels_compute = [int(val) for val in k[0].strip().split(' ')]
+def read_pixels(pixel_file):
+    with open(pixel_file, 'r') as fh:
+        lines = fh.readlines()
+    pixels_compute = [int(val) for val in lines[0].strip().split(' ')]
     return pixels_compute
 
 
