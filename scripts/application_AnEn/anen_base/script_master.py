@@ -67,8 +67,8 @@ if __name__ == '__main__':
                 'module load r', 'module load netcdf',
                 'module load python/2.7.7/GCC-4.9.0']
         t1.copy_input_data = [
-                '$SHARED/script_generate_observation_rasters.py',
-                '$SHARED/func_generate_observation_rasters.R']
+                    '/home/vivek91/work/chunk_NAM/script_generate_observation_rasters.py',
+                    '/home/vivek91/work/chunk_NAM/func_generate_observation_rasters.R']
         t1.arguments = [
                 'script_generate_observation_rasters.py',
                 '--test_ID_index', ind+1,
@@ -233,8 +233,8 @@ if __name__ == '__main__':
             'module load python/2.7.7/GCC-4.9.0',
             'module load netcdf', 'module load r']
     t4.copy_input_data= [
-            '$SHARED/script_define_pixels.py',
-            '$SHARED/func_define_pixels.R']
+            '/home/vivek91/work/chunk_NAM/script_define_pixels.py',
+            '/home/vivek91/work/chunk_NAM/func_define_pixels.R']
     t4.arguments = [
             'script_define_pixels.py', 
             '--iteration', iteration,
@@ -273,11 +273,11 @@ if __name__ == '__main__':
         # Create a Resource Manager using the above description
         rman = ResourceManager(res_dict)
 
-        rman.shared_data = [
-                './script_generate_observation_rasters.py',
-                './func_generate_observation_rasters.R',
-                './script_define_pixels.py',
-                './func_define_pixels.R']
+        # rman.shared_data = [
+        #         './script_generate_observation_rasters.py',
+        #         './func_generate_observation_rasters.R',
+        #         './script_define_pixels.py',
+        #         './func_define_pixels.R']
 
         # Create an Application Manager for our application
         appman = AppManager(port = 32769)
