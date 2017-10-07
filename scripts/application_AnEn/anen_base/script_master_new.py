@@ -93,14 +93,14 @@ if __name__ == '__main__':
 
     # -------------------------- Iteration  ------------------------------------
     iteration = int(initial_config['init.iteration'])
-    pixels_compute = initial_config['pixels.compute']
+    pixels_to_compute = initial_config['pixels.compute']
 
     # a list to keep track of the AnEn combined output files
     files_output = list()
 
     pipeline_iteration = start_iteration(
             iteration, initial_config, resource_key['xsede.supermic'],
-            pixels_compute, files_output)
+            pixels_to_compute, files_output)
 
     try:
         appman.resource_manager = rman

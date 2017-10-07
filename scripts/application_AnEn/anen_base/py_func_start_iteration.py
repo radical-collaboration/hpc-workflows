@@ -14,7 +14,7 @@ supercomputers and evaluate the results
 
 def start_iteration (
         iteration, configs, pre_exec,
-        pixels_compute, files_output):
+        pixels_to_compute, files_output):
 
     # setup
     ycuts = configs['ycuts']
@@ -63,7 +63,7 @@ def start_iteration (
         R_code = f.read()
     cut_pixels_along_y = STAP(R_code, 'cut_pixels_along_y')
     pixels_list = cut_pixels_along_y.cut_pixels_along_y(
-            [str(k) for k in pixels_compute],
+            [str(k) for k in pixels_to_compute],
             [str(k) for k in ycuts],
             xgrids_total, ygrids_total)
 
@@ -120,10 +120,10 @@ def start_iteration (
         t2.arguments.append('--weights')
         t2.arguments.extend(weights)
 
-        pixels_compute = pixels_list[ind]
-        pixels_compute = [int(val - subregion_pixel_start) for val in pixels_compute]
+        pixels_to_compute = pixels_list[ind]
+        pixels_to_compute = [int(val - subregion_pixel_start) for val in pixels_to_compute]
         t2.arguments.append('--stations-ID')
-        t2.arguments.extend(pixels_compute)
+        t2.arguments.extend(pixels_to_compute)
 
         t2.arguments.extend([
             '--start-forecasts','0','%s'%int(subregion_pixel_start), '0', '0',
