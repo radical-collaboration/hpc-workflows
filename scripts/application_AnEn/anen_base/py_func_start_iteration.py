@@ -190,7 +190,7 @@ def start_iteration (
             str_file_pixels_computed, str_iteration)
     str_pixels_accumulated = ' '.join([str(int(k)) for k in pixels_accumulated])
 
-    with open('pixels_accumulated.txt','w') as f:        
+    with open('%s/pixels_accumulated.txt' % configs['folder.local'], 'w') as f:        
         f.write(str_pixels_accumulated)
     
     # define pixels for the next iteration
@@ -198,7 +198,7 @@ def start_iteration (
     t4.cores = 1
     t4.pre_exec = pre_exec
     t4.executable = ['python']
-    t4.upload_input_data = ['pixels_accumulated.txt']
+    t4.upload_input_data = ['%s/pixels_accumulated.txt' % configs['folder.local']]
     t4.copy_input_data = [
             '%s/script_define_pixels.py' % configs['folder.scripts'],
             '%s/func_define_pixels.R' % configs['folder.scripts']]
@@ -215,7 +215,7 @@ def start_iteration (
             '--num_times_to_compute', num_times_to_compute,
             '--members_size', members_size,
             '--threshold_triangle', threashold_triangle,
-            '--file_pixels_accumulated', 'pixels_accumulated.txt']
+            '--file_pixels_accumulated', '%s/pixels_accumulated.txt' % configs['folder.local']]
     t4.download_output_data = [
             'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (
                 str_folder_local, str_iteration)]

@@ -21,25 +21,25 @@ interpolate_anen <- function(
 
     # check dimension
     if (!file.exists(file.anen)) {
-        error(paste("File not found", file.anen))
-        return (FALSE)
+        warning(paste("File not found", file.anen))
+        return (TRUE)
     }
 
     nc <- nc_open(file.anen)
     if (length(ncvar_get(nc, 'Members')) != members.size) {
-        error(paste("Members dimension is not correct in file", file.anen))
+        stop(paste("Members dimension is not correct in file", file.anen))
         return (FALSE)
     }
     if (length(ncvar_get(nc, 'Stations')) != num.pixels.computed) {
-        error(paste("Stations dimension is not correct in file", file.anen))
+        stop(paste("Stations dimension is not correct in file", file.anen))
         return (FALSE)
     }
     if (length(ncvar_get(nc, 'Time')) != times) {
-        error(paste("Time dimension is not correct in file", file.anen))
+        stop(paste("Time dimension is not correct in file", file.anen))
         return (FALSE)
     }
     if (length(ncvar_get(nc, 'dt')) != flts) {
-        error(paste("dt dimension is not correct in file", file.anen))
+        stop(paste("dt dimension is not correct in file", file.anen))
         return (FALSE)
     }
 

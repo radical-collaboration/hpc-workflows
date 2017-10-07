@@ -60,14 +60,14 @@ def postprocess (configs, pre_exec):
                 str_file_pixels_computed, str_iteration)
         str_pixels_accumulated = ' '.join([str(int(k)) for k in pixels_accumulated])
         
-	with open('pixels_accumulated.txt','w') as f:
+	with open('%s/pixels_accumulated.txt' % configs['folder.local'],'w') as f:
             f.write(str_pixels_accumulated)
 
         t = Task()
         t.cores = 1
         t.pre_exec = pre_exec
         t.executable = ['python']
-	t.upload_input_data = ['pixels_accumulated.txt']
+	t.upload_input_data = ['%s/pixels_accumulated.txt' % configs['folder.local']]
         t.copy_input_data = [
                 '%s/script_interpolate_anen.py' % configs['folder.scripts'],
                 '%s/func_interpolate_anen.R' % configs['folder.scripts']]
@@ -75,7 +75,7 @@ def postprocess (configs, pre_exec):
                 'script_interpolate_anen.py',
                 '--file_anen_accumulate_iteration', file_anen_accumulate_iteration,
                 '--prefix_anen_raster', prefix_anen_raster,
-                '--pixels_computed', 'pixels_accumulated.txt',
+                '--file_pixels_accumulated', '%s/pixels_accumulated.txt' % configs['folder.local'],
                 '--num_flts', configs['num.flts'],
                 '--num_times_to_compute', configs['num.times.to.compute'],
                 '--members_size', configs['members.size'],

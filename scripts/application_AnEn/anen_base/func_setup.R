@@ -60,7 +60,7 @@ initial_config <- function (user = 'Weiming') {
     threshold.triangle <- 2
     num.pixels.increase <- 10
 
-    debug <- 0
+    debug <- 1
     interpolate.AnEn.rasters <- 1
 
     # randomly select pixels to compute

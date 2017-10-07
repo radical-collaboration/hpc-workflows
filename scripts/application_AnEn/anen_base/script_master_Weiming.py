@@ -147,7 +147,8 @@ if __name__ == '__main__':
         sys.exit(1)
 
     finally:
-        appman.resource_terminate()
+        if not initial_config['debug']:
+            appman.resource_terminate()
         profs = glob('./*.prof')
         for f in profs:
             os.remove(f)
