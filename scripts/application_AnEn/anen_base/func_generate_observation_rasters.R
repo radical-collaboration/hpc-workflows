@@ -63,5 +63,6 @@ generate_observation_rasters <- function(
             }
         }
     }
+    print("Done!")
 }
 

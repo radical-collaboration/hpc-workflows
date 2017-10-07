@@ -83,6 +83,7 @@ if __name__ == '__main__':
     except Exception, ex:
         print 'Execution failed, error: %s'%ex
         print traceback.format_exc()
+        appman.resource_terminate()
         sys.exit(1)
 
     finally:
@@ -94,7 +95,7 @@ if __name__ == '__main__':
     # -------------------------- Iteration  ------------------------------------
     iteration = int(initial_config['init.iteration'])
     pixels_to_compute = initial_config['pixels.compute']
-
+    
     # a list to keep track of the AnEn combined output files
     files_output = list()
 
@@ -114,6 +115,7 @@ if __name__ == '__main__':
     except Exception, ex:
         print 'Execution failed, error: %s'%ex
         print traceback.format_exc()
+        appman.resource_terminate()
         sys.exit(1)
 
     finally:
@@ -141,6 +143,7 @@ if __name__ == '__main__':
     except Exception, ex:
         print 'Execution failed, error: %s'%ex
         print traceback.format_exc()
+        appman.resource_terminate()
         sys.exit(1)
 
     finally:

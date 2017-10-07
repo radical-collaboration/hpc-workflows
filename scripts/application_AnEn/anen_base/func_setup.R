@@ -26,7 +26,7 @@ initial_config <- function (user = 'Weiming') {
     
     file.pixels.computed <- paste(folder.local, 'pixels_computed_list.rdata', sep = '')
 
-    command.verbose <- '--verbose 0'
+    verbose <- '0'
     folder.accumulate <- paste(folder.prefix, 'anen_accumulate/', sep = '')
     folder.output <- paste(folder.prefix, 'anen_output/', sep = '')
     folder.raster.anen <- paste(folder.prefix, 'anen_raster/', sep = '')
@@ -71,7 +71,7 @@ initial_config <- function (user = 'Weiming') {
                                       ygrids.total, 0)
 
     list.init.config <- list(command.exe = command.exe,
-                             command.verbose = command.verbose,
+                             verbose = verbose,
                              file.forecasts = file.forecasts,
                              file.observations = file.observations,
                              file.pixels.computed = file.pixels.computed,

@@ -7,7 +7,7 @@ functions for parsing and checking the arguments from func_setup.R
 def test_initial_config(d):
 
     possible_keys = [
-            'command.exe', 'command.verbose', 'file.forecasts',
+            'command.exe', 'verbose', 'file.forecasts',
             'file.observations', 'file.pixels.computed', 'folder.prefix',
             'folder.accumulate', 'folder.scripts', 'folder.output',
             'folder.raster.anen', 'folder.raster.obs', 'folder.local',
@@ -36,7 +36,7 @@ def test_initial_config(d):
 def process_initial_config(initial_config):
 
     # arguments treated as lists with integer elements
-    keys_list_int = ['pixels.compute', 'ycuts']
+    keys_list_int = ['pixels.compute', 'ycuts', 'verbose']
 
     # arguments treated as lists with float elements
     keys_list_float = ['weights']
@@ -46,13 +46,11 @@ def process_initial_config(initial_config):
 
     # arguments treated as string
     keys_str = [
-            'command.exe', 'command.verbose',
-            'folder.raster.obs', 'folder.local',
-            'folder.scripts', 'folder.prefix',
-            'folder.accumulate', 'folder.output',
-            'folder.raster.anen', 'file.forecasts',
-            'file.observations', 'file.pixels.computed',
-            'folder.triangles']
+            'command.exe', 'folder.raster.obs',
+            'folder.local', 'folder.scripts',
+            'folder.prefix', 'folder.accumulate',
+            'folder.output', 'folder.raster.anen', 'file.forecasts',
+            'file.observations', 'file.pixels.computed', 'folder.triangles']
 
     # arguments treated as integer
     keys_int = [

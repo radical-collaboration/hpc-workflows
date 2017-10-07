@@ -38,6 +38,7 @@ def start_iteration (
     quick = configs['quick']
     cores = configs['cores']
     weights = configs['weights']
+    verbose = configs['verbose']
 
     str_iteration = str(iteration).zfill(4)
     str_folder_output = configs['folder.output']
@@ -49,7 +50,6 @@ def start_iteration (
     str_folder_local = configs['folder.local']
     str_file_pixels_computed = configs['file.pixels.computed']
     str_command_exe = configs['command.exe']
-    str_command_verbose = configs['command.verbose']
 
     p = Pipeline()
 
@@ -112,7 +112,7 @@ def start_iteration (
                 '--rolling', rolling,
                 '--cores', cores,
                 '-o', file_subregion,
-                str_command_verbose]
+                '--verbose', verbose]
 
         if quick:
             t2.arguments.append('--quick')
@@ -156,16 +156,15 @@ def start_iteration (
 
     file_output = '%siteration%s.nc' % (str_folder_accumulate, str_iteration)
 
-    t3.arguments = ['-C', '--file-new', file_output]
-    t3.arguments.append('--files-from')
+    t3.arguments = ['-C', '--file-new', file_output,
+                '--verbose', verbose]
 
     # combine files from previous iterations
+    t3.arguments.append('--files-from')
     t3.arguments.extend([k for k in files_output])
 
     # combine files from subregions of the current iteration
     t3.arguments.extend([k for k in files_subregion])
-
-    t3.arguments.append(str_command_verbose)
 
     # add the output file of this stage to the tracking list
     files_output.append(file_output)
