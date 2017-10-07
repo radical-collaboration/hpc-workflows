@@ -75,7 +75,7 @@ def postprocess (configs, pre_exec):
                 'script_interpolate_anen.py',
                 '--file_anen_accumulate_iteration', file_anen_accumulate_iteration,
                 '--prefix_anen_raster', prefix_anen_raster,
-                '--file_pixels_accumulated', 'pixels_accumulated.txt'],
+                '--file_pixels_accumulated', 'pixels_accumulated.txt',
                 '--num_flts', configs['num.flts'],
                 '--num_times_to_compute', configs['num.times.to.compute'],
                 '--members_size', configs['members.size'],
