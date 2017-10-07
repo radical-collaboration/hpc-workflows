@@ -36,7 +36,7 @@ def test_initial_config(d):
 def process_initial_config(initial_config):
 
     # arguments treated as lists with integer elements
-    keys_list_int = ['pixels.compute', 'ycuts', 'verbose']
+    keys_list_int = ['pixels.compute', 'ycuts']
 
     # arguments treated as lists with float elements
     keys_list_float = ['weights']
@@ -61,7 +61,7 @@ def process_initial_config(initial_config):
             'quick', 'cores', 'rolling', 'observation.ID',
             'train.ID.start', 'train.ID.end', 'test.ID.start',
             'test.ID.end', 'num.pixels.increase', 'debug',
-            'interpolate.AnEn.rasters']
+            'interpolate.AnEn.rasters', 'verbose']
 
     for key in keys_list_int:
         initial_config[key] = [int(k) for k in list(initial_config[key])]
