@@ -20,6 +20,7 @@ if __name__ == '__main__':
     parser.add_argument('--members_size')
     parser.add_argument('--threshold_triangle')
     parser.add_argument('--file_pixels_accumulated')
+    parser.add_argument('--verbose')
 
     args = parser.parse_args()
 
@@ -45,4 +46,5 @@ if __name__ == '__main__':
             args.iteration, args.folder_raster_obs, args.folder_accumulate,
             args.folder_triangles, pixels_computed, args.xgrids_total,
             args.ygrids_total, args.num_flts, args.num_pixels_increase,
-            args.num_times_to_compute, args.members_size, args.threshold_triangle)
+            args.num_times_to_compute, args.members_size, args.threshold_triangle,
+            args.verbose)

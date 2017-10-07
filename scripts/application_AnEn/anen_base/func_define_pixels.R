@@ -7,7 +7,7 @@ define_pixels <- function(
     iteration, folder.raster.obs, folder.accumulate, folder.triangles,
     pixels.computed, xgrids.total, ygrids.total,
     num.flts, num.pixels.increase, num.times.to.compute, members.size,
-    threshold.triangle) {
+    threshold.triangle, verbose) {
 
     require(raster)
     require(deldir)
@@ -28,6 +28,7 @@ define_pixels <- function(
     num.pixels.increase <- as.numeric(num.pixels.increase)
     members.size <- as.numeric(members.size)
     threshold.triangle <- as.numeric(threshold.triangle)
+    verbose <- as.numeric(verbose)
 
 
     #############################
@@ -120,6 +121,17 @@ define_pixels <- function(
     # find out the triangles that have too large errors
     triangles.index.to.continue <- which(errors.triangle.average > threshold.triangle)
 
+    if (verbose > 0) {
+        print(paste("******** Evaluation from Iteration ", iteration,
+                    " ********", sep = ''))
+        print(paste("There are ", length(triangles.index.to.continue),
+                    " triangles that need more pixels.", sep = ''))
+        print(paste("The averaged error of vertices is ",
+                    errors.triangle.average, sep = ''))
+        print(paste("***********************************************",
+                    sep = ''))
+    }
+
     # define pixels for the next iteration
     pixels.next.iteration <- vector(mode = 'numeric')
     for (i in triangles.index.to.continue) {
@@ -138,7 +150,7 @@ define_pixels <- function(
     print(paste("The amount of the pixels for the next iteration is",
                 length(pixels.next.iteration)))
 
-    write(pixels.next.iteration , file = 'pixels_next_iteration.txt',
+    write(pixels.next.iteration, file = 'pixels_next_iteration.txt',
           ncolumns = length(pixels.next.iteration))
     print("Done!")
 }

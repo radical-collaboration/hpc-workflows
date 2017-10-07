@@ -215,7 +215,8 @@ def start_iteration (
             '--num_times_to_compute', num_times_to_compute,
             '--members_size', members_size,
             '--threshold_triangle', threashold_triangle,
-            '--file_pixels_accumulated', 'pixels_accumulated.txt']
+            '--file_pixels_accumulated', 'pixels_accumulated.txt',
+            '--verbose', verbose]
     t4.download_output_data = [
             'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (
                 str_folder_local, str_iteration)]
