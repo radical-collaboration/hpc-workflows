@@ -299,7 +299,7 @@ if __name__ == '__main__':
     # Create a dictionary to describe our resource request
     res_dict = {
             'resource': 'xsede.supermic',
-            'walltime': 60,
+            'walltime': 100,
             'cores': 40,
             'project': 'TG-MCB090174',
             'queue': 'hybrid',
@@ -317,7 +317,10 @@ if __name__ == '__main__':
         #         './func_define_pixels.R']
 
         # Create an Application Manager for our application
-        appman = AppManager(port = 32773, autoterminate=False)
+        #appman = AppManager(port = 32773, autoterminate=False)
+
+        # Weiming's Jetstream
+        appman = AppManager(port = 32769, autoterminate=False)
 
         # Assign the resource manager to be used by the application manager
         appman.resource_manager = rman

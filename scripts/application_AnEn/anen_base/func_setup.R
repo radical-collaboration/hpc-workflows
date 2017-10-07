@@ -1,15 +1,15 @@
 # set up basic parameters that would be shared by all processes
-initial_config <- function (machine = 'supermic') {
+initial_config <- function (user = 'Weiming') {
     require(RAnEnExtra)
 
     prefix_time <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S")
 
-    if (machine == 'Weiming') {
-        command.exe <- '~/github/CAnalogsV2/install/bin/canalogs'
-        file.forecasts <- "~/geolab_storage_V2/data/NAM12KM/chunk_NAM/Forecasts_NAM_sliced.nc"
-        file.observations <- "~/geolab_storage_V2/data/NAM12KM/chunk_NAM/analysis_NAM.nc"
-        folder.prefix <- '~/geolab_storage_V2/data/NAM12KM/experiments_smart/'
-    } else if (machine == 'supermic') {
+    if (user == 'Weiming') {
+        command.exe <- '/home/whu/github/CAnalogsV2/install/bin/canalogs'
+        file.forecasts <- "/home/whu/data/chunk_NAM/Forecasts_NAM_sliced.nc"
+        file.observations <- "/home/whu/data/chunk_NAM/Analysis_NAM.nc"
+        folder.prefix <- paste('/home/whu/experiments/anen_smart/', prefix_time, '/', sep = '')
+    } else if (user == 'Vivek') {
         # setup on supermic
         command.exe <- '/work/vivek91/modules/CAnalogsV2/build/canalogs'
         file.forecasts <- "/work/vivek91/chunk_NAM/Forecasts_NAM_sliced.nc"
