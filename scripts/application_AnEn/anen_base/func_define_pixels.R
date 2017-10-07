@@ -124,10 +124,13 @@ define_pixels <- function(
     if (verbose > 0) {
         print(paste("******** Evaluation from Iteration ", iteration,
                     " ********", sep = ''))
+        print(paste("The error threshold is ", threshold.triangle, sep = ''))
         print(paste("There are ", length(triangles.index.to.continue),
                     " triangles that need more pixels.", sep = ''))
-        print(paste("The averaged error of vertices is ",
-                    errors.triangle.average, sep = ''))
+        for (i in 1 : length(errors.triangle.average)) {
+            print(paste("The averaged error of vertices #", i, " is ",
+                        errors.triangle.average[i], sep = ''))
+        }
         print(paste("***********************************************",
                     sep = ''))
     }
