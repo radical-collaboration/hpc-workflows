@@ -19,6 +19,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_times_to_compute')
     parser.add_argument('--members_size')
     parser.add_argument('--threshold_triangle')
+    parser.add_argument('--pixels_computed_file')
 
     args = parser.parse_args()
 

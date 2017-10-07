@@ -65,8 +65,8 @@ def postprocess (configs, pre_exec):
         t.pre_exec = pre_exec
         t.executable = ['python']
         t.copy_input_data = [
-                '$SHARED/script_interpolate_anen.py',
-                '$SHARED/func_interpolate_anen.R']
+                '%s/script_interpolate_anen.py' % configs['folder.scripts'],
+                '%s/func_interpolate_anen.R' % configs['folder.scripts']]
         t.arguments = [
                 'script_interpolate_anen.py',
                 '--file_anen_accumulate_iteration', file_anen_accumulate_iteration,

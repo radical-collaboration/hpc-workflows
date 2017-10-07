@@ -9,9 +9,9 @@ def test_initial_config(d):
     possible_keys = [
             'command.exe', 'command.verbose', 'file.forecasts',
             'file.observations', 'file.pixels.computed', 'folder.prefix',
-            'folder.accumulate', 'folder.output', 'folder.raster.anen',
-            'folder.raster.obs', 'folder.local', 'folder.triangles',
-            'num.flts', 'num.times', 'num.times.to.compute',
+            'folder.accumulate', 'folder.scripts', 'folder.output',
+            'folder.raster.anen', 'folder.raster.obs', 'folder.local',
+            'folder.triangles', 'num.flts', 'num.times', 'num.times.to.compute',
             'num.parameters', 'ygrids.total', 'xgrids.total',
             'grids.total', 'init.num.pixels.compute',
             'yinterval', 'ycuts', 'quick', 'cores', 'rolling',
@@ -48,10 +48,11 @@ def process_initial_config(initial_config):
     keys_str = [
             'command.exe', 'command.verbose',
             'folder.raster.obs', 'folder.local',
-            'folder.prefix', 'folder.accumulate',
-            'folder.output', 'folder.raster.anen',
-            'file.forecasts', 'file.observations',
-            'file.pixels.computed', 'folder.triangles']
+            'folder.scripts', 'folder.prefix',
+            'folder.accumulate', 'folder.output',
+            'folder.raster.anen', 'file.forecasts',
+            'file.observations', 'file.pixels.computed',
+            'folder.triangles']
 
     # arguments treated as integer
     keys_int = [

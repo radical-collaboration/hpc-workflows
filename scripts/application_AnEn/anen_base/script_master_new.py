@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
     # Create the Manager for our application
     rman = ResourceManager(res_dict)
-    appman = AppManager(port = 32769)
+    appman = AppManager(port = 32769, autoterminate = False)
 
 
     # -------------------------- End of Setup ----------------------------------
@@ -72,10 +72,6 @@ if __name__ == '__main__':
     pipeline_preprocess = preprocess(initial_config, resource_key['xsede.supermic'])
     
     try:
-        rman.shared_data = [
-                './script_generate_observation_rasters.py',
-                './func_generate_observation_rasters.R']
-
         appman.resource_manager = rman
         appman.assign_workflow(set([pipeline_preprocess]))
 
@@ -107,10 +103,6 @@ if __name__ == '__main__':
             pixels_compute, files_output)
 
     try:
-        rman.shared_data = [
-                './script_define_pixels.py',
-                './func_define_pixels.R']
-
         appman.resource_manager = rman
         appman.assign_workflow(set([pipeline_iteration]))
 
@@ -138,10 +130,6 @@ if __name__ == '__main__':
     pipeline_postprocess = postprocess(initial_config, resource_key['xsede.supermic'])
 
     try:
-        rman.shared_data = [
-                './script_interpolate_anen.py',
-                './func_interpolate_anen.R']
-
         appman.resource_manager = rman
         appman.assign_workflow(set([pipeline_postprocess]))
 
@@ -156,6 +144,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     finally:
+        appman.resource_terminate()
         profs = glob('./*.prof')
         for f in profs:
             os.remove(f)

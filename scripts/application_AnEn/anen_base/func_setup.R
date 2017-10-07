@@ -8,12 +8,15 @@ initial_config <- function (user = 'Weiming') {
         command.exe <- '/home/whu/github/CAnalogsV2/install/bin/canalogs'
         file.forecasts <- "/home/whu/data/chunk_NAM/Forecasts_NAM_sliced.nc"
         file.observations <- "/home/whu/data/chunk_NAM/Analysis_NAM.nc"
-        folder.prefix <- paste('/home/whu/experiments/anen_smart/', prefix_time, '/', sep = '')
+        folder.scripts <- '/home/whu/github/hpc-workflows/scripts/application_AnEn/anen_base/'
+        folder.prefix <- paste('/home/whu/experiments/anen_smart/',
+                               prefix_time, '/', sep = '')
     } else if (user == 'Vivek') {
         # setup on supermic
         command.exe <- '/work/vivek91/modules/CAnalogsV2/build/canalogs'
         file.forecasts <- "/work/vivek91/chunk_NAM/Forecasts_NAM_sliced.nc"
         file.observations <- "/work/vivek91/chunk_NAM/Analysis_NAM.nc"
+        folder.scripts <- ''
         folder.prefix <- paste('/work/vivek91/anen_smart/',
                                prefix_time, '/', sep = '')
     }
@@ -73,6 +76,7 @@ initial_config <- function (user = 'Weiming') {
                              file.observations = file.observations,
                              file.pixels.computed = file.pixels.computed,
                              folder.prefix = folder.prefix,
+                             folder.scripts = folder.scripts,
                              folder.local = folder.local,
                              folder.accumulate = folder.accumulate,
                              folder.output = folder.output,

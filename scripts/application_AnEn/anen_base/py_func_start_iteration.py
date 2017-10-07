@@ -192,8 +192,8 @@ def start_iteration (
     t4.pre_exec = pre_exec
     t4.executable = ['python']
     t4.copy_input_data = [
-            '$SHARED/script_define_pixels.py',
-            '$SHARED/func_define_pixels.R']
+            '%s/script_define_pixels.py' % configs['folder.scripts'],
+            '%s/func_define_pixels.R' % configs['folder.scripts']]
     t4.arguments = [
             'script_define_pixels.py', 
             '--iteration', str_iteration,
