@@ -19,12 +19,12 @@ if __name__ == '__main__':
     parser.add_argument('--num_times_to_compute')
     parser.add_argument('--members_size')
     parser.add_argument('--threshold_triangle')
-    parser.add_argument('--pixels_computed_file')
+    parser.add_argument('--file_pixels_accumulated')
 
     args = parser.parse_args()
 
 
-    with open(args.pixels_computed_file,'r') as fh:
+    with open(args.file_pixels_accumulated, 'r') as fh:
         pixels_computed = fh.readlines()[0].strip()
 
     pixels_computed = [k for k in pixels_computed.split(' ')]

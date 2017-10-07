@@ -185,6 +185,9 @@ def start_iteration (
             str_file_pixels_computed, str_iteration)
     str_pixels_accumulated = ' '.join([str(int(k)) for k in pixels_accumulated])
 
+    with open('pixels_accumulated.txt','w') as f:        
+        f.write(str_pixels_accumulated)
+    
     # define pixels for the next iteration
     t4 = Task()
     t4.cores = 1
@@ -206,7 +209,7 @@ def start_iteration (
             '--num_times_to_compute', num_times_to_compute,
             '--members_size', members_size,
             '--threshold_triangle', threashold_triangle,
-            '--pixels_computed', str_pixels_accumulated]
+            '--file_pixels_accumulated', 'pixels_accumulated.txt']
     #t4.download_output_data = [
     #        'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (
     #            str_folder_local, str_iteration)]
