@@ -1,7 +1,7 @@
 # generate interpolated prediction map for
 # a single AnEn file
 #
-interpolate_AnEn <- function(
+interpolate_anen <- function(
     file.anen, prefix.anen.raster, pixels.computed, times, flts,
     members.size, xgrids.total, ygrids.total, num.neighbors) {
     require(ncdf4)

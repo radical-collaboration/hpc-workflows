@@ -81,7 +81,7 @@ def start_iteration (
     files_subregion = list()
 
     for ind in range(len(pixels_list)):
-
+        
         # create task
         t2 = Task()
         t2.cores = int(cores)
@@ -99,6 +99,13 @@ def start_iteration (
                 str_folder_output + 'iteration' + str_iteration +
                 '_chunk' + str(ind).zfill(4) + '.nc')
 
+        # check whether there are pixels lying within this subregion
+        pixels_to_compute = pixels_list[ind]
+        pixels_to_compute = [int(val - subregion_pixel_start) for val in pixels_to_compute]
+        
+        if len(pixels_to_compute) == 0:
+            continue
+        
         # define arguments for calling the CAnEn program
         t2.arguments = ['-N','-p',
                 '--forecast-nc', str_file_forecasts,
@@ -120,8 +127,6 @@ def start_iteration (
         t2.arguments.append('--weights')
         t2.arguments.extend(weights)
 
-        pixels_to_compute = pixels_list[ind]
-        pixels_to_compute = [int(val - subregion_pixel_start) for val in pixels_to_compute]
         t2.arguments.append('--stations-ID')
         t2.arguments.extend(pixels_to_compute)
 
@@ -193,6 +198,7 @@ def start_iteration (
     t4.cores = 1
     t4.pre_exec = pre_exec
     t4.executable = ['python']
+    t4.upload_input_data = ['pixels_accumulated.txt']
     t4.copy_input_data = [
             '%s/script_define_pixels.py' % configs['folder.scripts'],
             '%s/func_define_pixels.R' % configs['folder.scripts']]
@@ -210,9 +216,9 @@ def start_iteration (
             '--members_size', members_size,
             '--threshold_triangle', threashold_triangle,
             '--file_pixels_accumulated', 'pixels_accumulated.txt']
-    #t4.download_output_data = [
-    #        'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (
-    #            str_folder_local, str_iteration)]
+    t4.download_output_data = [
+            'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (
+                str_folder_local, str_iteration)]
 
     s4 = Stage()
     s4.add_tasks(t4)
