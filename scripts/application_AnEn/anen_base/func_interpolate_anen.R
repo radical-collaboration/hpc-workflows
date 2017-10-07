@@ -3,13 +3,13 @@
 #
 interpolate_anen <- function(
     file.anen, prefix.anen.raster, pixels.computed, times, flts,
-    members.size, xgrids.total, ygrids.total, num.neighbors) {
+    members.size, num.neighbors, xgrids.total, ygrids.total) {
     require(ncdf4)
     require(raster)
     require(RAnEnExtra)
 
     # convert argument types
-    pixels.computed <- unlist(pixels.computed)
+    pixels.computed <- as.numeric(unlist(pixels.computed))
     times <- as.numeric(times)
     flts <- as.numeric(flts)
     members.size <- as.numeric(members.size)
@@ -26,19 +26,19 @@ interpolate_anen <- function(
     }
 
     nc <- nc_open(file.anen)
-    if (length(ncvar_get(nc, 'Members')) != members.size) {
+    if (length(nc$dim$Members$vals) != members.size) {
         stop(paste("Members dimension is not correct in file", file.anen))
         return (FALSE)
     }
-    if (length(ncvar_get(nc, 'Stations')) != num.pixels.computed) {
+    if (length(nc$dim$Stations$vals) != num.pixels.computed) {
         stop(paste("Stations dimension is not correct in file", file.anen))
         return (FALSE)
     }
-    if (length(ncvar_get(nc, 'Time')) != times) {
+    if (length(nc$dim$Time$vals) != times) {
         stop(paste("Time dimension is not correct in file", file.anen))
         return (FALSE)
     }
-    if (length(ncvar_get(nc, 'dt')) != flts) {
+    if (length(nc$dim$dt$vals) != flts) {
         stop(paste("dt dimension is not correct in file", file.anen))
         return (FALSE)
     }
@@ -53,21 +53,21 @@ interpolate_anen <- function(
                         xmn = 0.5, xmx = xgrids.total+.5,
                         ymn = 0.5, ymx = ygrids.total+.5)
 
-    for (day in 1 : days) {
+    for (time in 1 : times) {
         for (flt in 1 : flts) {
-            file.raster.anen <- paste(prefix.anen.raster, '_day', day,
+            file.raster.anen <- paste(prefix.anen.raster, '_time', time,
                                       "_flt", flt, '.rdata', sep = '')
 
             if (!file.exists(file.raster.anen)) {
                 nc <- nc_open(file.anen)
                 analogs <- ncvar_get(nc, 'Data',
-                                     start = c(1, day, flt, 1),
+                                     start = c(1, time, flt, 1),
                                      count = c(num.pixels.computed,
                                                1, 1, members.size))
                 nc_close(nc)
 
                 z <- apply(analogs, 1, mean, rm.na=T)
-                if (length(pixels.compute) == xgrids.total*ygrids.total) {
+                if (length(pixels.computed) == xgrids.total*ygrids.total) {
                     rast.int <- rasterize(cbind(x, y), rast.base, z)
                 } else {
                     rast.int <- nni(x, y, z, rast.base, n=num.neighbors)

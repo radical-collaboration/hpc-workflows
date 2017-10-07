@@ -36,6 +36,6 @@ if __name__ == '__main__':
     interpolate_anen.interpolate_anen(
             args.file_anen_accumulate_iteration,
             args.prefix_anen_raster, pixels_computed,
-            args.num_flts, args.num_times_to_compute,
+            args.num_times_to_compute, args.num_flts,
             args.members_size, args.num_neighbors,
             args.xgrids_total, args.ygrids_total)
