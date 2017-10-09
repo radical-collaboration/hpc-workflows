@@ -23,8 +23,8 @@ def preprocess (configs, pre_exec):
         t.pre_exec = pre_exec
         t.executable = ['python']
         t.copy_input_data = [
-                '$SHARED/script_generate_observation_rasters.py',
-                '$SHARED/func_generate_observation_rasters.R']
+                '%s/script_generate_observation_rasters.py' % configs['folder.scripts'],
+                '%s/func_generate_observation_rasters.R' % configs['folder.scripts']]
         t.arguments = [
                 'script_generate_observation_rasters.py',
                 '--test_ID_index', ind+1,
