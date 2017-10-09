@@ -28,12 +28,10 @@ resource_key = {
         }
 
 
-if __name__ == '__main__':
 
-    # -------------------------- Setup -----------------------------------------
-    # ENTK and AnEn parameters setup
+def generate_pipeline():
 
-    # Read initial configuration from R function
+    
     with open('func_setup.R', 'r') as f:
         R_code = f.read()
     RAnEnExtra = importr("RAnEnExtra")
@@ -251,11 +249,21 @@ if __name__ == '__main__':
             '--pixels_computed', pixels_accumulated_str]
     t4.download_output_data = [
             'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (
-                initial_config['folder.local'], iteration)]
+                '/'.join(initial_config['folder.local'].split('/')[1:]), iteration)]
 
     s4 = Stage()
     s4.add_tasks(t4)
     p.add_stages(s4)
+
+    return p
+
+
+if __name__ == '__main__':
+
+    # -------------------------- Setup -----------------------------------------
+    # ENTK and AnEn parameters setup
+
+    # Read initial configuration from R function
     # -------------------------- End of Stage 4 --------------------------------
 
 
@@ -265,7 +273,7 @@ if __name__ == '__main__':
             'walltime': 60,
             'cores': 40,
             'project': 'TG-MCB090174',
-            #'queue': 'development',
+            'queue': 'hybrid',
             'schema': 'gsissh'}
 
     try:
@@ -280,16 +288,28 @@ if __name__ == '__main__':
         #         './func_define_pixels.R']
 
         # Create an Application Manager for our application
-        appman = AppManager(port = 32769)
+        appman = AppManager(port = 32773, autoterminate=False)
 
         # Assign the resource manager to be used by the application manager
         appman.resource_manager = rman
+
+        p = generate_pipeline()
 
         # Assign the workflow to be executed by the application manager
         appman.assign_workflow(set([p]))
 
         # Run the application manager -- blocking call
         appman.run()
+    
+        p = generate_pipeline()
+
+        # Assign the workflow to be executed by the application manager
+        appman.assign_workflow(set([p]))
+
+        # Run the application manager -- blocking call
+        appman.run()    
+
+        appman.resource_terminate()
 
     except Exception, ex:
 
