@@ -136,7 +136,7 @@ if __name__ == '__main__':
                 initial_config['folder.local'], str_iteration), 'r') as f:
                 line = f.readlines()
 
-            pixels_to_compute = [int(k) for k in line[0].split(' ')]
+            pixels_to_compute = [int(float(k)) for k in line[0].split(' ')]
             
             if initial_config['verbose'] > 0:
                 print ("the number of pixels to compute for the next iteration %d"
