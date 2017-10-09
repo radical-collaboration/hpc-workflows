@@ -122,17 +122,20 @@ define_pixels <- function(
     triangles.index.to.continue <- which(errors.triangle.average > threshold.triangle)
 
     if (verbose > 0) {
-        print(paste("******** Evaluation from Iteration ", iteration,
-                    " ********", sep = ''))
-        print(paste("The error threshold is ", threshold.triangle, sep = ''))
-        print(paste("There are ", length(triangles.index.to.continue),
-                    " triangles that need more pixels.", sep = ''))
+        write(paste("******** Evaluation from Iteration ", iteration,
+                    " ********", sep = ''), file = 'evaluation_log.txt')
+        write(paste("The error threshold is ", threshold.triangle, sep = ''),
+              file = 'evaluation_log.txt', append = T)
+        write(paste("There are ", length(triangles.index.to.continue),
+                    " triangles that need more pixels.", sep = ''),
+              file = 'evaluation_log.txt', append = T)
         for (i in 1 : length(errors.triangle.average)) {
-            print(paste("The averaged error of vertices #", i, " is ",
-                        errors.triangle.average[i], sep = ''))
+            write(paste("The averaged error of vertices #", i, " is ",
+                        errors.triangle.average[i], sep = ''),
+                  file = 'evaluation_log.txt', append = T)
         }
-        print(paste("***********************************************",
-                    sep = ''))
+        write(paste("***********************************************", sep = ''),
+              file = 'evaluation_log.txt', append = T)
     }
 
     # define pixels for the next iteration

@@ -101,7 +101,9 @@ if __name__ == '__main__':
 
 
     while iteration_count < max_iterations:
-    
+
+        print "Iteration %s" % str_iteration
+
         pipeline_iteration = start_iteration(
                 iteration, initial_config, resource_key['xsede.supermic'],
                 pixels_to_compute, files_output)
@@ -141,6 +143,8 @@ if __name__ == '__main__':
                         % len(pixels_to_compute))
 
         iteration_count += 1
+        iteration = int(str_iteration) + 1
+        str_iteration = str(iteration).zfill(4)
 
     # -------------------------- End of Iteration  -----------------------------
 
