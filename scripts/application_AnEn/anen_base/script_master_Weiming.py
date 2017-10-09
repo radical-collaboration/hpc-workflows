@@ -57,7 +57,7 @@ if __name__ == '__main__':
 
     iteration = initial_config['init.iteration']
     
-    # list to keep track of the combined output AnEn files to be accumulated
+    # a list to keep track of the combined output AnEn files to be accumulated
     files_output = list()
 
     # Create the Manager for our application
@@ -102,9 +102,6 @@ if __name__ == '__main__':
 
     while iteration_count < max_iterations:
     
-        # a list to keep track of the AnEn combined output files
-        files_output = list()
-
         pipeline_iteration = start_iteration(
                 iteration, initial_config, resource_key['xsede.supermic'],
                 pixels_to_compute, files_output)
