@@ -220,9 +220,9 @@ def start_iteration (
     t3.download_output_data = [
             'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (
                 str_folder_local, str_iteration)]
-    #if configs['verbose'] > 0:
-    #    t3.download_output_data.append(['evaluation_log.txt > %sevaluation_log_after_iteration%s.txt' % (
-    #                str_folder_local, str_iteration)])
+    if configs['verbose'] > 0:
+        t3.download_output_data.append('evaluation_log.txt > %sevaluation_log_after_iteration%s.txt' % (
+                    str_folder_local, str_iteration))
 
     s3 = Stage()
     s3.add_tasks(t3)
