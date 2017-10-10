@@ -30,7 +30,7 @@ resource_key = {
 
 res_dict = {
         'resource': 'xsede.supermic',
-        'walltime': 100,
+        'walltime': 3000,
         'cores': 40,
         'project': 'TG-MCB090174',
         #'queue': 'development',
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     iteration = int(initial_config['init.iteration'])
     str_iteration = str(iteration).zfill(4)
     pixels_to_compute = initial_config['pixels.compute']
-    max_iterations = 5
+    max_iterations = initial_config['max.iterations']
     iteration_count = 0
 
 
@@ -141,6 +141,11 @@ if __name__ == '__main__':
             if initial_config['verbose'] > 0:
                 print ("the number of pixels to compute for the next iteration %d"
                         % len(pixels_to_compute))
+
+        if len(pixels_to_compute) == 0:
+            print "No more pixels to compute for the next iteration."
+            print "Terminate the process!"
+            break
 
         iteration_count += 1
         iteration = int(str_iteration) + 1

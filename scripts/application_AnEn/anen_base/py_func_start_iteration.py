@@ -166,7 +166,9 @@ def start_iteration (
 
     # combine files from previous iterations
     t2.arguments.append('--files-from')
-    t2.arguments.extend([k for k in files_output])
+    if len(files_output) != 0:
+        t2.arguments.extend(files_output[len(files_output)-1])
+
 
     # combine files from subregions of the current iteration
     t2.arguments.extend([k for k in files_subregion])
@@ -190,7 +192,8 @@ def start_iteration (
             str_file_pixels_computed, str_iteration)
     str_pixels_accumulated = ' '.join([str(int(k)) for k in pixels_accumulated])
 
-    with open('%s/pixels_accumulated.txt' % configs['folder.local'], 'w') as f:        
+    with open('%s/pixels_accumulated_for_iteration%s.txt' % (
+        configs['folder.local'], str_iteration), 'w') as f:        
         f.write(str_pixels_accumulated)
     
     # define pixels for the next iteration
@@ -198,7 +201,8 @@ def start_iteration (
     t3.cores = 1
     t3.pre_exec = pre_exec
     t3.executable = ['python']
-    t3.upload_input_data = ['%s/pixels_accumulated.txt' % configs['folder.local']]
+    t3.upload_input_data = ['%s/pixels_accumulated_for_iteration%s.txt' % (
+        configs['folder.local'], str_iteration)]
     t3.copy_input_data = [
             '%s/script_define_pixels.py' % configs['folder.scripts'],
             '%s/func_define_pixels.R' % configs['folder.scripts']]
@@ -215,7 +219,8 @@ def start_iteration (
             '--num_times_to_compute', num_times_to_compute,
             '--members_size', members_size,
             '--threshold_triangle', threashold_triangle,
-            '--file_pixels_accumulated', 'pixels_accumulated.txt',
+            '--file_pixels_accumulated',
+            'pixels_accumulated_for_iteration%s.txt' % str_iteration,
             '--verbose', verbose]
     t3.download_output_data = [
             'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (

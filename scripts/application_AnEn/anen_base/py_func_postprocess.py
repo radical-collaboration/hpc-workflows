@@ -56,18 +56,23 @@ def postprocess (configs, pre_exec):
                 str_folder_raster_anen, str_iteration)
 
         # get pixels computed
-        pixels_accumulated = read_pixels_computed.read_pixels_computed(
-                str_file_pixels_computed, str_iteration)
-        str_pixels_accumulated = ' '.join([str(int(k)) for k in pixels_accumulated])
-        
-	with open('%s/pixels_accumulated.txt' % configs['folder.local'],'w') as f:
-            f.write(str_pixels_accumulated)
+        str_file_pixels_accumulated = '%s/pixels_accumulated_for_iteration%s.txt' % (
+                configs['folder.local'], str_iteration)
+
+        if not os.path.exists(str_file_pixels_accumulated):
+            print "File %s can't be found. Create it." % str_file_pixels_accumulated
+
+            pixels_accumulated = read_pixels_computed.read_pixels_computed(
+                    str_file_pixels_computed, str_iteration)
+            str_pixels_accumulated = ' '.join([str(int(k)) for k in pixels_accumulated])
+            with open(str_file_pixels_accumulated) as f:
+                f.write(str_pixels_accumulated)
 
         t = Task()
         t.cores = 1
         t.pre_exec = pre_exec
         t.executable = ['python']
-	t.upload_input_data = ['%s/pixels_accumulated.txt' % configs['folder.local']]
+	t.upload_input_data = [str_file_pixels_accumulated]
         t.copy_input_data = [
                 '%s/script_interpolate_anen.py' % configs['folder.scripts'],
                 '%s/func_interpolate_anen.R' % configs['folder.scripts']]
@@ -75,7 +80,8 @@ def postprocess (configs, pre_exec):
                 'script_interpolate_anen.py',
                 '--file_anen_accumulate_iteration', file_anen_accumulate_iteration,
                 '--prefix_anen_raster', prefix_anen_raster,
-                '--file_pixels_accumulated', 'pixels_accumulated.txt',
+                '--file_pixels_accumulated',
+                'pixels_accumulated_for_iteration%s.txt' % str_iteration,
                 '--num_flts', configs['num.flts'],
                 '--num_times_to_compute', configs['num.times.to.compute'],
                 '--members_size', configs['members.size'],

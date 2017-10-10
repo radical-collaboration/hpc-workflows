@@ -20,7 +20,6 @@ define_pixels <- function(
     # convert argument types
     iteration <- str_pad(as.numeric(iteration), 4, pad = '0')
     pixels.computed <- as.numeric(unlist(pixels.computed))
-
     xgrids.total <- as.numeric(xgrids.total)
     ygrids.total <- as.numeric(ygrids.total)
     num.flts <- as.numeric(num.flts)
@@ -48,7 +47,7 @@ define_pixels <- function(
 
     # save triangles
     file.triangles <- paste(folder.triangles, 'iteration',
-                            iteration, '.nc', sep = '')
+                            iteration, '.rdata', sep = '')
     save(polys.triangles, file = file.triangles)
  
 
@@ -56,6 +55,19 @@ define_pixels <- function(
     # compute errors over the triangle vertices #
     #############################################
     print("Compute errors over the triangle vertices")
+
+    rast.base <- raster(nrows = ygrids.total, ncols = xgrids.total,
+                        xmn = 0.5, xmx = xgrids.total+.5,
+                        ymn = 0.5, ymx = ygrids.total+.5)
+    indices <- cellFromXY(rast.base, cbind(x, y))
+    if (verbose > 1) {
+        print("The x vector is:")
+        print(x)
+        print("The y vector is:")
+        print(y)
+        print("The indices are:")
+        print(indices)
+    }
 
     errors.triangle <- array(NA, dim = c(num.times.to.compute, num.flts,
                                          length(polys.triangles)))
@@ -83,7 +95,7 @@ define_pixels <- function(
                                      '_flt', j, '.rdata', sep = '')
             if (file.exists(file.raster.obs)) {
                 load(file.raster.obs)
-                data.obs <- rast.obs[(y-1) + x]
+                data.obs <- rast.obs[indices]
             } else {
                 stop(paste("Can't find observation raster", file.raster.obs))
             }
