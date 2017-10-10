@@ -56,6 +56,19 @@ define_pixels <- function(
     #############################################
     print("Compute errors over the triangle vertices")
 
+    rast.base <- raster(nrows = ygrids.total, ncols = xgrids.total,
+                        xmn = 0.5, xmx = xgrids.total+.5,
+                        ymn = 0.5, ymx = ygrids.total+.5)
+    indices <- cellFromXY(rast.base, cbind(x, y))
+    if (verbose > 1) {
+        print("The x vector is:")
+        print(x)
+        print("The y vector is:")
+        print(y)
+        print("The indices are:")
+        print(indices)
+    }
+
     errors.triangle <- array(NA, dim = c(num.times.to.compute, num.flts,
                                          length(polys.triangles)))
     for (i in 1:num.times.to.compute) {
@@ -82,20 +95,7 @@ define_pixels <- function(
                                      '_flt', j, '.rdata', sep = '')
             if (file.exists(file.raster.obs)) {
                 load(file.raster.obs)
-                indices <- cellFromXY(rast.obs, cbind(x, y))
                 data.obs <- rast.obs[indices]
-                
-                if (verbose > 1) {
-                  print("The x vector is:")
-                  print(x)
-                  print("The y vector is:")
-                  print(y)
-                  print("The indices are:")
-                  print(indices)
-                }
-                
-                #data.obs <- rast.obs[(y-1) + x]
-                
             } else {
                 stop(paste("Can't find observation raster", file.raster.obs))
             }
