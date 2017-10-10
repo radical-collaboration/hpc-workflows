@@ -7,11 +7,11 @@ functions for parsing and checking the arguments from func_setup.R
 def test_initial_config(d):
 
     possible_keys = [
-            'command.exe', 'command.verbose', 'file.forecasts',
+            'command.exe', 'verbose', 'file.forecasts',
             'file.observations', 'file.pixels.computed', 'folder.prefix',
-            'folder.accumulate', 'folder.output', 'folder.raster.anen',
-            'folder.raster.obs', 'folder.local', 'folder.triangles',
-            'num.flts', 'num.times', 'num.times.to.compute',
+            'folder.accumulate', 'folder.scripts', 'folder.output',
+            'folder.raster.anen', 'folder.raster.obs', 'folder.local',
+            'folder.triangles', 'num.flts', 'num.times', 'num.times.to.compute',
             'num.parameters', 'ygrids.total', 'xgrids.total',
             'grids.total', 'init.num.pixels.compute',
             'yinterval', 'ycuts', 'quick', 'cores', 'rolling',
@@ -46,12 +46,11 @@ def process_initial_config(initial_config):
 
     # arguments treated as string
     keys_str = [
-            'command.exe', 'command.verbose',
-            'folder.raster.obs', 'folder.local',
+            'command.exe', 'folder.raster.obs',
+            'folder.local', 'folder.scripts',
             'folder.prefix', 'folder.accumulate',
-            'folder.output', 'folder.raster.anen',
-            'file.forecasts', 'file.observations',
-            'file.pixels.computed', 'folder.triangles']
+            'folder.output', 'folder.raster.anen', 'file.forecasts',
+            'file.observations', 'file.pixels.computed', 'folder.triangles']
 
     # arguments treated as integer
     keys_int = [
@@ -62,7 +61,7 @@ def process_initial_config(initial_config):
             'quick', 'cores', 'rolling', 'observation.ID',
             'train.ID.start', 'train.ID.end', 'test.ID.start',
             'test.ID.end', 'num.pixels.increase', 'debug',
-            'interpolate.AnEn.rasters']
+            'interpolate.AnEn.rasters', 'verbose']
 
     for key in keys_list_int:
         initial_config[key] = [int(k) for k in list(initial_config[key])]

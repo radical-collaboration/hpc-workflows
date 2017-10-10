@@ -30,7 +30,7 @@ resource_key = {
 
 res_dict = {
         'resource': 'xsede.supermic',
-        'walltime': 60,
+        'walltime': 3000,
         'cores': 40,
         'project': 'TG-MCB090174',
         #'queue': 'development',
@@ -57,12 +57,12 @@ if __name__ == '__main__':
 
     iteration = initial_config['init.iteration']
     
-    # list to keep track of the combined output AnEn files to be accumulated
+    # a list to keep track of the combined output AnEn files to be accumulated
     files_output = list()
 
     # Create the Manager for our application
     rman = ResourceManager(res_dict)
-    appman = AppManager(port = 32769)
+    appman = AppManager(port = 32769, autoterminate = False)
 
 
     # -------------------------- End of Setup ----------------------------------
@@ -72,10 +72,6 @@ if __name__ == '__main__':
     pipeline_preprocess = preprocess(initial_config, resource_key['xsede.supermic'])
     
     try:
-        rman.shared_data = [
-                './script_generate_observation_rasters.py',
-                './func_generate_observation_rasters.R']
-
         appman.resource_manager = rman
         appman.assign_workflow(set([pipeline_preprocess]))
 
@@ -87,6 +83,7 @@ if __name__ == '__main__':
     except Exception, ex:
         print 'Execution failed, error: %s'%ex
         print traceback.format_exc()
+        appman.resource_terminate()
         sys.exit(1)
 
     finally:
@@ -97,37 +94,63 @@ if __name__ == '__main__':
 
     # -------------------------- Iteration  ------------------------------------
     iteration = int(initial_config['init.iteration'])
-    pixels_compute = initial_config['pixels.compute']
+    str_iteration = str(iteration).zfill(4)
+    pixels_to_compute = initial_config['pixels.compute']
+    max_iterations = 5
+    iteration_count = 0
 
-    # a list to keep track of the AnEn combined output files
-    files_output = list()
 
-    pipeline_iteration = start_iteration(
-            iteration, initial_config, resource_key['xsede.supermic'],
-            pixels_compute, files_output)
+    while iteration_count < max_iterations:
 
-    try:
-        rman.shared_data = [
-                './script_define_pixels.py',
-                './func_define_pixels.R']
+        print "Iteration %s" % str_iteration
 
-        appman.resource_manager = rman
-        appman.assign_workflow(set([pipeline_iteration]))
+        pipeline_iteration = start_iteration(
+                iteration, initial_config, resource_key['xsede.supermic'],
+                pixels_to_compute, files_output)
+
+        try:
+            appman.resource_manager = rman
+            appman.assign_workflow(set([pipeline_iteration]))
+
+            if initial_config['debug']:
+                print "Iteration debug mode ..."
+            else:
+                appman.run()
+
+        except Exception, ex:
+            print 'Execution failed, error: %s'%ex
+            print traceback.format_exc()
+            appman.resource_terminate()
+            sys.exit(1)
+
+        finally:
+            profs = glob('./*.prof')
+            for f in profs:
+                os.remove(f)
 
         if initial_config['debug']:
-            print "Iteration debug mode ..."
+            print("No pixel information in debug mode")
+
         else:
-            appman.run()
+            with open('%spixels_defined_after_iteration%s.txt' % (
+                initial_config['folder.local'], str_iteration), 'r') as f:
+                line = f.readlines()
 
-    except Exception, ex:
-        print 'Execution failed, error: %s'%ex
-        print traceback.format_exc()
-        sys.exit(1)
+            pixels_to_compute = [int(float(k)) for k in line[0].split(' ')]
+            
+            if initial_config['verbose'] > 0:
+                print ("the number of pixels to compute for the next iteration %d"
+                        % len(pixels_to_compute))
 
-    finally:
-        profs = glob('./*.prof')
-        for f in profs:
-            os.remove(f)
+        if len(pixels_to_compute) == 0:
+            print "No more pixels to compute for the next iteration."
+            print "Terminate the process!"
+            break
+
+        iteration_count += 1
+        iteration = int(str_iteration) + 1
+        str_iteration = str(iteration).zfill(4)
+
     # -------------------------- End of Iteration  -----------------------------
 
     # -------------------------- Post Processing -------------------------------
@@ -138,10 +161,6 @@ if __name__ == '__main__':
     pipeline_postprocess = postprocess(initial_config, resource_key['xsede.supermic'])
 
     try:
-        rman.shared_data = [
-                './script_interpolate_anen.py',
-                './func_interpolate_anen.R']
-
         appman.resource_manager = rman
         appman.assign_workflow(set([pipeline_postprocess]))
 
@@ -153,9 +172,12 @@ if __name__ == '__main__':
     except Exception, ex:
         print 'Execution failed, error: %s'%ex
         print traceback.format_exc()
+        appman.resource_terminate()
         sys.exit(1)
 
     finally:
+        if not initial_config['debug']:
+            appman.resource_terminate()
         profs = glob('./*.prof')
         for f in profs:
             os.remove(f)

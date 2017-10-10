@@ -14,7 +14,7 @@ supercomputers and evaluate the results
 
 def start_iteration (
         iteration, configs, pre_exec,
-        pixels_compute, files_output):
+        pixels_to_compute, files_output):
 
     # setup
     ycuts = configs['ycuts']
@@ -38,6 +38,7 @@ def start_iteration (
     quick = configs['quick']
     cores = configs['cores']
     weights = configs['weights']
+    verbose = configs['verbose']
 
     str_iteration = str(iteration).zfill(4)
     str_folder_output = configs['folder.output']
@@ -49,21 +50,20 @@ def start_iteration (
     str_folder_local = configs['folder.local']
     str_file_pixels_computed = configs['file.pixels.computed']
     str_command_exe = configs['command.exe']
-    str_command_verbose = configs['command.verbose']
 
     p = Pipeline()
 
 
     # -------------------------- Stage 1 ---------------------------------------
     # compute AnEn for each subregion 
-    s2 = Stage()
+    s1 = Stage()
 
     # get the pixels to cmpute for each subregion
     with open('func_cut_pixels_along_y.R', 'r') as f:
         R_code = f.read()
     cut_pixels_along_y = STAP(R_code, 'cut_pixels_along_y')
     pixels_list = cut_pixels_along_y.cut_pixels_along_y(
-            [str(k) for k in pixels_compute],
+            [str(k) for k in pixels_to_compute],
             [str(k) for k in ycuts],
             xgrids_total, ygrids_total)
 
@@ -81,12 +81,12 @@ def start_iteration (
     files_subregion = list()
 
     for ind in range(len(pixels_list)):
-
+        
         # create task
-        t2 = Task()
-        t2.cores = int(cores)
-        t2.pre_exec = pre_exec
-        t2.executable = [str_command_exe]
+        t1 = Task()
+        t1.cores = int(cores)
+        t1.pre_exec = pre_exec
+        t1.executable = [str_command_exe]
 
         # define the chunk to read
         subregion_pixel_start = ((ycuts[ind] - ycuts[0]) * xgrids_total)
@@ -99,8 +99,15 @@ def start_iteration (
                 str_folder_output + 'iteration' + str_iteration +
                 '_chunk' + str(ind).zfill(4) + '.nc')
 
+        # check whether there are pixels lying within this subregion
+        pixels_to_compute = pixels_list[ind]
+        pixels_to_compute = [int(val - subregion_pixel_start) for val in pixels_to_compute]
+        
+        if len(pixels_to_compute) == 0:
+            continue
+        
         # define arguments for calling the CAnEn program
-        t2.arguments = ['-N','-p',
+        t1.arguments = ['-N','-p',
                 '--forecast-nc', str_file_forecasts,
                 '--observation-nc', str_file_observations,
                 '--test-ID-start', test_ID_start,
@@ -112,20 +119,18 @@ def start_iteration (
                 '--rolling', rolling,
                 '--cores', cores,
                 '-o', file_subregion,
-                str_command_verbose]
+                '--verbose', verbose]
 
         if quick:
-            t2.arguments.append('--quick')
+            t1.arguments.append('--quick')
 
-        t2.arguments.append('--weights')
-        t2.arguments.extend(weights)
+        t1.arguments.append('--weights')
+        t1.arguments.extend(weights)
 
-        pixels_compute = pixels_list[ind]
-        pixels_compute = [int(val - subregion_pixel_start) for val in pixels_compute]
-        t2.arguments.append('--stations-ID')
-        t2.arguments.extend(pixels_compute)
+        t1.arguments.append('--stations-ID')
+        t1.arguments.extend(pixels_to_compute)
 
-        t2.arguments.extend([
+        t1.arguments.extend([
             '--start-forecasts','0','%s'%int(subregion_pixel_start), '0', '0',
             '--count-forecasts','%s'%int(num_parameters), 
             '%s'%int(subregion_pixel_count),
@@ -135,13 +140,13 @@ def start_iteration (
             '%s'%int(num_times), '%s'%int(num_flts)])
 
         # Add this task to our stage
-        s2.add_tasks(t2)
+        s1.add_tasks(t1)
 
         # record the subregion output file
         files_subregion.append(file_subregion)
 
     # Add the stage to our pipeline
-    p.add_stages(s2)
+    p.add_stages(s1)
 
     # -------------------------- End of Stage 1 --------------------------------
 
@@ -149,29 +154,28 @@ def start_iteration (
     # combine the AnEn output files for different subregions from the current iteration
     # and the AnEn output files from the previous iterations
     #
-    s3 = Stage()
-    t3 = Task()
-    t3.pre_exec = pre_exec
-    t3.executable = [str_command_exe]
+    s2 = Stage()
+    t2 = Task()
+    t2.pre_exec = pre_exec
+    t2.executable = [str_command_exe]
 
     file_output = '%siteration%s.nc' % (str_folder_accumulate, str_iteration)
 
-    t3.arguments = ['-C', '--file-new', file_output]
-    t3.arguments.append('--files-from')
+    t2.arguments = ['-C', '--file-new', file_output,
+                '--verbose', verbose]
 
     # combine files from previous iterations
-    t3.arguments.extend([k for k in files_output])
+    t2.arguments.append('--files-from')
+    t2.arguments.extend([k for k in files_output])
 
     # combine files from subregions of the current iteration
-    t3.arguments.extend([k for k in files_subregion])
-
-    t3.arguments.append(str_command_verbose)
+    t2.arguments.extend([k for k in files_subregion])
 
     # add the output file of this stage to the tracking list
     files_output.append(file_output)
 
-    s3.add_tasks(t3)
-    p.add_stages(s3)
+    s2.add_tasks(t2)
+    p.add_stages(s2)
     # -------------------------- End of Stage 2 --------------------------------
 
     # -------------------------- Stage 3 ---------------------------------------
@@ -186,15 +190,19 @@ def start_iteration (
             str_file_pixels_computed, str_iteration)
     str_pixels_accumulated = ' '.join([str(int(k)) for k in pixels_accumulated])
 
+    with open('%s/pixels_accumulated.txt' % configs['folder.local'], 'w') as f:        
+        f.write(str_pixels_accumulated)
+    
     # define pixels for the next iteration
-    t4 = Task()
-    t4.cores = 1
-    t4.pre_exec = pre_exec
-    t4.executable = ['python']
-    t4.copy_input_data = [
-            '$SHARED/script_define_pixels.py',
-            '$SHARED/func_define_pixels.R']
-    t4.arguments = [
+    t3 = Task()
+    t3.cores = 1
+    t3.pre_exec = pre_exec
+    t3.executable = ['python']
+    t3.upload_input_data = ['%s/pixels_accumulated.txt' % configs['folder.local']]
+    t3.copy_input_data = [
+            '%s/script_define_pixels.py' % configs['folder.scripts'],
+            '%s/func_define_pixels.R' % configs['folder.scripts']]
+    t3.arguments = [
             'script_define_pixels.py', 
             '--iteration', str_iteration,
             '--folder_raster_obs', str_folder_raster_obs,
@@ -207,14 +215,18 @@ def start_iteration (
             '--num_times_to_compute', num_times_to_compute,
             '--members_size', members_size,
             '--threshold_triangle', threashold_triangle,
-            '--pixels_computed', str_pixels_accumulated]
-    #t4.download_output_data = [
-    #        'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (
-    #            str_folder_local, str_iteration)]
+            '--file_pixels_accumulated', 'pixels_accumulated.txt',
+            '--verbose', verbose]
+    t3.download_output_data = [
+            'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (
+                str_folder_local, str_iteration)]
+    if configs['verbose'] > 0:
+        t3.download_output_data.append('evaluation_log.txt > %sevaluation_log_after_iteration%s.txt' % (
+                    str_folder_local, str_iteration))
 
-    s4 = Stage()
-    s4.add_tasks(t4)
-    p.add_stages(s4)
+    s3 = Stage()
+    s3.add_tasks(t3)
+    p.add_stages(s3)
     # -------------------------- End of Stage 3 --------------------------------
 
     return p
