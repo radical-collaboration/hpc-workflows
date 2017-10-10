@@ -142,6 +142,11 @@ if __name__ == '__main__':
                 print ("the number of pixels to compute for the next iteration %d"
                         % len(pixels_to_compute))
 
+        if len(pixels_to_compute) == 0:
+            print "No more pixels to compute for the next iteration."
+            print "Terminate the process!"
+            break
+
         iteration_count += 1
         iteration = int(str_iteration) + 1
         str_iteration = str(iteration).zfill(4)
