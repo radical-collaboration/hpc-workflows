@@ -20,7 +20,6 @@ define_pixels <- function(
     # convert argument types
     iteration <- str_pad(as.numeric(iteration), 4, pad = '0')
     pixels.computed <- as.numeric(unlist(pixels.computed))
-
     xgrids.total <- as.numeric(xgrids.total)
     ygrids.total <- as.numeric(ygrids.total)
     num.flts <- as.numeric(num.flts)
@@ -83,7 +82,20 @@ define_pixels <- function(
                                      '_flt', j, '.rdata', sep = '')
             if (file.exists(file.raster.obs)) {
                 load(file.raster.obs)
-                data.obs <- rast.obs[(y-1) + x]
+                indices <- cellFromXY(rast.obs, cbind(x, y))
+                data.obs <- rast.obs[indices]
+                
+                if (verbose > 1) {
+                  print("The x vector is:")
+                  print(x)
+                  print("The y vector is:")
+                  print(y)
+                  print("The indices are:")
+                  print(indices)
+                }
+                
+                #data.obs <- rast.obs[(y-1) + x]
+                
             } else {
                 stop(paste("Can't find observation raster", file.raster.obs))
             }
