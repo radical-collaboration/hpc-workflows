@@ -96,7 +96,7 @@ if __name__ == '__main__':
     iteration = int(initial_config['init.iteration'])
     str_iteration = str(iteration).zfill(4)
     pixels_to_compute = initial_config['pixels.compute']
-    max_iterations = 3
+    max_iterations = initial_config['max.iterations']
     iteration_count = 0
 
 

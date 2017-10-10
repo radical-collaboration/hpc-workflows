@@ -57,6 +57,7 @@ initial_config <- function (user = 'Weiming') {
 
     num.neighbors <- 2
     init.iteration <- 1
+    max.iterations <- 3
     threshold.triangle <- 4
     num.pixels.increase <- 10
 
@@ -106,6 +107,7 @@ initial_config <- function (user = 'Weiming') {
                              members.size = members.size,
                              num.neighbors = num.neighbors,
                              init.iteration = init.iteration,
+                             max.iterations = max.iterations,
                              threshold.triangle = threshold.triangle,
                              num.pixels.increase = num.pixels.increase,
                              interpolate.AnEn.rasters = interpolate.AnEn.rasters,
