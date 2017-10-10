@@ -47,7 +47,7 @@ define_pixels <- function(
 
     # save triangles
     file.triangles <- paste(folder.triangles, 'iteration',
-                            iteration, '.nc', sep = '')
+                            iteration, '.rdata', sep = '')
     save(polys.triangles, file = file.triangles)
  
 
