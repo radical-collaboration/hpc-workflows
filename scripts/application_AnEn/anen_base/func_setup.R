@@ -26,7 +26,7 @@ initial_config <- function (user = 'Weiming') {
     
     file.pixels.computed <- paste(folder.local, 'pixels_computed_list.rdata', sep = '')
 
-    verbose <- '1'
+    verbose <- '2'
     folder.accumulate <- paste(folder.prefix, 'anen_accumulate/', sep = '')
     folder.output <- paste(folder.prefix, 'anen_output/', sep = '')
     folder.raster.anen <- paste(folder.prefix, 'anen_raster/', sep = '')
