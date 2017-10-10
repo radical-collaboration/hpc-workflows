@@ -44,7 +44,6 @@ def postprocess (configs, pre_exec):
     for ind in range(num_iterations):
 
         str_iteration = str(ind+1).zfill(4)
-        print str_iteration
 
         # define the file name of the accumulated AnEn output file
         # which will be used to interpolate the raster
