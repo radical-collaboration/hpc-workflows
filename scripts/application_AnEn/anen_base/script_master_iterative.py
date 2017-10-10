@@ -338,19 +338,19 @@ if __name__ == '__main__':
                 p = generate_pipeline(iter_cnt, pixels_compute)
 
                 # Assign the workflow to be executed by the application manager
-                #appman.assign_workflow(set([p]))
+                appman.assign_workflow(set([p]))
 
                 # Run the application manager -- blocking call
-                #appman.run()
+                appman.run()
 
                 # Process pixels_defined_after_iteration%s.txt to get new list of 
                 # pixels. Generate new pipeline with this new list.
 
-                #pixels_compute = read_pixels('%spixels_defined_after_iteration%s.txt'%(
-                                                            #initial_config['folder.local'],
-                                                            #iter_cnt))
-                #print 'Pixels to compute: ', len(pixels_compute)
-                #iter_cnt += 1
+                pixels_compute = read_pixels('%spixels_defined_after_iteration%s.txt'%(
+                                                            initial_config['folder.local'],
+                                                            iter_cnt))
+                print 'Pixels to compute: ', len(pixels_compute)
+                iter_cnt += 1
 
 
         except Exception as ex:
