@@ -18,6 +18,7 @@ def postprocess (configs, pre_exec):
     str_folder_accumulate = configs['folder.accumulate']
     str_folder_raster_anen = configs['folder.raster.anen']
     str_file_pixels_computed = configs['file.pixels.computed']
+    str_folder_local = configs['folder.local']
 
     # get number of iterations
     with open('func_get_list_length.R', 'r') as f:
@@ -98,8 +99,10 @@ def postprocess (configs, pre_exec):
             t.download_output_data = []
             for time in range(configs['num.times.to.compute']):
                 for flt in range(configs['num.flts']):
-                    t.download_output_data.append("%s_time%d_flt%d.rdata" % (
-                            prefix_anen_raster, time+1, flt+1))
+                    t.download_output_data.append(
+                            "%s_time%d_flt%d.rdata > %sraster_AnEn_iteration%s_time%d_flt%d.rdata" % (
+                                prefix_anen_raster, time+1, flt+1,
+                                str_folder_local, str_iteration, time+1, flt+1))
 
             if configs['verbose'] > 1:
                 print "Files to download for this task:"

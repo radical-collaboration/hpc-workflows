@@ -71,7 +71,6 @@ def generate_pipeline(iteration, pixels_compute=None):
 
 
             print t1.uid
-
             s1.add_tasks(t1)
 
         p.add_stages(s1)
@@ -181,6 +180,8 @@ def generate_pipeline(iteration, pixels_compute=None):
             '%s'%int(initial_config['num.times']), 
             '%s'%int(initial_config['num.flts'])])
 
+        print t2.uid
+
         # Add this task to our stage
         s2.add_tasks(t2)
 
@@ -196,7 +197,7 @@ def generate_pipeline(iteration, pixels_compute=None):
     t3 = Task()
     t3.executable = [initial_config['command.exe']]
     t3.pre_exec = resource_key['xsede.supermic']
-
+    print t3.uid
     file_output = '%siteration%s.nc' % (initial_config['folder.accumulate'], str(iteration).zfill(4))
 
     t3.arguments = ['-C', '--file-new', file_output]
@@ -239,6 +240,7 @@ def generate_pipeline(iteration, pixels_compute=None):
     # define pixels for the next iteration
     t4 = Task()
     t4.cores = 1
+    print t4.uid
     t4.executable = ['python']
     t4.pre_exec = [
             'module load python/2.7.7/GCC-4.9.0',
@@ -290,17 +292,17 @@ if __name__ == '__main__':
     # Read initial configuration from R function
     with open('func_setup.R', 'r') as f:
         R_code = f.read()
-    RAnEnExtra = importr("RAnEnExtra")
-    initial_config = STAP(R_code, 'initial_config')
-    config = initial_config.initial_config()
-    initial_config = dict(zip(config.names, list(config)))
+    #RAnEnExtra = importr("RAnEnExtra")
+    #initial_config = STAP(R_code, 'initial_config')
+    #config = initial_config.initial_config()
+    #initial_config = dict(zip(config.names, list(config)))
 
-    if not test_initial_config(initial_config):
-        sys.exit(1)
+    #if not test_initial_config(initial_config):
+    #    sys.exit(1)
 
-    initial_config = process_initial_config(initial_config)
+    #initial_config = process_initial_config(initial_config)
 
-    iteration = initial_config['init.iteration']
+    #iteration = initial_config['init.iteration']
     
     # list to keep track of the combined output AnEn files to be accumulated
     files_output = list()
@@ -332,7 +334,7 @@ if __name__ == '__main__':
         appman = AppManager(port = 32769, autoterminate=False)
 
         # Assign the resource manager to be used by the application manager
-        appman.resource_manager = rman
+        #appman.resource_manager = rman
 
 
         try:

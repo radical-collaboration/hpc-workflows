@@ -1,4 +1,4 @@
-import os, sys, traceback, rpy2
+import os, sys, traceback, rpy2, shutil
 import rpy2.robjects as robjects
 
 from glob import glob
@@ -47,7 +47,7 @@ if __name__ == '__main__':
         R_code = f.read()
     RAnEnExtra = importr("RAnEnExtra")
     initial_config = STAP(R_code, 'initial_config')
-    config = initial_config.initial_config()
+    config = initial_config.initial_config(user = os.environ.get('USER_NAME','Weiming'))
     initial_config = dict(zip(config.names, list(config)))
 
     if not test_initial_config(initial_config):
@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
     # Create the Manager for our application
     rman = ResourceManager(res_dict)
-    appman = AppManager(port = 32769, autoterminate = False)
+    appman = AppManager(port = initial_config['docker_port'], autoterminate = False)
 
 
     # -------------------------- End of Setup ----------------------------------
@@ -89,7 +89,7 @@ if __name__ == '__main__':
     finally:
         profs = glob('./*.prof')
         for f in profs:
-            os.remove(f)
+            shutil.move(f, "./%s/%s"%(initial_config['folder.local'], os.path.basename(f)))
     # -------------------------- End of Preprocess  ----------------------------
 
     # -------------------------- Iteration  ------------------------------------
@@ -126,7 +126,7 @@ if __name__ == '__main__':
         finally:
             profs = glob('./*.prof')
             for f in profs:
-                os.remove(f)
+                shutil.move(f, "./%s/%s"%(initial_config['folder.local'], os.path.basename(f)))
 
         if initial_config['debug']:
             print("No pixel information in debug mode")
@@ -180,5 +180,5 @@ if __name__ == '__main__':
             appman.resource_terminate()
         profs = glob('./*.prof')
         for f in profs:
-            os.remove(f)
+            shutil.move(f, "./%s/%s"%(initial_config['folder.local'], os.path.basename(f)))
     # -------------------------- End of Post Processing ------------------------
