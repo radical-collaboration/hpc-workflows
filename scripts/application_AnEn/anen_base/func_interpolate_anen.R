@@ -58,7 +58,7 @@ interpolate_anen <- function(
             file.raster.anen <- paste(prefix.anen.raster, '_time', time,
                                       "_flt", flt, '.rdata', sep = '')
             print(paste("Processing time #", time, " flt #", flt, ": ",
-                        file.raster.anen, , sep = ''))
+                        file.raster.anen, sep = ''))
 
             if (!file.exists(file.raster.anen)) {
                 nc <- nc_open(file.anen)

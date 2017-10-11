@@ -141,6 +141,8 @@ def start_iteration (
 
         # Add this task to our stage
         s1.add_tasks(t1)
+        if configs['verbose'] > 1:
+            print "Create a task for subregion %d" % ind
 
         # record the subregion output file
         files_subregion.append(file_subregion)
@@ -167,7 +169,7 @@ def start_iteration (
     # combine files from previous iterations
     t2.arguments.append('--files-from')
     if len(files_output) != 0:
-        t2.arguments.extend(files_output[len(files_output)-1])
+        t2.arguments.append(files_output[len(files_output)-1])
 
 
     # combine files from subregions of the current iteration
@@ -177,6 +179,9 @@ def start_iteration (
     files_output.append(file_output)
 
     s2.add_tasks(t2)
+    if configs['verbose'] > 1:
+        print "Create a task for combining AnEn output files"
+
     p.add_stages(s2)
     # -------------------------- End of Stage 2 --------------------------------
 
@@ -230,7 +235,11 @@ def start_iteration (
                     str_folder_local, str_iteration))
 
     s3 = Stage()
+
     s3.add_tasks(t3)
+    if configs['verbose'] > 1:
+        print "Create a task for evaluation"
+
     p.add_stages(s3)
     # -------------------------- End of Stage 3 --------------------------------
 
