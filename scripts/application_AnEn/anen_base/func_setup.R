@@ -59,7 +59,7 @@ initial_config <- function (user = 'Weiming') {
     init.iteration <- 1
     max.iterations <- 3
     threshold.triangle <- 4
-    num.pixels.increase <- 10
+    num.pixels.increase <- 1
 
     debug <- 0
     interpolate.AnEn.rasters <- 1
