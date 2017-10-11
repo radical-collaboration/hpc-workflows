@@ -59,7 +59,7 @@ define_pixels <- function(
     rast.base <- raster(nrows = ygrids.total, ncols = xgrids.total,
                         xmn = 0.5, xmx = xgrids.total+.5,
                         ymn = 0.5, ymx = ygrids.total+.5)
-    indices <- cellFromRowCol(rast.base, x, y)
+    indices <- cellFromRowCol(rast.base, y, x)
 
     if (verbose > 1) {
         print("The x vector is:")
