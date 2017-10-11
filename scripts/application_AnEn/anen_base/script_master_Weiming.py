@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
     # Create the Manager for our application
     rman = ResourceManager(res_dict)
-    appman = AppManager(port = initial_config['docker_port'], autoterminate = False)
+    appman = AppManager(port = initial_config['docker.port'], autoterminate = False)
 
 
     # -------------------------- End of Setup ----------------------------------

@@ -18,7 +18,7 @@ def test_initial_config(d):
             'observation.ID', 'train.ID.start', 'train.ID.end',
             'test.ID.start', 'test.ID.end', 'weights', 'members.size',
             'num.neighbors', 'init.iteration', 'max.iterations',
-            'threshold.triangle', 'num.pixels.increase', 'debug', 'docker_port',
+            'threshold.triangle', 'num.pixels.increase', 'debug', 'docker.port',
             'pixels.compute', 'interpolate.AnEn.rasters', 'download.AnEn.rasters']
 
     all_ok = True
@@ -61,7 +61,7 @@ def process_initial_config(initial_config):
             'num.times.to.compute', 'quick', 'cores',
             'rolling', 'observation.ID', 'train.ID.start',
             'train.ID.end', 'test.ID.start', 'test.ID.end',
-            'num.pixels.increase', 'debug', 'docker_port',
+            'num.pixels.increase', 'debug', 'docker.port',
             'interpolate.AnEn.rasters', 'verbose',
             'download.AnEn.rasters']
 

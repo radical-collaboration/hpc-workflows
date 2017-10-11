@@ -11,7 +11,7 @@ initial_config <- function (user = 'Weiming') {
         folder.scripts <- '/home/whu/github/hpc-workflows/scripts/application_AnEn/anen_base/'
         folder.prefix <- paste('/home/whu/experiments/anen_smart/',        
                                prefix_time, '/', sep = '')
-        docker_port <- 32769
+        docker.port <- 32769
         
     } else if (user == 'Vivek') {
         # setup on supermic
@@ -21,7 +21,7 @@ initial_config <- function (user = 'Weiming') {
         folder.scripts <- '/home/vivek91/repos/hpc-workflows/scripts/application_AnEn/anen_base/'
         folder.prefix <- paste('/work/vivek91/anen_smart/',
                                prefix_time, '/', sep = '')
-        docker_port <- 32773
+        docker.port <- 32773
     }
 
     folder.local <- paste('./local_', prefix_time, '/', sep = '')
@@ -116,6 +116,7 @@ initial_config <- function (user = 'Weiming') {
                              num.pixels.increase = num.pixels.increase,
                              interpolate.AnEn.rasters = interpolate.AnEn.rasters,
                              download.AnEn.rasters = download.AnEn.rasters,
+                             docker.port = docker.port,
                              debug = debug)
 
     return(list.init.config)
