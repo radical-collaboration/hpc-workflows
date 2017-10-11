@@ -19,7 +19,7 @@ def test_initial_config(d):
             'test.ID.start', 'test.ID.end', 'weights', 'members.size',
             'num.neighbors', 'init.iteration', 'max.iterations',
             'threshold.triangle', 'num.pixels.increase', 'debug',
-            'pixels.compute', 'interpolate.AnEn.rasters']
+            'pixels.compute', 'interpolate.AnEn.rasters', 'download.AnEn.rasters']
 
     all_ok = True
 
@@ -62,7 +62,8 @@ def process_initial_config(initial_config):
             'rolling', 'observation.ID', 'train.ID.start',
             'train.ID.end', 'test.ID.start', 'test.ID.end',
             'num.pixels.increase', 'debug',
-            'interpolate.AnEn.rasters', 'verbose']
+            'interpolate.AnEn.rasters', 'verbose',
+            'download.AnEn.rasters']
 
     for key in keys_list_int:
         initial_config[key] = [int(k) for k in list(initial_config[key])]

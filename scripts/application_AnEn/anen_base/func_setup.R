@@ -63,6 +63,7 @@ initial_config <- function (user = 'Weiming') {
 
     debug <- 0
     interpolate.AnEn.rasters <- 1
+    download.AnEn.rasters <- 1
 
     # randomly select pixels to compute
     pixels.compute <- sample.int(grids.total,
@@ -111,6 +112,7 @@ initial_config <- function (user = 'Weiming') {
                              threshold.triangle = threshold.triangle,
                              num.pixels.increase = num.pixels.increase,
                              interpolate.AnEn.rasters = interpolate.AnEn.rasters,
+                             download.AnEn.rasters = download.AnEn.rasters,
                              debug = debug)
 
     return(list.init.config)

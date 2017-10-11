@@ -89,7 +89,14 @@ def postprocess (configs, pre_exec):
                 '--xgrids_total', configs['xgrids.total'],
                 '--ygrids_total', configs['ygrids.total']]
 
+        if configs['download.AnEn.rasters'] and configs['interpolate.AnEn.rasters']:
+            print "Option chosen to download the interpolated AnEn rasters"
+            print "Not implemented yet"
+
         s.add_tasks(t)
+        if configs['verbose'] > 1:
+            print "Create a task for postprocessing %d / %d" % (
+                    ind+1, num_iterations)
 
     p.add_stages(s)
     # -------------------------- End of Stage 1 --------------------------------
