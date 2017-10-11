@@ -18,6 +18,7 @@ def postprocess (configs, pre_exec):
     str_folder_accumulate = configs['folder.accumulate']
     str_folder_raster_anen = configs['folder.raster.anen']
     str_file_pixels_computed = configs['file.pixels.computed']
+    str_folder_local = configs['folder.local']
 
     # get number of iterations
     with open('func_get_list_length.R', 'r') as f:
@@ -56,18 +57,23 @@ def postprocess (configs, pre_exec):
                 str_folder_raster_anen, str_iteration)
 
         # get pixels computed
-        pixels_accumulated = read_pixels_computed.read_pixels_computed(
-                str_file_pixels_computed, str_iteration)
-        str_pixels_accumulated = ' '.join([str(int(k)) for k in pixels_accumulated])
-        
-	with open('%s/pixels_accumulated.txt' % configs['folder.local'],'w') as f:
-            f.write(str_pixels_accumulated)
+        str_file_pixels_accumulated = '%s/pixels_accumulated_for_iteration%s.txt' % (
+                configs['folder.local'], str_iteration)
+
+        if not os.path.exists(str_file_pixels_accumulated):
+            print "File %s can't be found. Create it." % str_file_pixels_accumulated
+
+            pixels_accumulated = read_pixels_computed.read_pixels_computed(
+                    str_file_pixels_computed, str_iteration)
+            str_pixels_accumulated = ' '.join([str(int(k)) for k in pixels_accumulated])
+            with open(str_file_pixels_accumulated) as f:
+                f.write(str_pixels_accumulated)
 
         t = Task()
         t.cores = 1
         t.pre_exec = pre_exec
         t.executable = ['python']
-	t.upload_input_data = ['%s/pixels_accumulated.txt' % configs['folder.local']]
+	t.upload_input_data = [str_file_pixels_accumulated]
         t.copy_input_data = [
                 '%s/script_interpolate_anen.py' % configs['folder.scripts'],
                 '%s/func_interpolate_anen.R' % configs['folder.scripts']]
@@ -75,13 +81,32 @@ def postprocess (configs, pre_exec):
                 'script_interpolate_anen.py',
                 '--file_anen_accumulate_iteration', file_anen_accumulate_iteration,
                 '--prefix_anen_raster', prefix_anen_raster,
-                '--file_pixels_accumulated', 'pixels_accumulated.txt',
+                '--file_pixels_accumulated',
+                'pixels_accumulated_for_iteration%s.txt' % str_iteration,
                 '--num_flts', configs['num.flts'],
                 '--num_times_to_compute', configs['num.times.to.compute'],
                 '--members_size', configs['members.size'],
                 '--num_neighbors', configs['num.neighbors'],
                 '--xgrids_total', configs['xgrids.total'],
                 '--ygrids_total', configs['ygrids.total']]
+
+        if configs['verbose'] > 1:
+            print "Create a task for postprocessing %d / %d" % (
+                    ind+1, num_iterations)
+
+        if configs['download.AnEn.rasters'] and configs['interpolate.AnEn.rasters']:
+            print "Download AnEn interpolated rasters for iteration %s" % str_iteration
+            t.download_output_data = []
+            for time in range(configs['num.times.to.compute']):
+                for flt in range(configs['num.flts']):
+                    t.download_output_data.append(
+                            "%s_time%d_flt%d.rdata > %sraster_AnEn_iteration%s_time%d_flt%d.rdata" % (
+                                prefix_anen_raster, time+1, flt+1,
+                                str_folder_local, str_iteration, time+1, flt+1))
+
+            if configs['verbose'] > 1:
+                print "Files to download for this task:"
+                print t.download_output_data
 
         s.add_tasks(t)
 

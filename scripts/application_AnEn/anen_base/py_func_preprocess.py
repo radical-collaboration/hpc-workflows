@@ -42,6 +42,9 @@ def preprocess (configs, pre_exec):
                 '--ygrids_total', configs['ygrids.total']]
 
         s.add_tasks(t)
+        if configs['verbose'] > 1:
+            print "Create a task for preprocessing %d / %d" % (
+                    ind+1, configs['num.times.to.compute'])
 
     p.add_stages(s)
     # -------------------------- End of Stage 1 --------------------------------

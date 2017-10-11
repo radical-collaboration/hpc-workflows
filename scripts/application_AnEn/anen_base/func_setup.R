@@ -57,11 +57,13 @@ initial_config <- function (user = 'Weiming') {
 
     num.neighbors <- 2
     init.iteration <- 1
+    max.iterations <- 3
     threshold.triangle <- 4
     num.pixels.increase <- 10
 
     debug <- 0
     interpolate.AnEn.rasters <- 1
+    download.AnEn.rasters <- 1
 
     # randomly select pixels to compute
     pixels.compute <- sample.int(grids.total,
@@ -106,9 +108,11 @@ initial_config <- function (user = 'Weiming') {
                              members.size = members.size,
                              num.neighbors = num.neighbors,
                              init.iteration = init.iteration,
+                             max.iterations = max.iterations,
                              threshold.triangle = threshold.triangle,
                              num.pixels.increase = num.pixels.increase,
                              interpolate.AnEn.rasters = interpolate.AnEn.rasters,
+                             download.AnEn.rasters = download.AnEn.rasters,
                              debug = debug)
 
     return(list.init.config)
