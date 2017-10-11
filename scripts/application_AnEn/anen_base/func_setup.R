@@ -9,16 +9,19 @@ initial_config <- function (user = 'Weiming') {
         file.forecasts <- "/home/whu/data/chunk_NAM/Forecasts_NAM_sliced.nc"
         file.observations <- "/home/whu/data/chunk_NAM/Analysis_NAM.nc"
         folder.scripts <- '/home/whu/github/hpc-workflows/scripts/application_AnEn/anen_base/'
-        folder.prefix <- paste('/home/whu/experiments/anen_smart/',
+        folder.prefix <- paste('/home/whu/experiments/anen_smart/',        
                                prefix_time, '/', sep = '')
+        docker.port <- 32769
+        
     } else if (user == 'Vivek') {
         # setup on supermic
         command.exe <- '/work/vivek91/modules/CAnalogsV2/build/canalogs'
         file.forecasts <- "/work/vivek91/chunk_NAM/Forecasts_NAM_sliced.nc"
         file.observations <- "/work/vivek91/chunk_NAM/Analysis_NAM.nc"
-        folder.scripts <- ''
+        folder.scripts <- '/home/vivek91/repos/hpc-workflows/scripts/application_AnEn/anen_base/'
         folder.prefix <- paste('/work/vivek91/anen_smart/',
                                prefix_time, '/', sep = '')
+        docker.port <- 32773
     }
 
     folder.local <- paste('./local_', prefix_time, '/', sep = '')
@@ -113,6 +116,7 @@ initial_config <- function (user = 'Weiming') {
                              num.pixels.increase = num.pixels.increase,
                              interpolate.AnEn.rasters = interpolate.AnEn.rasters,
                              download.AnEn.rasters = download.AnEn.rasters,
+                             docker.port = docker.port,
                              debug = debug)
 
     return(list.init.config)

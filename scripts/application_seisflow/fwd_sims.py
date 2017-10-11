@@ -14,14 +14,14 @@ if __name__ == '__main__':
 
     t1.pre_exec = [     # Modules to be loaded
                         'module swap PrgEnv-pgi/5.2.82 PrgEnv-gnu/5.2.82',
-                        'module load cudatoolkit/7.5.18-1.0502.10743.2.1 ',
-                        'module load cray-netcdf-hdf5parallel/4.3.3.1 ',
-                        'module load cray-hdf5-parallel/1.8.14 ',
-                        'module load szip/2.1 ',
+                        'module load cudatoolkit/7.5.18-1.0502.10743.2.1',
+                        'module load cray-netcdf-hdf5parallel/4.3.3.1',
+                        'module load cray-hdf5-parallel/1.8.14',
+                        'module load szip/2.1',
                         'module load mxml/2.9',
                         'module load adios/1.9.0',
                         'module load cmake/2.8.10.2',
-                        'module load boost/1.57.0 ',
+                        'module load boost/1.57.0',
                         'module load vim/7.4',
 
                         # Untar the input data
