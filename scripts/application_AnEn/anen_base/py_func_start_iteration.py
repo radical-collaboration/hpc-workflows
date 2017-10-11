@@ -167,7 +167,7 @@ def start_iteration (
     # combine files from previous iterations
     t2.arguments.append('--files-from')
     if len(files_output) != 0:
-        t2.arguments.extend(files_output[len(files_output)-1])
+        t2.arguments.append(files_output[len(files_output)-1])
 
 
     # combine files from subregions of the current iteration
