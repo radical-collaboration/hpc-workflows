@@ -19,7 +19,8 @@ def test_initial_config(d):
             'test.ID.start', 'test.ID.end', 'weights', 'members.size',
             'num.neighbors', 'init.iteration', 'max.iterations',
             'threshold.triangle', 'num.pixels.increase', 'debug', 'docker.port',
-            'pixels.compute', 'interpolate.AnEn.rasters', 'download.AnEn.rasters']
+            'pixels.compute', 'interpolate.AnEn.rasters', 'download.AnEn.rasters',
+            'num.pixels.iteration', 'predefine.num.pixels']
 
     all_ok = True
 
@@ -36,7 +37,7 @@ def test_initial_config(d):
 def process_initial_config(initial_config):
 
     # arguments treated as lists with integer elements
-    keys_list_int = ['pixels.compute', 'ycuts']
+    keys_list_int = ['pixels.compute', 'ycuts', 'num.pixels.iteration']
 
     # arguments treated as lists with float elements
     keys_list_float = ['weights']
@@ -63,7 +64,7 @@ def process_initial_config(initial_config):
             'train.ID.end', 'test.ID.start', 'test.ID.end',
             'num.pixels.increase', 'debug', 'docker.port',
             'interpolate.AnEn.rasters', 'verbose',
-            'download.AnEn.rasters']
+            'download.AnEn.rasters', 'predefine.num.pixels']
 
     for key in keys_list_int:
         initial_config[key] = [int(k) for k in list(initial_config[key])]

@@ -66,7 +66,7 @@ initial_config <- function (user = 'Weiming') {
 
     debug <- 0
     interpolate.AnEn.rasters <- 1
-    download.AnEn.rasters <- 1
+    download.AnEn.rasters <- 0
 
     # randomly select pixels to compute
     pixels.compute <- sample.int(grids.total,
@@ -74,6 +74,12 @@ initial_config <- function (user = 'Weiming') {
     pixels.compute <- include.corners(pixels.compute,
                                       xgrids.total,
                                       ygrids.total, 0)
+
+    predefine.num.pixels <- 1
+    num.pixels.iteration <- c(100, 200, 300)
+    if (predefine.num.pixels == 1) {
+        max.iterations = length(num.pixels.iteration)
+    }
 
     list.init.config <- list(command.exe = command.exe,
                              verbose = verbose,
@@ -113,6 +119,8 @@ initial_config <- function (user = 'Weiming') {
                              init.iteration = init.iteration,
                              max.iterations = max.iterations,
                              threshold.triangle = threshold.triangle,
+                             predefine.num.pixels = predefine.num.pixels,
+                             num.pixels.iteration = num.pixels.iteration,
                              num.pixels.increase = num.pixels.increase,
                              interpolate.AnEn.rasters = interpolate.AnEn.rasters,
                              download.AnEn.rasters = download.AnEn.rasters,

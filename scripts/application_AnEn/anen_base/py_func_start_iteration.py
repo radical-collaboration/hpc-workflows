@@ -198,7 +198,7 @@ def start_iteration (
     str_pixels_accumulated = ' '.join([str(int(k)) for k in pixels_accumulated])
 
     with open('%s/pixels_accumulated_for_iteration%s.txt' % (
-        configs['folder.local'], str_iteration), 'w') as f:        
+        configs['folder.local'], str_iteration), 'w') as f:
         f.write(str_pixels_accumulated)
     
     # define pixels for the next iteration

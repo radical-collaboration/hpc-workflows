@@ -1,5 +1,6 @@
 import os, sys, traceback, rpy2, shutil
 import rpy2.robjects as robjects
+import random
 
 from glob import glob
 from py_func_preprocess import preprocess
@@ -128,19 +129,35 @@ if __name__ == '__main__':
             for f in profs:
                 shutil.move(f, "./%s/%s"%(initial_config['folder.local'], os.path.basename(f)))
 
-        if initial_config['debug']:
-            print("No pixel information in debug mode")
 
+        if initial_config['predefine.num.pixels'] == 0:
+            if initial_config['debug']:
+                print("No pixel information from evaluation in debug mode")
+
+            else:
+                with open('%spixels_defined_after_iteration%s.txt' % (
+                    initial_config['folder.local'], str_iteration), 'r') as f:
+                    line = f.readlines()
+
+                pixels_to_compute = [int(float(k)) for k in line[0].split(' ')]
+        
         else:
-            with open('%spixels_defined_after_iteration%s.txt' % (
-                initial_config['folder.local'], str_iteration), 'r') as f:
-                line = f.readlines()
-
-            pixels_to_compute = [int(float(k)) for k in line[0].split(' ')]
+            print "Predefined the number of pixels to compute for the next iteration"
+            if iteration_count+1 == max_iterations:
+                print "This is the last iteration specified by the mas iterations"
+                pixels_to_compute = []
+                
+            else:
+                pixels_to_compute = random.sample(
+                        range(initial_config['grids.total']),
+                        initial_config['num.pixels.iteration'][iteration_count+1])
+                with open('%spixels_defined_randomly_after_iteration%s.txt' % (
+                        initial_config['folder.local'], str_iteration), 'w') as f:
+                    f.write(' '.join([str(int(k)) for k in pixels_to_compute]))
             
-            if initial_config['verbose'] > 0:
-                print ("the number of pixels to compute for the next iteration %d"
-                        % len(pixels_to_compute))
+        if initial_config['verbose'] > 0:
+            print ("the number of pixels to compute for the next iteration %d"
+                    % len(pixels_to_compute))
 
         if len(pixels_to_compute) == 0:
             print "No more pixels to compute for the next iteration."
