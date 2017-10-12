@@ -156,10 +156,15 @@ define_pixels <- function(
     for (i in triangles.index.to.continue) {
         triangle <- polys.triangles[i]
         pts.selected <- random.points.in.triangle(triangle, num.pixels.increase)
-        pixels.next.iteration <- c(pixels.next.iteration,
-                                   xy.to.pixels(pts.selected[, 1],
-                                                pts.selected[, 2],
-                                                xgrids.total, 0))
+        if (length(pts.selected) > 0) {
+            pixels.next.iteration <- c(pixels.next.iteration,
+                                       xy.to.pixels(pts.selected[, 1],
+                                                    pts.selected[, 2],
+                                                    xgrids.total, 0))
+        }
+        if (NA %in% pixels.next.iteration) {
+            stop(paste("NA generated in pixels.next.iteration for triangle", i))
+        }
     }
     pixels.next.iteration <- remove.vector.duplicates(c(pixels.computed,
                                                         pixels.next.iteration))
@@ -168,6 +173,13 @@ define_pixels <- function(
 
     print(paste("The amount of the pixels for the next iteration is",
                 length(pixels.next.iteration)))
+
+    if (NA %in% pixels.next.iteration) {
+        stop("NA found in pixels.next.iteration after removing duplicates")
+    }
+
+    print("The pixels for the next iteration are:")
+    print(pixels.next.iteration)
 
     write(pixels.next.iteration, file = 'pixels_next_iteration.txt',
           ncolumns = length(pixels.next.iteration))

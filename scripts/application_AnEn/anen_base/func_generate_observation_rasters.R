@@ -7,7 +7,7 @@
 # folders and files on supercomputers
 #
 generate_observation_rasters <- function(
-    test.ID.index, test.ID.start,
+    test.ID.index, test.ID.start, flt,
     folder.prefix, folder.accumulate, 
     folder.raster.anen, folder.output,
     folder.raster.obs, folder.triangles,
@@ -42,25 +42,23 @@ generate_observation_rasters <- function(
     if (num.of.files == num.times.to.compute*num.flts) {
         print(paste("Observation rasters already exist."))
     } else {
-        for (j in 1:num.flts) {
-            print(paste('Generating observation raster for day ',
-                        test.ID.index, ' flt ', j, sep = ''))
-            file.raster.obs <- paste(folder.raster.obs, 'day', 
-                                     test.ID.index, '_flt', j,
-                                     '.rdata', sep = '')
-            if(file.exists(file.raster.obs)) {
-                print('skip because it already exists')
-            } else {
-                nc <- nc_open(file.observations)
-                obs <- ncvar_get(nc, 'Data',
-                                 start = c(1, 1, test.ID.index+test.ID.start, j),
-                                 count = c(1, grids.total, 1, 1))
-                nc_close(nc)
-                coords   <- expand.grid(1:ncol(rast.base),1:nrow(rast.base))
-                rast.obs <- rasterize(coords, rast.base, field = obs)
+        print(paste('Generating observation raster for day ',
+                    test.ID.index, ' flt ', flt, sep = ''))
+        file.raster.obs <- paste(folder.raster.obs, 'day', 
+                                 test.ID.index, '_flt', flt,
+                                 '.rdata', sep = '')
+        if(file.exists(file.raster.obs)) {
+            print('skip because it already exists')
+        } else {
+            nc <- nc_open(file.observations)
+            obs <- ncvar_get(nc, 'Data',
+                             start = c(1, 1, test.ID.index+test.ID.start, flt),
+                             count = c(1, grids.total, 1, 1))
+            nc_close(nc)
+            coords   <- expand.grid(1:ncol(rast.base),1:nrow(rast.base))
+            rast.obs <- rasterize(coords, rast.base, field = obs)
 
-                save(rast.obs, file = file.raster.obs)
-            }
+            save(rast.obs, file = file.raster.obs)
         }
     }
     print("Done!")
