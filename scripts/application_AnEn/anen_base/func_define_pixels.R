@@ -61,7 +61,7 @@ define_pixels <- function(
                         ymn = 0.5, ymx = ygrids.total+.5)
     #indices <- cellFromRowCol(rast.base, y, x)
     # after test, we should use this function
-    indices <- cellFromXY(rast.base, c(x, y))
+    indices <- cellFromXY(rast.base, cbind(x, y))
 
     if (verbose > 1) {
         print("The x vector is:")
