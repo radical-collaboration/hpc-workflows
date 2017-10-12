@@ -32,6 +32,7 @@ generate_observation_rasters <- function(
     test.ID.index<- as.numeric(test.ID.index)
     xgrids.total <- as.numeric(xgrids.total)
     ygrids.total <- as.numeric(ygrids.total)
+    flt <- as.numeric(flt)
 
     rast.files <- list.files(folder.raster.obs)
     num.of.files <- length(rast.files)

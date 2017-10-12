@@ -30,8 +30,8 @@ resource_key = {
 
 res_dict = {
         'resource': 'xsede.supermic',
-        'walltime': 3000,
-        'cores': 40,
+        'walltime': 300,
+        'cores': 20,
         'project': 'TG-MCB090174',
         #'queue': 'development',
         'schema': 'gsissh'}

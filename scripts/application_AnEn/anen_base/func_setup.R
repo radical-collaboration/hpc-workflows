@@ -60,7 +60,7 @@ initial_config <- function (user = 'Weiming') {
 
     num.neighbors <- 2
     init.iteration <- 1
-    max.iterations <- 3
+    max.iterations <- 1
     threshold.triangle <- 4
     num.pixels.increase <- 1
 
