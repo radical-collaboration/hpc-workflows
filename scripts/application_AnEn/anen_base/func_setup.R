@@ -60,13 +60,13 @@ initial_config <- function (user = 'Weiming') {
 
     num.neighbors <- 2
     init.iteration <- 1
-    max.iterations <- 5
-    threshold.triangle <- 4
-    num.pixels.increase <- 2
+    max.iterations <- 8
+    threshold.triangle <- 3
+    num.pixels.increase <- 1
 
     debug <- 0
     interpolate.AnEn.rasters <- 1
-    download.AnEn.rasters <- 1
+    download.AnEn.rasters <- 0
 
     # randomly select pixels to compute
     pixels.compute <- sample.int(grids.total,
