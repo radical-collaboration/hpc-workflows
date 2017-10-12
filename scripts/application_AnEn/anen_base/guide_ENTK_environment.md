@@ -6,6 +6,14 @@ docker rm [name]
 docker run -d --name rabbitmq1 -P rabbitmq:3
 ```
 
+If you have already installed docker but it is not running, for Linux, try
+
+```
+service docker stop
+```
+
+You might need root permission to run this command.
+
 Prepare env variable for ENTK
 
 ```
