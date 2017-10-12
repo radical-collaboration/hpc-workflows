@@ -9,6 +9,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('--test_ID_index')
     parser.add_argument('--test_ID_start')
+    parser.add_argument('--flt')
     parser.add_argument('--folder_prefix')
     parser.add_argument('--folder_accumulate')
     parser.add_argument('--folder_raster_anen')
@@ -31,8 +32,8 @@ if __name__ == '__main__':
     
     generate_observation_rasters = STAP(R_code, 'generate_observation_rasters')
     generate_observation_rasters.generate_observation_rasters(  
-            args.test_ID_index, args.test_ID_start, args.folder_prefix,
-            args.folder_accumulate, args.folder_raster_anen,
+            args.test_ID_index, args.test_ID_start, args.flt,
+            args.folder_prefix, args.folder_accumulate, args.folder_raster_anen,
             args.folder_output, args.folder_raster_obs, args.folder_triangles,
             args.num_times_to_compute, args.num_flts, args.file_observations,
             args.xgrids_total, args.ygrids_total)
