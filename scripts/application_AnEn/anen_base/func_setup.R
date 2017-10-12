@@ -60,9 +60,9 @@ initial_config <- function (user = 'Weiming') {
 
     num.neighbors <- 2
     init.iteration <- 1
-    max.iterations <- 1
+    max.iterations <- 5
     threshold.triangle <- 4
-    num.pixels.increase <- 1
+    num.pixels.increase <- 2
 
     debug <- 0
     interpolate.AnEn.rasters <- 1
