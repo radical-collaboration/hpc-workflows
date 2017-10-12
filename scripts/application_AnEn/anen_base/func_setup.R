@@ -75,6 +75,12 @@ initial_config <- function (user = 'Weiming') {
                                       xgrids.total,
                                       ygrids.total, 0)
 
+    predefine.num.pixels <- 1
+    num.pixels.iteration <- c(100, 200, 300)
+    if (predefine.num.pixels == 1) {
+        max.iterations = length(num.pixels.iteration)
+    }
+
     list.init.config <- list(command.exe = command.exe,
                              verbose = verbose,
                              file.forecasts = file.forecasts,
@@ -113,6 +119,8 @@ initial_config <- function (user = 'Weiming') {
                              init.iteration = init.iteration,
                              max.iterations = max.iterations,
                              threshold.triangle = threshold.triangle,
+                             predefine.num.pixels = predefine.num.pixels,
+                             num.pixels.iteration = num.pixels.iteration,
                              num.pixels.increase = num.pixels.increase,
                              interpolate.AnEn.rasters = interpolate.AnEn.rasters,
                              download.AnEn.rasters = download.AnEn.rasters,
