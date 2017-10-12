@@ -76,7 +76,7 @@ initial_config <- function (user = 'Weiming') {
                                       ygrids.total, 0)
 
     predefine.num.pixels <- 1
-    num.pixels.iteration <- c(100, 200, 300)
+    num.pixels.iteration <- c(100, 200, 300, 500, 1000)
     if (predefine.num.pixels == 1) {
         max.iterations = length(num.pixels.iteration)
     }
