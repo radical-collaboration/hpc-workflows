@@ -7,6 +7,8 @@ if __name__ == '__main__':
 
     p = Pipeline()
 
+    '''
+
     # First stage to perform one meshfem task
     s1 = Stage()
 
@@ -37,13 +39,14 @@ if __name__ == '__main__':
                 ]
     t1.executable = ['./bin/xmeshfem3D']
     t1.cpu_reqs = {'processes': 4, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
-    t1.copy_input_data = ['/ccs/proj/bip149/specfem-test.small/data.tar > meshfem_data.tar']
+    t1.copy_input_data = ['/ccs/proj/bip149/ssflow-1-event/data.tar > meshfem_data.tar']
     t1.post_exec = ['tar cfz specfem_data.tar bin DATA DATABASES_MPI OUTPUT_FILES']
 
     s1.add_tasks(t1)
 
     p.add_stages(s1)
 
+    '''
 
     # Second stage to perform multiple specfem tasks
     s2 = Stage()
@@ -66,13 +69,16 @@ if __name__ == '__main__':
                         'module load vim/7.4',
 
                         # Untar the input data
-                        'tar xf specfem_data.tar'    
+                        'tar xf specfem_data.tar',
+
+                        # Copy DATABASES_MPI
+                        'cp /lustre/atlas/scratch/vivekb/bip149/ssflow-1-event/DATABASES_MPI . -r'
 
                     ]
     t2.executable = ['./bin/xspecfem3D']
     t2.cpu_reqs = {'processes': 0, 'process_type': 'MPI', 'threads_per_process': 0, 'thread_type': 'OpenMP'}
-    t2.gpu_reqs = {'processes': 4, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
-    t2.copy_input_data = ['$Pipeline_%s_Stage_%s_Task_%s/specfem_data.tar'%(p.uid,s1.uid,t1.uid)]
+    t2.gpu_reqs = {'processes': 384, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
+    t2.copy_input_data = ['/lustre/atlas/scratch/vivekb/bip149/ssflow-1-event/specfem_data.tar']
 
     s2.add_tasks(t2)
 
@@ -87,11 +93,11 @@ if __name__ == '__main__':
     res_dict = {
 
             'resource': 'ornl.titan_aprun',
-            'walltime': 30,
-            'cpus': 80,
-            'gpus':  5,
+            'walltime': 15,
+            'cpus': 385,
+            'gpus':  385,
             'project': 'BIP149',
-            #'queue': 'development',
+            'queue': 'debug',
             'schema': 'local'
 
     }
@@ -103,7 +109,7 @@ if __name__ == '__main__':
         rman = ResourceManager(res_dict)
 
         # Create an Application Manager for our application
-        appman = AppManager()
+        appman = AppManager(resubmit_failed=False)
 
         # Assign the resource manager to be used by the application manager
         appman.resource_manager = rman
