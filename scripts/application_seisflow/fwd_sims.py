@@ -1,16 +1,36 @@
 from radical.entk import Pipeline, Stage, Task, AppManager, ResourceManager
-import traceback
-
-NUM_SPECFEM_TASKS = 1
+import traceback, sys
 
 if __name__ == '__main__':
+
+    if len(sys.argv)!=2:
+        print 'Execution cmd: python fwd_sims.py <number of events>'
+        sys.exit(1)
+
+    num_events = sys.argv[1]
+
+    event_names = [ 'C201303130312A', 'C200904210526A', 'C200809291519A', 'C201404240310A', 
+                    'C201309251642A', 'C201004112208A', 'C201002180113A', 'C200802080938A', 
+                    'C200806011431A', 'C201305110208A', 'C200807190239A', 'C201305270336A',
+                    'C201403100518A', 'C200908100406A', 'C201405240925A', 'C200909122006A',
+                    'C200904181917A', 'C200805291546A', 'C200912192319A', 'C200910270004A',
+                    'C200810221255A', 'C200910291744A', 'C200909031326A', 'C200903061050A',
+                    'C201308211238A', 'C201411150231A', 'C201101010956A', 'C201310191754A',
+                    'C201211122042A', 'C200804140945A', 'C201108231751A', 'C201201010527A',
+                    'C201407270128A', 'C200707211534A', 'C200803222124A', 'C200808281522A',
+                    'C201408232232A', 'C200906231419A', 'C201008121154A', 'C201107290742A']
+
+    random.shuffle(event_names)
+
+    selected_events = event_names[:num_events]
+
 
     p = Pipeline()
 
     '''
 
     # First stage to perform one meshfem task
-    s1 = Stage()
+    meshfem_stage = Stage()
 
     t1 = Task()
 
@@ -38,24 +58,23 @@ if __name__ == '__main__':
                         
                 ]
     t1.executable = ['./bin/xmeshfem3D']
-    t1.cpu_reqs = {'processes': 4, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
+    t1.cpu_reqs = {'processes': 384, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
     t1.copy_input_data = ['/ccs/proj/bip149/ssflow-1-event/data.tar > meshfem_data.tar']
-    #t1.gpu_reqs = {'process': 24, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
     t1.post_exec = ['tar cfz specfem_data.tar bin DATA DATABASES_MPI OUTPUT_FILES']
 
-    s1.add_tasks(t1)
+    meshfem_stage.add_tasks(t1)
 
-    p.add_stages(s1)
+    p.add_stages(meshfem_stage)
 
     '''
 
     # Second stage to perform multiple specfem tasks
-    s2 = Stage()
+    specfem_stage = Stage()
 
-    t2_uids = []
+    for event in selected_events:
 
-    t2 = Task()
-    t2.pre_exec = [
+        t = Task()
+        t.pre_exec = [
 
                         # Modules to be loaded
                         'module swap PrgEnv-pgi/5.2.82 PrgEnv-gnu/5.2.82',
@@ -69,47 +88,44 @@ if __name__ == '__main__':
                         'module load boost/1.57.0 ',
                         'module load vim/7.4',
 
-                        # Untar the input data
-                        'tar xf specfem_data.tar',
+                        # Untar the specfem input data
+                        'tar xf specfem_data_event_%s.tar'%event,
 
-                        # Copy DATABASES_MPI
-                        'cp /lustre/atlas/scratch/vivekb/bip149/ssflow-1-event/DATABASES_MPI . -r'
+                        # Link to common DATABASES_MPI containing mesh files (~55GB)
+                        'ln -s /lustre/atlas/scratch/vivekb/bip149/ssflow-N-seq-events/DATABASES_MPI DATABASES_MPI'
 
                     ]
-    t2.executable = ['./bin/xspecfem3D']
-    t2.cpu_reqs = {'processes': 0, 'process_type': 'MPI', 'threads_per_process': 0, 'thread_type': 'OpenMP'}
-    t2.gpu_reqs = {'processes': 384, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
-    t2.copy_input_data = ['/lustre/atlas/scratch/vivekb/bip149/ssflow-1-event/specfem_data.tar']
+        t.executable = ['./bin/xspecfem3D']
+        t.cpu_reqs = {'processes': 0, 'process_type': 'MPI', 'threads_per_process': 0, 'thread_type': 'OpenMP'}
+        t.gpu_reqs = {'processes': 384, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
+        t.copy_input_data = ['/lustre/atlas/scratch/vivekb/bip149/ssflow-N-seq-events/specfem_data_event_%s.tar'%event,
+                             '/lustre/atlas/scratch/vivekb/bip149/ssflow-N-seq-events/specfem_validator.py'
+                            ]
+        t.post_exec = ['python specfem_validator.py OUTPUT_FILES/output_solver.txt']
+        specfem_stage.add_tasks(t2)
 
-    s2.add_tasks(t2)
-
-    #t2_uids.append(t2.uid)
-
-
-    #print t2.to_dict()
-    p.add_stages(s2)
+    p.add_stages(specfem_stage)
 
 
-    # Create a dictionary to describe our resource request
     res_dict = {
-
-            'resource': 'ornl.titan_aprun',
-            'walltime': 15,
-            'cpus': 385,
-            'gpus':  385,
-            'project': 'BIP149',
-            'queue': 'debug',
-            'schema': 'local'
-
-    }
+                'resource': 'ornl.titan_aprun',
+                'walltime': 8*num_events,
+                'cpus': 385,
+                'gpus':  385,
+                'project': 'BIP149',
+                'schema': 'local'
+            }
+    if num_events<=16:
+        # Fits in debug queue
+        res_dict['queue'] = 'debug'
+    else:
+        res_dict['queue'] = 'batch'
     
 
     try:
 
         # Create a Resource Manager using the above description
         rman = ResourceManager(res_dict)
-
-        rman.shared_data = ['./specfem_validator.py']
 
         # Create an Application Manager for our application
         appman = AppManager(resubmit_failed=False)
