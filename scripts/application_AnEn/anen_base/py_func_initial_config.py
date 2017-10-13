@@ -7,18 +7,20 @@ functions for parsing and checking the arguments from func_setup.R
 def test_initial_config(d):
 
     possible_keys = [
-            'command.exe', 'command.verbose', 'file.forecasts',
+            'command.exe', 'verbose', 'file.forecasts',
             'file.observations', 'file.pixels.computed', 'folder.prefix',
-            'folder.accumulate', 'folder.output', 'folder.raster.anen',
-            'folder.raster.obs', 'folder.local', 'folder.triangles',
-            'num.flts', 'num.times', 'num.times.to.compute',
+            'folder.accumulate', 'folder.scripts', 'folder.output',
+            'folder.raster.anen', 'folder.raster.obs', 'folder.local',
+            'folder.triangles', 'num.flts', 'num.times', 'num.times.to.compute',
             'num.parameters', 'ygrids.total', 'xgrids.total',
             'grids.total', 'init.num.pixels.compute',
             'yinterval', 'ycuts', 'quick', 'cores', 'rolling',
             'observation.ID', 'train.ID.start', 'train.ID.end',
             'test.ID.start', 'test.ID.end', 'weights', 'members.size',
-            'num.neighbors', 'init.iteration', 'threshold.triangle',
-            'num.pixels.increase', 'debug', 'pixels.compute']
+            'num.neighbors', 'init.iteration', 'max.iterations',
+            'threshold.triangle', 'num.pixels.increase', 'debug', 'docker.port',
+            'pixels.compute', 'interpolate.AnEn.rasters', 'download.AnEn.rasters',
+            'num.pixels.iteration', 'predefine.num.pixels']
 
     all_ok = True
 
@@ -35,7 +37,7 @@ def test_initial_config(d):
 def process_initial_config(initial_config):
 
     # arguments treated as lists with integer elements
-    keys_list_int = ['pixels.compute', 'ycuts']
+    keys_list_int = ['pixels.compute', 'ycuts', 'num.pixels.iteration']
 
     # arguments treated as lists with float elements
     keys_list_float = ['weights']
@@ -45,23 +47,24 @@ def process_initial_config(initial_config):
 
     # arguments treated as string
     keys_str = [
-            'command.exe', 'command.verbose',
-            'folder.raster.obs', 'folder.local',
+            'command.exe', 'folder.raster.obs',
+            'folder.local', 'folder.scripts',
             'folder.prefix', 'folder.accumulate',
-            'folder.output', 'folder.raster.anen',
-            'file.forecasts', 'file.observations',
-            'file.pixels.computed', 'folder.triangles']
+            'folder.output', 'folder.raster.anen', 'file.forecasts',
+            'file.observations', 'file.pixels.computed', 'folder.triangles']
 
     # arguments treated as integer
     keys_int = [
             'grids.total', 'init.num.pixels.compute', 'yinterval',
             'members.size', 'num.neighbors', 'init.iteration',
-            'num.parameters', 'ygrids.total', 'xgrids.total',
-            'num.flts', 'num.times', 'num.times.to.compute',
-            'quick', 'cores', 'rolling', 'observation.ID',
-            'train.ID.start', 'train.ID.end',
-            'test.ID.start', 'test.ID.end',
-            'num.pixels.increase', 'debug']
+            'max.iterations', 'num.parameters', 'ygrids.total',
+            'xgrids.total', 'num.flts', 'num.times',
+            'num.times.to.compute', 'quick', 'cores',
+            'rolling', 'observation.ID', 'train.ID.start',
+            'train.ID.end', 'test.ID.start', 'test.ID.end',
+            'num.pixels.increase', 'debug', 'docker.port',
+            'interpolate.AnEn.rasters', 'verbose',
+            'download.AnEn.rasters', 'predefine.num.pixels']
 
     for key in keys_list_int:
         initial_config[key] = [int(k) for k in list(initial_config[key])]

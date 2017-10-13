@@ -1,21 +1,27 @@
 # set up basic parameters that would be shared by all processes
-initial_config <- function (machine = 'supermic') {
+initial_config <- function (user = 'Weiming') {
     require(RAnEnExtra)
 
     prefix_time <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S")
 
-    if (machine == 'Weiming') {
-        command.exe <- '~/github/CAnalogsV2/install/bin/canalogs'
-        file.forecasts <- "~/geolab_storage_V2/data/NAM12KM/chunk_NAM/Forecasts_NAM_sliced.nc"
-        file.observations <- "~/geolab_storage_V2/data/NAM12KM/chunk_NAM/analysis_NAM.nc"
-        folder.prefix <- '~/geolab_storage_V2/data/NAM12KM/experiments_smart/'
-    } else if (machine == 'supermic') {
-        # setup on supermic
+    if (user == 'Weiming') {
         command.exe <- '/home/whu/github/CAnalogsV2/install/bin/canalogs'
         file.forecasts <- "/home/whu/data/chunk_NAM/Forecasts_NAM_sliced.nc"
         file.observations <- "/home/whu/data/chunk_NAM/Analysis_NAM.nc"
-        folder.prefix <- paste('/home/whu/experiments/anen_smart/',
+        folder.scripts <- '/home/whu/github/hpc-workflows/scripts/application_AnEn/anen_base/'
+        folder.prefix <- paste('/home/whu/experiments/anen_smart/',        
                                prefix_time, '/', sep = '')
+        docker.port <- 32769
+        
+    } else if (user == 'Vivek') {
+        # setup on supermic
+        command.exe <- '/work/vivek91/modules/CAnalogsV2/build/canalogs'
+        file.forecasts <- "/work/vivek91/chunk_NAM/Forecasts_NAM_sliced.nc"
+        file.observations <- "/work/vivek91/chunk_NAM/Analysis_NAM.nc"
+        folder.scripts <- '/home/vivek91/repos/hpc-workflows/scripts/application_AnEn/anen_base/'
+        folder.prefix <- paste('/work/vivek91/anen_smart/',
+                               prefix_time, '/', sep = '')
+        docker.port <- 32773
     }
 
     folder.local <- paste('./local_', prefix_time, '/', sep = '')
@@ -23,7 +29,7 @@ initial_config <- function (machine = 'supermic') {
     
     file.pixels.computed <- paste(folder.local, 'pixels_computed_list.rdata', sep = '')
 
-    command.verbose <- '--verbose 0'
+    verbose <- '2'
     folder.accumulate <- paste(folder.prefix, 'anen_accumulate/', sep = '')
     folder.output <- paste(folder.prefix, 'anen_output/', sep = '')
     folder.raster.anen <- paste(folder.prefix, 'anen_raster/', sep = '')
@@ -54,14 +60,13 @@ initial_config <- function (machine = 'supermic') {
 
     num.neighbors <- 2
     init.iteration <- 1
-    threshold.triangle <- 2
-    num.pixels.increase <- 10
+    max.iterations <- 8
+    threshold.triangle <- 3
+    num.pixels.increase <- 1
 
     debug <- 0
-
-    #rast.base <- raster(nrows = ygrids.total, ncols = xgrids.total,
-    #                    xmn = 0.5, xmx = xgrids.total+.5,
-    #                    ymn = 0.5, ymx = ygrids.total+.5)
+    interpolate.AnEn.rasters <- 1
+    download.AnEn.rasters <- 0
 
     # randomly select pixels to compute
     pixels.compute <- sample.int(grids.total,
@@ -70,12 +75,19 @@ initial_config <- function (machine = 'supermic') {
                                       xgrids.total,
                                       ygrids.total, 0)
 
+    predefine.num.pixels <- 1
+    num.pixels.iteration <- c(100, 200, 300, 500, 1000)
+    if (predefine.num.pixels == 1) {
+        max.iterations = length(num.pixels.iteration)
+    }
+
     list.init.config <- list(command.exe = command.exe,
-                             command.verbose = command.verbose,
+                             verbose = verbose,
                              file.forecasts = file.forecasts,
                              file.observations = file.observations,
                              file.pixels.computed = file.pixels.computed,
                              folder.prefix = folder.prefix,
+                             folder.scripts = folder.scripts,
                              folder.local = folder.local,
                              folder.accumulate = folder.accumulate,
                              folder.output = folder.output,
@@ -105,8 +117,14 @@ initial_config <- function (machine = 'supermic') {
                              members.size = members.size,
                              num.neighbors = num.neighbors,
                              init.iteration = init.iteration,
+                             max.iterations = max.iterations,
                              threshold.triangle = threshold.triangle,
+                             predefine.num.pixels = predefine.num.pixels,
+                             num.pixels.iteration = num.pixels.iteration,
                              num.pixels.increase = num.pixels.increase,
+                             interpolate.AnEn.rasters = interpolate.AnEn.rasters,
+                             download.AnEn.rasters = download.AnEn.rasters,
+                             docker.port = docker.port,
                              debug = debug)
 
     return(list.init.config)

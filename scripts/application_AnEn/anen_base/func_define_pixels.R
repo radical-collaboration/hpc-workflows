@@ -7,7 +7,7 @@ define_pixels <- function(
     iteration, folder.raster.obs, folder.accumulate, folder.triangles,
     pixels.computed, xgrids.total, ygrids.total,
     num.flts, num.pixels.increase, num.times.to.compute, members.size,
-    threshold.triangle) {
+    threshold.triangle, verbose) {
 
     require(raster)
     require(deldir)
@@ -20,7 +20,6 @@ define_pixels <- function(
     # convert argument types
     iteration <- str_pad(as.numeric(iteration), 4, pad = '0')
     pixels.computed <- as.numeric(unlist(pixels.computed))
-
     xgrids.total <- as.numeric(xgrids.total)
     ygrids.total <- as.numeric(ygrids.total)
     num.flts <- as.numeric(num.flts)
@@ -28,6 +27,7 @@ define_pixels <- function(
     num.pixels.increase <- as.numeric(num.pixels.increase)
     members.size <- as.numeric(members.size)
     threshold.triangle <- as.numeric(threshold.triangle)
+    verbose <- as.numeric(verbose)
 
 
     #############################
@@ -47,7 +47,7 @@ define_pixels <- function(
 
     # save triangles
     file.triangles <- paste(folder.triangles, 'iteration',
-                            iteration, '.nc', sep = '')
+                            iteration, '.rdata', sep = '')
     save(polys.triangles, file = file.triangles)
  
 
@@ -55,6 +55,22 @@ define_pixels <- function(
     # compute errors over the triangle vertices #
     #############################################
     print("Compute errors over the triangle vertices")
+
+    rast.base <- raster(nrows = ygrids.total, ncols = xgrids.total,
+                        xmn = 0.5, xmx = xgrids.total+.5,
+                        ymn = 0.5, ymx = ygrids.total+.5)
+    #indices <- cellFromRowCol(rast.base, y, x)
+    # after test, we should use this function
+    indices <- cellFromXY(rast.base, cbind(x, y))
+
+    if (verbose > 1) {
+        print("The x vector is:")
+        print(x)
+        print("The y vector is:")
+        print(y)
+        print("The indices are:")
+        print(indices)
+    }
 
     errors.triangle <- array(NA, dim = c(num.times.to.compute, num.flts,
                                          length(polys.triangles)))
@@ -82,7 +98,7 @@ define_pixels <- function(
                                      '_flt', j, '.rdata', sep = '')
             if (file.exists(file.raster.obs)) {
                 load(file.raster.obs)
-                data.obs <- rast.obs[(y-1) + x]
+                data.obs <- rast.obs[indices]
             } else {
                 stop(paste("Can't find observation raster", file.raster.obs))
             }
@@ -120,15 +136,37 @@ define_pixels <- function(
     # find out the triangles that have too large errors
     triangles.index.to.continue <- which(errors.triangle.average > threshold.triangle)
 
+    if (verbose > 0) {
+        write(paste("******** Evaluation from Iteration ", iteration,
+                    " ********", sep = ''), file = 'evaluation_log.txt')
+        write(paste("The error threshold is ", threshold.triangle, sep = ''),
+              file = 'evaluation_log.txt', append = T)
+        write(paste("There are ", length(triangles.index.to.continue),
+                    " triangles that need more pixels.", sep = ''),
+              file = 'evaluation_log.txt', append = T)
+        for (i in 1 : length(errors.triangle.average)) {
+            write(paste("The averaged error of vertices #", i, " is ",
+                        errors.triangle.average[i], sep = ''),
+                  file = 'evaluation_log.txt', append = T)
+        }
+        write(paste("***********************************************", sep = ''),
+              file = 'evaluation_log.txt', append = T)
+    }
+
     # define pixels for the next iteration
     pixels.next.iteration <- vector(mode = 'numeric')
     for (i in triangles.index.to.continue) {
         triangle <- polys.triangles[i]
         pts.selected <- random.points.in.triangle(triangle, num.pixels.increase)
-        pixels.next.iteration <- c(pixels.next.iteration,
-                                   xy.to.pixels(pts.selected[, 1],
-                                                pts.selected[, 2],
-                                                xgrids.total, 0))
+        if (length(pts.selected) > 0) {
+            pixels.next.iteration <- c(pixels.next.iteration,
+                                       xy.to.pixels(pts.selected[, 1],
+                                                    pts.selected[, 2],
+                                                    xgrids.total, 0))
+        }
+        if (NA %in% pixels.next.iteration) {
+            stop(paste("NA generated in pixels.next.iteration for triangle", i))
+        }
     }
     pixels.next.iteration <- remove.vector.duplicates(c(pixels.computed,
                                                         pixels.next.iteration))
@@ -138,7 +176,14 @@ define_pixels <- function(
     print(paste("The amount of the pixels for the next iteration is",
                 length(pixels.next.iteration)))
 
-    write(pixels.next.iteration , file = 'pixels_next_iteration.txt',
+    if (NA %in% pixels.next.iteration) {
+        stop("NA found in pixels.next.iteration after removing duplicates")
+    }
+
+    print("The pixels for the next iteration are:")
+    print(pixels.next.iteration)
+
+    write(pixels.next.iteration, file = 'pixels_next_iteration.txt',
           ncolumns = length(pixels.next.iteration))
     print("Done!")
 }

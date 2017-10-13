@@ -16,14 +16,14 @@ if __name__ == '__main__':
 
     t1.pre_exec = [     # Modules to be loaded
                         'module swap PrgEnv-pgi/5.2.82 PrgEnv-gnu/5.2.82',
-                        'module load cudatoolkit/7.5.18-1.0502.10743.2.1 ',
-                        'module load cray-netcdf-hdf5parallel/4.3.3.1 ',
-                        'module load cray-hdf5-parallel/1.8.14 ',
-                        'module load szip/2.1 ',
+                        'module load cudatoolkit/7.5.18-1.0502.10743.2.1',
+                        'module load cray-netcdf-hdf5parallel/4.3.3.1',
+                        'module load cray-hdf5-parallel/1.8.14',
+                        'module load szip/2.1',
                         'module load mxml/2.9',
                         'module load adios/1.9.0',
                         'module load cmake/2.8.10.2',
-                        'module load boost/1.57.0 ',
+                        'module load boost/1.57.0',
                         'module load vim/7.4',
 
                         # Untar the input data
@@ -40,6 +40,7 @@ if __name__ == '__main__':
     t1.executable = ['./bin/xmeshfem3D']
     t1.cpu_reqs = {'processes': 4, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
     t1.copy_input_data = ['/ccs/proj/bip149/ssflow-1-event/data.tar > meshfem_data.tar']
+    #t1.gpu_reqs = {'process': 24, 'process_type': 'MPI', 'threads_per_process': 1, 'thread_type': 'OpenMP'}
     t1.post_exec = ['tar cfz specfem_data.tar bin DATA DATABASES_MPI OUTPUT_FILES']
 
     s1.add_tasks(t1)
@@ -107,6 +108,8 @@ if __name__ == '__main__':
 
         # Create a Resource Manager using the above description
         rman = ResourceManager(res_dict)
+
+        rman.shared_data = ['./specfem_validator.py']
 
         # Create an Application Manager for our application
         appman = AppManager(resubmit_failed=False)
