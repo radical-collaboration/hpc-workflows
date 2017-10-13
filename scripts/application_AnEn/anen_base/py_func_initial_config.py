@@ -13,7 +13,7 @@ def test_initial_config(d):
             'folder.raster.anen', 'folder.raster.obs', 'folder.local',
             'folder.triangles', 'num.flts', 'num.times', 'num.times.to.compute',
             'num.parameters', 'ygrids.total', 'xgrids.total',
-            'grids.total', 'init.num.pixels.compute',
+            'grids.total', 'init.num.pixels.compute', 'only.evaluate.vertices',
             'yinterval', 'ycuts', 'quick', 'cores', 'rolling',
             'observation.ID', 'train.ID.start', 'train.ID.end',
             'test.ID.start', 'test.ID.end', 'weights', 'members.size',
@@ -64,7 +64,8 @@ def process_initial_config(initial_config):
             'train.ID.end', 'test.ID.start', 'test.ID.end',
             'num.pixels.increase', 'debug', 'docker.port',
             'interpolate.AnEn.rasters', 'verbose',
-            'download.AnEn.rasters', 'predefine.num.pixels']
+            'download.AnEn.rasters', 'predefine.num.pixels',
+            'only.evaluate.vertices']
 
     for key in keys_list_int:
         initial_config[key] = [int(k) for k in list(initial_config[key])]

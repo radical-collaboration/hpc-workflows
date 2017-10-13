@@ -45,7 +45,7 @@ generate_observation_rasters <- function(
     } else {
         print(paste('Generating observation raster for day ',
                     test.ID.index, ' flt ', flt, sep = ''))
-        file.raster.obs <- paste(folder.raster.obs, 'day', 
+        file.raster.obs <- paste(folder.raster.obs, 'time', 
                                  test.ID.index, '_flt', flt,
                                  '.rdata', sep = '')
         if(file.exists(file.raster.obs)) {

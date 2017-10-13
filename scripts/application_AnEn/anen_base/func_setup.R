@@ -66,7 +66,8 @@ initial_config <- function (user = 'Weiming') {
 
     debug <- 0
     interpolate.AnEn.rasters <- 1
-    download.AnEn.rasters <- 0
+    download.AnEn.rasters <- 1
+    only.evaluate.vertices <- 1
 
     # randomly select pixels to compute
     pixels.compute <- sample.int(grids.total,
@@ -76,7 +77,7 @@ initial_config <- function (user = 'Weiming') {
                                       ygrids.total, 0)
 
     predefine.num.pixels <- 1
-    num.pixels.iteration <- c(100, 200, 300, 500, 1000)
+    num.pixels.iteration <- c(100, 163, 316, 714, 1637, 3610, 7162, 12518)
     if (predefine.num.pixels == 1) {
         max.iterations = length(num.pixels.iteration)
     }
@@ -124,6 +125,7 @@ initial_config <- function (user = 'Weiming') {
                              num.pixels.increase = num.pixels.increase,
                              interpolate.AnEn.rasters = interpolate.AnEn.rasters,
                              download.AnEn.rasters = download.AnEn.rasters,
+                             only.evaluate.vertices = only.evaluate.vertices,
                              docker.port = docker.port,
                              debug = debug)
 

@@ -31,7 +31,7 @@ resource_key = {
 
 res_dict = {
         'resource': 'xsede.supermic',
-        'walltime': 3000,
+        'walltime': 600,
         'cores': 40,
         'project': 'TG-MCB090174',
         #'queue': 'development',
@@ -173,6 +173,12 @@ if __name__ == '__main__':
     # -------------------------- Post Processing -------------------------------
     if not initial_config['interpolate.AnEn.rasters']:
         # exit the process if AnEn ouput raster interpolation is not needed
+        sys.exit(0)
+
+    if not initial_config['only.evaluate.vertices']:
+        # exit if the evaluation is not done only on vertices
+        # because if the evalution is done on rasters,
+        # the AnEn rasters has already been created
         sys.exit(0)
 
     pipeline_postprocess = postprocess(initial_config, resource_key['xsede.supermic'])
