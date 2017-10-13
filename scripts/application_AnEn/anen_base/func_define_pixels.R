@@ -4,10 +4,10 @@
 # - define pixels for the next iteration
 #
 define_pixels <- function(
-    iteration, folder.raster.obs, folder.accumulate, folder.triangles,
-    pixels.computed, xgrids.total, ygrids.total,
+    iteration, folder.raster.obs, prefix.anen.raster, folder.accumulate,
+    folder.triangles, pixels.computed, xgrids.total, ygrids.total,
     num.flts, num.pixels.increase, num.times.to.compute, members.size,
-    threshold.triangle, verbose) {
+    threshold.triangle, only.evaluate.vertices, verbose) {
 
     require(raster)
     require(deldir)
@@ -27,6 +27,7 @@ define_pixels <- function(
     num.pixels.increase <- as.numeric(num.pixels.increase)
     members.size <- as.numeric(members.size)
     threshold.triangle <- as.numeric(threshold.triangle)
+    only.evaluate.vertices <- as.numeric(only.evaluate.vertices)
     verbose <- as.numeric(verbose)
 
 
@@ -51,11 +52,6 @@ define_pixels <- function(
     save(polys.triangles, file = file.triangles)
  
 
-    #############################################
-    # compute errors over the triangle vertices #
-    #############################################
-    print("Compute errors over the triangle vertices")
-
     rast.base <- raster(nrows = ygrids.total, ncols = xgrids.total,
                         xmn = 0.5, xmx = xgrids.total+.5,
                         ymn = 0.5, ymx = ygrids.total+.5)
@@ -72,61 +68,111 @@ define_pixels <- function(
         print(indices)
     }
 
-    errors.triangle <- array(NA, dim = c(num.times.to.compute, num.flts,
-                                         length(polys.triangles)))
-    for (i in 1:num.times.to.compute) {
-        for (j in 1:num.flts) {
-            print(paste("Processing test day ", i, " flt ", j, sep = ''))
 
-            # read anen accumulated NetCDF file
-            file.anen <- paste(folder.accumulate, 'iteration',
-                               iteration, '.nc', sep = '')
-            if (file.exists(file.anen)) {
-                nc <- nc_open(file.anen)
-                data.anen <- ncvar_get(nc, 'Data',
-                                       start = c(1, i, j, 1),
-                                       count = c(length(pixels.computed), 1, 1, members.size))
-            } else {
-                stop(paste("Can't find AnEn file", file.anen))
-            }
+    if (only.evaluate.vertices == 1) {
 
-            # compute the average across all ensemble members
-            data.anen <- apply(data.anen, 1, mean, na.rm = T)
+        #############################################
+        # compute errors over the triangle vertices #
+        #############################################
+        print("Compute errors over the triangle vertices")
 
-            # extract observation values from observation raster at the vertices
-            file.raster.obs <- paste(folder.raster.obs, 'day', i,
-                                     '_flt', j, '.rdata', sep = '')
-            if (file.exists(file.raster.obs)) {
-                load(file.raster.obs)
-                data.obs <- rast.obs[indices]
-            } else {
-                stop(paste("Can't find observation raster", file.raster.obs))
-            }
+        errors.triangle <- array(NA, dim = c(num.times.to.compute, num.flts,
+                                             length(polys.triangles)))
+        for (i in 1:num.times.to.compute) {
+            for (j in 1:num.flts) {
+                print(paste("Processing test day ", i, " flt ", j, sep = ''))
 
-            # compute errors for the vertices
-            errors.vertex <- abs(data.obs - data.anen)
-
-            for (k in 1:length(polys.triangles)) {
-                control.points <- polys.triangles[k]@polygons[[1]]@Polygons[[1]]@coords
-                control.points <- control.points[-1, ]
-                control.points <- xy.to.pixels(control.points[, 1], control.points[, 2],
-                                               xgrids.total = xgrids.total, start = 0)
-                index <- unlist(lapply(control.points,
-                                       function (x, l) {return(which(l == x))},
-                                       l = pixels.computed))
-                
-                if (length(index) == length(control.points)) {
-                    errors.triangle[i, j, k] <- mean(errors.vertex[index], na.rm = T)
+                # read anen accumulated NetCDF file
+                file.anen <- paste(folder.accumulate, 'iteration',
+                                   iteration, '.nc', sep = '')
+                if (file.exists(file.anen)) {
+                    nc <- nc_open(file.anen)
+                    data.anen <- ncvar_get(nc, 'Data',
+                                           start = c(1, i, j, 1),
+                                           count = c(length(pixels.computed), 1, 1, members.size))
                 } else {
-                    stop(paste("Some vertex not found in the computed list. ",
-                               "The desired vertices are ", control.points, sep = ''))
+                    stop(paste("Can't find AnEn file", file.anen))
+                }
+
+                # compute the average across all ensemble members
+                data.anen <- apply(data.anen, 1, mean, na.rm = T)
+
+                # extract observation values from observation raster at the vertices
+                file.raster.obs <- paste(folder.raster.obs, 'time', i,
+                                         '_flt', j, '.rdata', sep = '')
+                if (file.exists(file.raster.obs)) {
+                    load(file.raster.obs)
+                    data.obs <- rast.obs[indices]
+                } else {
+                    stop(paste("Can't find observation raster", file.raster.obs))
+                }
+
+                # compute errors for the vertices
+                errors.vertex <- abs(data.obs - data.anen)
+
+                for (k in 1:length(polys.triangles)) {
+                    control.points <- polys.triangles[k]@polygons[[1]]@Polygons[[1]]@coords
+                    control.points <- control.points[-1, ]
+                    control.points <- xy.to.pixels(control.points[, 1], control.points[, 2],
+                                                   xgrids.total = xgrids.total, start = 0)
+                    index <- unlist(lapply(control.points,
+                                           function (x, l) {return(which(l == x))},
+                                           l = pixels.computed))
+
+                    if (length(index) == length(control.points)) {
+                        errors.triangle[i, j, k] <- mean(errors.vertex[index], na.rm = T)
+                    } else {
+                        stop(paste("Some vertex not found in the computed list. ",
+                                   "The desired vertices are ", control.points, sep = ''))
+                    }
                 }
             }
         }
+
+        errors.triangle.average <- apply(errors.triangle, 3, mean, na.rm = T)
+    } else {
+
+        ##############################################
+        # compute errors on the interpolated rasters #
+        ##############################################
+        print("Compute errors over the iterpolated area of the triangle")
+
+        errors.triangle <- array(NA, dim = c(num.times.to.compute, num.flts,
+                                             length(polys.triangles)))
+        for (i in 1:num.times.to.compute) {
+            for (j in 1:num.flts) {
+                print(paste("Processing test day ", i, " flt ", j, sep = ''))
+
+                # read AnEn raster
+                file.raster.anen <- paste(prefix.anen.raster, '_time', time,
+                                          "_flt", flt, '.rdata', sep = '')
+                if (file.exists(file.raster.anen)) {
+                    load(file.raster.anen)
+                } else {
+                    stop(paste("Can't find AnEn raster", file.raster.anen))
+                }
+
+                # read observation raster
+                file.raster.obs <- paste(folder.raster.obs, 'time', i,
+                                         '_flt', j, '.rdata', sep = '')
+                if (file.exists(file.raster.obs)) {
+                    load(file.raster.obs)
+                } else {
+                    stop(paste("Can't find observation raster", file.raster.obs))
+                }
+
+                # compute errors for each triangle area
+                for (k in 1:length(polys.triangles)) {
+                    pts.in.triangle <- get.points.in.triangle(polys.triangles[k])
+                    indices <- cellFromXY(rast.base, pts.in.triangle)
+                    errors.triangle[i, j, k] <- mean(rast.obs[indices] - rast.int[indices],
+                                                     na.rm = T)
+                }
+            }
+        }
+
+        errors.triangle.average <- apply(errors.triangle, 3, mean, na.rm = T)
     }
-
-    errors.triangle.average <- apply(errors.triangle, 3, mean, na.rm = T)
-
 
     #################
     # define pixels #

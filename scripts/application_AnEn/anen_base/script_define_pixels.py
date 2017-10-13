@@ -9,6 +9,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers')
     parser.add_argument('--iteration')
     parser.add_argument('--folder_raster_obs')
+    parser.add_argument('--prefix_anen_raster')
     parser.add_argument('--folder_accumulate')
     parser.add_argument('--folder_triangles')
     parser.add_argument('--pixels_computed')
@@ -20,6 +21,7 @@ if __name__ == '__main__':
     parser.add_argument('--members_size')
     parser.add_argument('--threshold_triangle')
     parser.add_argument('--file_pixels_accumulated')
+    parser.add_argument('--only_evaluate_vertices')
     parser.add_argument('--verbose')
 
     args = parser.parse_args()
@@ -39,12 +41,13 @@ if __name__ == '__main__':
     stringr = importr("stringr")
     spatstat = importr("spatstat") 
     maptools = importr("maptools")
+    maptools = importr("splancs")
     RAnEnExtra = importr("RAnEnExtra")
 
     define_pixels = STAP(R_code, 'define_pixels')
     define_pixels.define_pixels(
-            args.iteration, args.folder_raster_obs, args.folder_accumulate,
-            args.folder_triangles, pixels_computed, args.xgrids_total,
-            args.ygrids_total, args.num_flts, args.num_pixels_increase,
+            args.iteration, args.folder_raster_obs, args.prefix_anen_raster,
+            args.folder_accumulate, args.folder_triangles, pixels_computed,
+            args.xgrids_total, args.ygrids_total, args.num_flts, args.num_pixels_increase,
             args.num_times_to_compute, args.members_size, args.threshold_triangle,
-            args.verbose)
+            args.only_evaluate_vertices, args.verbose)

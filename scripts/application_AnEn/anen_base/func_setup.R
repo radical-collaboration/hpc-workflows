@@ -67,6 +67,7 @@ initial_config <- function (user = 'Weiming') {
     debug <- 0
     interpolate.AnEn.rasters <- 1
     download.AnEn.rasters <- 0
+    only.evaluate.vertices <- 1
 
     # randomly select pixels to compute
     pixels.compute <- sample.int(grids.total,
@@ -124,6 +125,7 @@ initial_config <- function (user = 'Weiming') {
                              num.pixels.increase = num.pixels.increase,
                              interpolate.AnEn.rasters = interpolate.AnEn.rasters,
                              download.AnEn.rasters = download.AnEn.rasters,
+                             only.evaluate.vertices = only.evaluate.vertices,
                              docker.port = docker.port,
                              debug = debug)
 

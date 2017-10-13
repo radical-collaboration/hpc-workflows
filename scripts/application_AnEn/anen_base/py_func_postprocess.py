@@ -66,7 +66,7 @@ def postprocess (configs, pre_exec):
             pixels_accumulated = read_pixels_computed.read_pixels_computed(
                     str_file_pixels_computed, str_iteration)
             str_pixels_accumulated = ' '.join([str(int(k)) for k in pixels_accumulated])
-            with open(str_file_pixels_accumulated) as f:
+            with open(str_file_pixels_accumulated, 'w') as f:
                 f.write(str_pixels_accumulated)
 
         t = Task()

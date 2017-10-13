@@ -44,6 +44,7 @@ def start_iteration (
     str_folder_output = configs['folder.output']
     str_folder_accumulate = configs['folder.accumulate']
     str_folder_raster_obs = configs['folder.raster.obs']
+    str_folder_raster_anen = configs['folder.raster.anen']
     str_folder_triangles = configs['folder.triangles']
     str_file_forecasts = configs['file.forecasts']
     str_file_observations = configs['file.observations']
@@ -185,21 +186,70 @@ def start_iteration (
     p.add_stages(s2)
     # -------------------------- End of Stage 2 --------------------------------
 
+    # -------------------------- Optional stage --------------------------------
+    if not configs['only.evaluate.vertices']:
+        # if only.evaluate.vertices is not chosen
+        # then evaluate the interpolated raster
+        file_anen_accumulate_iteration = '%siteration%s.nc' % (
+                str_folder_accumulate, str_iteration)
+        prefix_anen_raster = '%siteration%s' % (
+                str_folder_raster_anen, str_iteration)
+        str_file_pixels_accumulated = '%s/pixels_accumulated_for_iteration%s.txt' % (
+                configs['folder.local'], str_iteration)
+
+        if not os.path.exists(str_file_pixels_accumulated):
+            with open('func_read_pixels_computed.R', 'r') as f:
+                R_code = f.read()
+            read_pixels_computed = STAP(R_code, 'read_pixels_computed')
+
+            pixels_accumulated = read_pixels_computed.read_pixels_computed(
+                    str_file_pixels_computed, str_iteration)
+            str_pixels_accumulated = ' '.join([str(int(k)) for k in pixels_accumulated])
+            with open(str_file_pixels_accumulated, 'w') as f:
+                f.write(str_pixels_accumulated)
+
+        t_opt = Task()
+        t_opt.cores = 1
+        t_opt.pre_exec = pre_exec
+        t_opt.executable = ['python']
+        t_opt.upload_input_data = [str_file_pixels_accumulated]
+        t_opt.copy_input_data = [
+                '%s/script_interpolate_anen.py' % configs['folder.scripts'],
+                '%s/func_interpolate_anen.R' % configs['folder.scripts']]
+        t_opt.arguments = [
+                'script_interpolate_anen.py',
+                '--file_anen_accumulate_iteration', file_anen_accumulate_iteration,
+                '--prefix_anen_raster', prefix_anen_raster,
+                '--file_pixels_accumulated',
+                'pixels_accumulated_for_iteration%s.txt' % str_iteration,
+                '--num_flts', configs['num.flts'],
+                '--num_times_to_compute', configs['num.times.to.compute'],
+                '--members_size', configs['members.size'],
+                '--num_neighbors', configs['num.neighbors'],
+                '--xgrids_total', configs['xgrids.total'],
+                '--ygrids_total', configs['ygrids.total']]
+    # -------------------------- End of optional stage -------------------------
+
     # -------------------------- Stage 3 ---------------------------------------
     # define triangles and evaluate the errors of the triangle vertices;
     # then define the pixels to compute for the next iteration
     #
     # read accumulated pixels computed
-    with open('func_read_pixels_computed.R', 'r') as f:
-        R_code = f.read()
-    read_pixels_computed = STAP(R_code, 'read_pixels_computed')
-    pixels_accumulated = read_pixels_computed.read_pixels_computed(
-            str_file_pixels_computed, str_iteration)
-    str_pixels_accumulated = ' '.join([str(int(k)) for k in pixels_accumulated])
+    str_file_pixels_accumulated = '%s/pixels_accumulated_for_iteration%s.txt' % (
+            configs['folder.local'], str_iteration)
+    if not os.path.exists(str_file_pixels_accumulated):
+        with open('func_read_pixels_computed.R', 'r') as f:
+            R_code = f.read()
+        read_pixels_computed = STAP(R_code, 'read_pixels_computed')
+        pixels_accumulated = read_pixels_computed.read_pixels_computed(
+                str_file_pixels_computed, str_iteration)
+        str_pixels_accumulated = ' '.join([str(int(k)) for k in pixels_accumulated])
 
-    with open('%s/pixels_accumulated_for_iteration%s.txt' % (
-        configs['folder.local'], str_iteration), 'w') as f:
-        f.write(str_pixels_accumulated)
+        with open(str_file_pixels_accumulated, 'w') as f:
+            f.write(str_pixels_accumulated)
+
+    if configs['only.evaluate.vertices']:
+        prefix_anen_raster = ''
     
     # define pixels for the next iteration
     t3 = Task()
@@ -215,6 +265,7 @@ def start_iteration (
             'script_define_pixels.py', 
             '--iteration', str_iteration,
             '--folder_raster_obs', str_folder_raster_obs,
+            '--prefix_anen_raster', prefix_anen_raster,
             '--folder_accumulate', str_folder_accumulate,
             '--folder_triangles', str_folder_triangles,
             '--xgrids_total', xgrids_total,
@@ -226,6 +277,7 @@ def start_iteration (
             '--threshold_triangle', threashold_triangle,
             '--file_pixels_accumulated',
             'pixels_accumulated_for_iteration%s.txt' % str_iteration,
+            '--only_evaluate_vertices', configs['only.evaluate.vertices'],
             '--verbose', verbose]
     t3.download_output_data = [
             'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (

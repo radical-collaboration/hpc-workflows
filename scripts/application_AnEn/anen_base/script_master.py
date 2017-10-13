@@ -175,6 +175,12 @@ if __name__ == '__main__':
         # exit the process if AnEn ouput raster interpolation is not needed
         sys.exit(0)
 
+    if not initial_config['only.evaluate.vertices']:
+        # exit if the evaluation is not done only on vertices
+        # because if the evalution is done on rasters,
+        # the AnEn rasters has already been created
+        sys.exit(0)
+
     pipeline_postprocess = postprocess(initial_config, resource_key['xsede.supermic'])
 
     try:
