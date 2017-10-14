@@ -175,7 +175,7 @@ if __name__ == '__main__':
         # exit the process if AnEn ouput raster interpolation is not needed
         sys.exit(0)
 
-    if not initial_config['evaluation_method'] == 2:
+    if not initial_config['evaluation.method'] == 2:
         # exit when evaluation method is raster evaluation
         # because at this point, we should already have
         # the interpolated map
