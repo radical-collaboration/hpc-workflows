@@ -187,13 +187,13 @@ def start_iteration (
     # -------------------------- End of Stage 2 --------------------------------
 
     # -------------------------- Optional stage --------------------------------
+    prefix_anen_raster = '%siteration%s' % (
+        str_folder_raster_anen, str_iteration)
     if not configs['only.evaluate.vertices']:
         # if only.evaluate.vertices is not chosen
         # then evaluate the interpolated raster
         file_anen_accumulate_iteration = '%siteration%s.nc' % (
                 str_folder_accumulate, str_iteration)
-        prefix_anen_raster = '%siteration%s' % (
-                str_folder_raster_anen, str_iteration)
         str_file_pixels_accumulated = '%s/pixels_accumulated_for_iteration%s.txt' % (
                 configs['folder.local'], str_iteration)
 
@@ -248,9 +248,6 @@ def start_iteration (
         with open(str_file_pixels_accumulated, 'w') as f:
             f.write(str_pixels_accumulated)
 
-    if configs['only.evaluate.vertices']:
-        prefix_anen_raster = ''
-    
     # define pixels for the next iteration
     t3 = Task()
     t3.cores = 1
