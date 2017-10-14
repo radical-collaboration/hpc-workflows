@@ -7,7 +7,7 @@ define_pixels <- function(
     iteration, folder.raster.obs, prefix.anen.raster, folder.accumulate,
     folder.triangles, pixels.computed, xgrids.total, ygrids.total,
     num.flts, num.pixels.increase, num.times.to.compute, members.size,
-    threshold.triangle, only.evaluate.vertices, verbose) {
+    threshold.triangle, evaluation.method, verbose) {
 
     require(raster)
     require(deldir)
@@ -27,7 +27,7 @@ define_pixels <- function(
     num.pixels.increase <- as.numeric(num.pixels.increase)
     members.size <- as.numeric(members.size)
     threshold.triangle <- as.numeric(threshold.triangle)
-    only.evaluate.vertices <- as.numeric(only.evaluate.vertices)
+    evaluation.method <- as.numeric(evaluation.method)
     verbose <- as.numeric(verbose)
 
 
@@ -69,7 +69,7 @@ define_pixels <- function(
     }
 
 
-    if (only.evaluate.vertices == 1) {
+    if (evaluation.method == 1) {
 
         #############################################
         # compute errors over the triangle vertices #
@@ -130,7 +130,7 @@ define_pixels <- function(
         }
 
         errors.triangle.average <- apply(errors.triangle, 3, mean, na.rm = T)
-    } else {
+    } else if (evaluation.method == 2){
 
         ##############################################
         # compute errors on the interpolated rasters #
@@ -172,6 +172,9 @@ define_pixels <- function(
         }
 
         errors.triangle.average <- apply(errors.triangle, 3, mean, na.rm = T)
+    } else {
+        print(paste("The selected evaluation method is", evaluation.method))
+        stop("But it is not implemented yet.")
     }
 
     #################

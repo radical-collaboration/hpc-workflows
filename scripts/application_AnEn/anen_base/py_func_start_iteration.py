@@ -189,9 +189,8 @@ def start_iteration (
     # -------------------------- Optional stage --------------------------------
     prefix_anen_raster = '%siteration%s' % (
         str_folder_raster_anen, str_iteration)
-    if not configs['only.evaluate.vertices']:
-        # if only.evaluate.vertices is not chosen
-        # then evaluate the interpolated raster
+    if not configs['evaluation.method'] == 2:
+        # evaluate the interpolated raster
         file_anen_accumulate_iteration = '%siteration%s.nc' % (
                 str_folder_accumulate, str_iteration)
         str_file_pixels_accumulated = '%s/pixels_accumulated_for_iteration%s.txt' % (
@@ -274,7 +273,7 @@ def start_iteration (
             '--threshold_triangle', threashold_triangle,
             '--file_pixels_accumulated',
             'pixels_accumulated_for_iteration%s.txt' % str_iteration,
-            '--only_evaluate_vertices', configs['only.evaluate.vertices'],
+            '--evaluation_method', configs['evaluation.method'],
             '--verbose', verbose]
     t3.download_output_data = [
             'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (

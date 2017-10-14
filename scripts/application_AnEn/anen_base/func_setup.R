@@ -67,7 +67,13 @@ initial_config <- function (user = 'Weiming') {
     debug <- 0
     interpolate.AnEn.rasters <- 1
     download.AnEn.rasters <- 1
-    only.evaluate.vertices <- 1
+
+    # choose one evaluation method from the below
+    # 1 ---- evaluate on the vertices
+    # 2 ---- evaluate on the interpolated maps
+    # 3 ---_ evaluate using binary tournament
+    #
+    evaluation.method <- 1
 
     # randomly select pixels to compute
     pixels.compute <- sample.int(grids.total,
@@ -125,7 +131,7 @@ initial_config <- function (user = 'Weiming') {
                              num.pixels.increase = num.pixels.increase,
                              interpolate.AnEn.rasters = interpolate.AnEn.rasters,
                              download.AnEn.rasters = download.AnEn.rasters,
-                             only.evaluate.vertices = only.evaluate.vertices,
+                             evaluation.method = evaluation.method,
                              docker.port = docker.port,
                              debug = debug)
 
