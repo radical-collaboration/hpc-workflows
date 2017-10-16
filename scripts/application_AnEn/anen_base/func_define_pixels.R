@@ -7,7 +7,9 @@ define_pixels <- function(
     iteration, folder.raster.obs, prefix.anen.raster, folder.accumulate,
     folder.triangles, pixels.computed, xgrids.total, ygrids.total,
     num.flts, num.pixels.increase, num.times.to.compute, members.size,
-    threshold.triangle, evaluation.method, verbose) {
+    threshold.triangle, tournament.size, num.champions,
+    num.error.pixels, num.triangles.from.tournament,
+    evaluation.method, verbose) {
 
     require(raster)
     require(deldir)
@@ -27,9 +29,12 @@ define_pixels <- function(
     num.pixels.increase <- as.numeric(num.pixels.increase)
     members.size <- as.numeric(members.size)
     threshold.triangle <- as.numeric(threshold.triangle)
+    tournament.size <- as.numeric(tournament.size)
+    num.champions <- as.numeric(num.champions)
+    num.error.pixels <- as.numeric(num.error.pixels)
+    num.triangles.from.tournament <- as.numeric(num.triangles.from.tournament)
     evaluation.method <- as.numeric(evaluation.method)
     verbose <- as.numeric(verbose)
-
 
     #############################
     # define and save triangles #
@@ -55,8 +60,6 @@ define_pixels <- function(
     rast.base <- raster(nrows = ygrids.total, ncols = xgrids.total,
                         xmn = 0.5, xmx = xgrids.total+.5,
                         ymn = 0.5, ymx = ygrids.total+.5)
-    #indices <- cellFromRowCol(rast.base, y, x)
-    # after test, we should use this function
     indices <- cellFromXY(rast.base, cbind(x, y))
 
     if (verbose > 1) {
@@ -130,6 +133,8 @@ define_pixels <- function(
         }
 
         errors.triangle.average <- apply(errors.triangle, 3, mean, na.rm = T)
+        triangles.index.to.continue <- which(errors.triangle.average > threshold.triangle)
+
     } else if (evaluation.method == 2){
 
         ##############################################
@@ -164,14 +169,73 @@ define_pixels <- function(
                 # compute errors for each triangle area
                 for (k in 1:length(polys.triangles)) {
                     pts.in.triangle <- get.points.in.triangle(polys.triangles[k])
-                    indices <- cellFromXY(rast.base, pts.in.triangle)
-                    errors.triangle[i, j, k] <- mean(rast.obs[indices] - rast.int[indices],
+                    index.vertices <- cellFromXY(rast.base, pts.in.triangle)
+                    errors.triangle[i, j, k] <- mean(rast.obs[index.vertices] - rast.int[index.vertices],
                                                      na.rm = T)
                 }
             }
         }
 
         errors.triangle.average <- apply(errors.triangle, 3, mean, na.rm = T)
+        triangles.index.to.continue <- which(errors.triangle.average > threshold.triangle)
+
+    } else if (evaluation.method == 3) {
+
+        ##########################################################
+        # compute errors and use the binary tournament selection #
+        ##########################################################
+        print("Tournament selection is chosen")
+        print("Compute errors for each triangle")
+        
+        errors.triangle <- array(NA, dim = c(num.times.to.compute, num.flts,
+                                             length(polys.triangles)))
+        for (i in 1:num.times.to compute) {
+            for (j in 1:num.flts) {
+                print(paste("Processing test day ", i, " flt", j, sep = ''))
+
+                # read anen accumulated NetCDF file
+                file.anen <- paste(folder.accumulate, 'iteration',
+                                   iteration, '.nc', sep = '')
+                if (file.exists(file.anen)) {
+                    nc <- nc_open(file.anen)
+                    data.anen <- ncvar_get(nc, 'Data',
+                                           start = c(1, i, j, 1),
+                                           count = c(length(pixels.computed), 1, 1, members.size))
+                } else {
+                    stop(paste("Can't find AnEn file", file.anen))
+                }
+
+                # read observation raster
+                file.raster.obs <- paste(folder.raster.obs, 'time', i,
+                                         '_flt', j, '.rdata', sep = '')
+                if (file.exists(file.raster.obs)) {
+                    load(file.raster.obs)
+                } else {
+                    stop(paste("Can't find observation raster", file.raster.obs))
+                }
+
+                for (k in 1:length(polys.triangles)) {
+                    control.points <- polys.triangles[k]@polygons[[1]]@Polygons[[1]]@coords
+                    control.points <- control.points[-1, ]
+                    control.points.indices <- cellFromXY(rast.obs, control.points)
+                    random.points <- random.points.in.triangle(polys.triangles, num.error.pixels)
+                    print("The randomly picked piels are")
+                    print(random.points)
+                    random.points.interpolate <- inverse.distance.interpolation(random.points,
+                                                                                control.points,
+                                                                                rast.obs[control.points.indices])
+                    random.points.true <- rast.obs[cellFromXY(rast.obs, random.points)]
+                    errors.triangle[i, j, k] <- mean(abs(random.points.true-random.points.interpolate),
+                                                     na.rm = T)
+                }
+            }
+        }
+
+        errors.triangle.average <- apply(errors.triangle, 3, mean, na.rm = T)
+
+        triangles.index.to.continue <- tournament.selection(errors.triangle.average,
+                                                            num.triangles.from.tournament)
+
     } else {
         print(paste("The selected evaluation method is", evaluation.method))
         stop("But it is not implemented yet.")
@@ -183,7 +247,6 @@ define_pixels <- function(
     print("Define pixels to compute for the next iteration")
 
     # find out the triangles that have too large errors
-    triangles.index.to.continue <- which(errors.triangle.average > threshold.triangle)
 
     if (verbose > 0) {
         write(paste("******** Evaluation from Iteration ", iteration,
