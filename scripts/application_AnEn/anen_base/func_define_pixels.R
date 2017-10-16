@@ -222,7 +222,7 @@ define_pixels <- function(
                     control.points <- polys.triangles[k]@polygons[[1]]@Polygons[[1]]@coords
                     control.points <- control.points[-1, ]
                     control.points.indices <- cellFromXY(rast.obs, control.points)
-                    random.points <- random.points.in.triangle(polys.triangles, num.error.pixels)
+                    random.points <- as.matrix(random.points.in.triangle(polys.triangles, num.error.pixels))
                     print("The randomly picked piels are")
                     print(random.points)
                     random.points.interpolate <- inverse.distance.interpolation(random.points,
