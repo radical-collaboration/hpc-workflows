@@ -11,7 +11,7 @@ initial_config <- function (user = 'Weiming') {
         folder.scripts <- '/home/whu/github/hpc-workflows/scripts/application_AnEn/anen_base/'
         folder.prefix <- paste('/home/whu/experiments/anen_smart/',        
                                prefix_time, '/', sep = '')
-        docker.port <- 32769
+        docker.port <- 32773
         
     } else if (user == 'Vivek') {
         # setup on supermic
