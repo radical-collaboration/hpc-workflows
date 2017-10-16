@@ -64,16 +64,23 @@ initial_config <- function (user = 'Weiming') {
     threshold.triangle <- 3
     num.pixels.increase <- 1
 
-    debug <- 0
+    debug <- 1
     interpolate.AnEn.rasters <- 1
     download.AnEn.rasters <- 1
 
     # choose one evaluation method from the below
     # 1 ---- evaluate on the vertices
     # 2 ---- evaluate on the interpolated maps
-    # 3 ---_ evaluate using binary tournament
+    # 3 ---- evaluate using binary tournament
     #
-    evaluation.method <- 1
+    evaluation.method <- 3
+
+
+    # parameters for evaluation method #3
+    tournament.size <- 2
+    num.champions <- 1
+    num.error.pixels <- 1
+    num.triangles.from.tournament <- 100
 
     # randomly select pixels to compute
     pixels.compute <- sample.int(grids.total,
@@ -82,7 +89,7 @@ initial_config <- function (user = 'Weiming') {
                                       xgrids.total,
                                       ygrids.total, 0)
 
-    predefine.num.pixels <- 1
+    predefine.num.pixels <- 0
     num.pixels.iteration <- c(100, 63, 153, 398, 923, 1973, 3552, 5356)
     if (predefine.num.pixels == 1) {
         max.iterations = length(num.pixels.iteration)
@@ -132,6 +139,10 @@ initial_config <- function (user = 'Weiming') {
                              interpolate.AnEn.rasters = interpolate.AnEn.rasters,
                              download.AnEn.rasters = download.AnEn.rasters,
                              evaluation.method = evaluation.method,
+                             tournament.size = tournament.size,
+                             num.champions = num.champions,
+                             num.error.pixels = num.error.pixels,
+                             num.triangles.from.tournament = num.triangles.from.tournament,
                              docker.port = docker.port,
                              debug = debug)
 

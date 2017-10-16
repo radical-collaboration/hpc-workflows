@@ -38,6 +38,11 @@ def start_iteration (
     quick = configs['quick']
     cores = configs['cores']
     weights = configs['weights']
+    tournament_size = configs['tournament.size']
+    num_champions = configs['num.champions']
+    num_error_pixels = configs['num.error.pixels']
+    num_triangles_from_tournament = configs['num.triangles.from.tournament']
+    evaluation_method = configs['evaluation.method']
     verbose = configs['verbose']
 
     str_iteration = str(iteration).zfill(4)
@@ -273,7 +278,11 @@ def start_iteration (
             '--threshold_triangle', threashold_triangle,
             '--file_pixels_accumulated',
             'pixels_accumulated_for_iteration%s.txt' % str_iteration,
-            '--evaluation_method', configs['evaluation.method'],
+            '--tournament_size', tournament_size,
+            '--num_champions', num_champions,
+            '--num_error_pixels', num_error_pixels,
+            '--num_triangles_from_tournament', num_triangles_from_tournament,
+            '--evaluation_method', evaluation_method,
             '--verbose', verbose]
     t3.download_output_data = [
             'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (
