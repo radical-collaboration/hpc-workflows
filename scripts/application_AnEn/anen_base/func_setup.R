@@ -64,7 +64,7 @@ initial_config <- function (user = 'Weiming') {
     threshold.triangle <- 3
     num.pixels.increase <- 1
 
-    debug <- 1
+    debug <- 0
     interpolate.AnEn.rasters <- 1
     download.AnEn.rasters <- 1
 

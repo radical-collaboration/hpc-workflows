@@ -173,7 +173,8 @@ if __name__ == '__main__':
     # -------------------------- Post Processing -------------------------------
     if not initial_config['interpolate.AnEn.rasters']:
         # exit the process if AnEn ouput raster interpolation is not needed
-        appman.resource_terminate()
+        if not initial_config['debug']:
+            appman.resource_terminate()
         sys.exit(0)
 
     if not initial_config['evaluation.method'] == 2:
@@ -181,7 +182,8 @@ if __name__ == '__main__':
         # because at this point, we should already have
         # the interpolated map
         #
-        appman.resource_terminate()
+        if not initial_config['debug']:
+	    appman.resource_terminate()
         sys.exit(0)
 
     pipeline_postprocess = postprocess(initial_config, resource_key['xsede.supermic'])
