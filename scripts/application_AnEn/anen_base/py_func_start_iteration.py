@@ -1,16 +1,17 @@
+'''
+File: py_func_start_iteration.py
+Author: Weiming Hu
+Created: Sep 2017
+
+start one iteration to compute Analog Ensemble for the specified pixels on 
+supercomputers and evaluate the results
+'''
 import os, sys, traceback, rpy2
 import rpy2.robjects as robjects
 
 from glob import glob
 from rpy2.robjects.packages import STAP, importr
 from radical.entk import Pipeline, Stage, Task, AppManager, ResourceManager
-
-'''
-function start_iteration
-
-start one iteration to compute Analog Ensemble for the specified pixels on 
-supercomputers and evaluate the results
-'''
 
 def start_iteration (
         iteration, configs, pre_exec,

@@ -1,4 +1,9 @@
-# set up basic parameters that would be shared by all processes
+# File: func_setup.R
+# Author: Weiming Hu
+#         Vivek Balasubramanian
+# Created: Sep 2017
+#
+# This script sets up the basic parameters for running EnTK and AnEn
 initial_config <- function (user = 'Weiming') {
     require(RAnEnExtra)
 

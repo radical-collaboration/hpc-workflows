@@ -1,4 +1,8 @@
-# define_pixels has several steps:
+# File: func_define_pixels.R
+# Author: Weiming Hu
+# Created: Sep 2017
+#
+# Define_pixels has several steps:
 # - define and save triangles
 # - compute errors over the triangle vertices
 # - define pixels for the next iteration

@@ -1,3 +1,7 @@
+# File: func_generate_observation_rasters.R
+# Author: Weiming Hu
+# Created: Sep 2017
+#
 # generate_observation_rasters complete the following steps
 # - generate multiple folders for output
 # - generate a rdata file to keep track of the pixels computed

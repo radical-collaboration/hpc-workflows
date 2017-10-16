@@ -1,3 +1,7 @@
+# File: func_interpolate_anen.R
+# Author: Weiming Hu
+# Created: Sep 2017
+#
 # generate interpolated prediction map for
 # a single AnEn file
 #

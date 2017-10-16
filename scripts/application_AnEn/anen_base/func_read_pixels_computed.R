@@ -1,3 +1,7 @@
+# File: func_read_pixels_computed.R
+# Author: Weiming Hu
+# Created: Sep 2017
+#
 # read_pixels_computed read the pixels_computed_list
 # rdata file and return the accumulated list of the
 # pixels that have been computed. This function is

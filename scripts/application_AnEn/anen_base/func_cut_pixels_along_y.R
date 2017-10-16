@@ -1,4 +1,8 @@
-# call the function from RAnEnExtra
+# File: func_cut_pixels_along_y.R
+# Author: Weiming Hu
+# Created: Sep 2017
+#
+# Call the function from RAnEnExtra
 # to cut pixels along y based on the
 # predefined cuts
 #

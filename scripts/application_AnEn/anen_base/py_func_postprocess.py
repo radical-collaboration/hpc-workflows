@@ -1,16 +1,17 @@
+'''
+File: py_func_postprocess.py
+Author: Weiming Hu
+Created: Sep 2017
+
+Interpolate rasters for AnEn. This will make the visualization of
+AnEn output easier 
+'''
 import os, sys, traceback, rpy2
 import rpy2.robjects as robjects
 
 from glob import glob
 from rpy2.robjects.packages import STAP, importr
 from radical.entk import Pipeline, Stage, Task, AppManager, ResourceManager
-
-'''
-function postprocess
-
-Interpolate rasters for AnEn. This will make the visualization of
-AnEn output easier 
-'''
 
 def postprocess (configs, pre_exec):
 

@@ -1,3 +1,14 @@
+'''
+File: script_master.py
+Author: Weiming Hu
+Created: Sep 2017
+
+EnTK 0.6 script - Analog Ensemble application
+
+In this example, we intend to execute 32 canalogs tasks each using 4 cores and different
+station IDs on Stampede with a total resource reservation of 32 cores. Once completed,
+we determine the execution time of the tasks using the EnTK profiler.
+'''
 import os, sys, traceback, rpy2, shutil
 import rpy2.robjects as robjects
 import random
@@ -10,15 +21,6 @@ from py_func_start_iteration import start_iteration
 from py_func_initial_config import test_initial_config
 from py_func_initial_config import process_initial_config
 from radical.entk import Pipeline, Stage, Task, AppManager, ResourceManager
-
-'''
-EnTK 0.6 script - Analog Ensemble application
-
-In this example, we intend to execute 32 canalogs tasks each using 4 cores and different
-station IDs on Stampede with a total resource reservation of 32 cores. Once completed,
-we determine the execution time of the tasks using the EnTK profiler.
-'''
-
 
 resource_key = {
         'xsede.supermic': [

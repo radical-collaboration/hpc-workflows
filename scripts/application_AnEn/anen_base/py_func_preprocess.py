@@ -1,15 +1,17 @@
+'''
+File: py_func_preprocess.py
+Author: Weiming Hu
+Created: Sep 2017
+
+function preprocess contains one pipeline with only one stage
+to generate the observation rasters and prepare the working
+environment for the subsequent pipelines
+'''
 import os, sys, traceback
 
 from glob import glob
 from radical.entk import Pipeline, Stage, Task
 from radical.entk import AppManager, ResourceManager
-
-'''
-function preprocess contains one pipeline with only one stage
-to generate the observation rasters and prepare the working
-environment for the subsequent pipelines
-'''
-
 
 def preprocess (configs, pre_exec):
     p = Pipeline()

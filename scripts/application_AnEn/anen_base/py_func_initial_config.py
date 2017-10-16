@@ -1,8 +1,12 @@
-import os, sys, traceback, rpy2
-
 '''
+File: py_func_initial_config.py
+Author: Weiming Hu
+        Vivek Balasubramanian
+Created: Sep 2017
+
 functions for parsing and checking the arguments from func_setup.R
 '''
+import os, sys, traceback, rpy2
 
 def test_initial_config(d):
 

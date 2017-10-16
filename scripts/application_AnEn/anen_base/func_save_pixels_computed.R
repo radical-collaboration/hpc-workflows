@@ -1,3 +1,7 @@
+# File: func_save_pixels_computed.R
+# Author: Weiming Hu
+# Created: Sep 2017
+#
 # save_pixels_computed saves the pixels to a list of
 # pixels.computed.list. This function is called locally.
 #

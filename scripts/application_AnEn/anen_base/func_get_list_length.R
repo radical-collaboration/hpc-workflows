@@ -1,3 +1,7 @@
+# File: func_get_list_length.R
+# Author: Weiming Hu
+# Created: Sep 2017
+#
 # get_list_length gets the length of the list pixels.computed.list.
 # This is helpful to acquire the number of iterations, because the
 # length of the pixels.computed.list equals the number of iterations
