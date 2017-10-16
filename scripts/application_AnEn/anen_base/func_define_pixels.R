@@ -193,7 +193,7 @@ define_pixels <- function(
         
         errors.triangle <- array(NA, dim = c(num.times.to.compute, num.flts,
                                              length(polys.triangles)))
-        for (i in 1:num.times.to compute) {
+        for (i in 1:num.times.to.compute) {
             for (j in 1:num.flts) {
                 print(paste("Processing test day ", i, " flt", j, sep = ''))
 
