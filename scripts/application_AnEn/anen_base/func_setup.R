@@ -49,6 +49,7 @@ initial_config <- function (user = 'Weiming') {
     xgrids.total <- 614
     grids.total <- xgrids.total*ygrids.total
     init.num.pixels.compute <- 100
+    num.edge.points <- 5
     yinterval <- 15
     ycuts <- seq(from = 1, to = ygrids.total, by = yinterval)
 
@@ -88,11 +89,15 @@ initial_config <- function (user = 'Weiming') {
     num.triangles.from.tournament <- 100
 
     # randomly select pixels to compute
-    pixels.compute <- sample.int(grids.total,
-                                 init.num.pixels.compute)
+    pixels.compute <- sample(0:(grids.total-1), 
+                             init.num.pixels.compute)
     pixels.compute <- include.corners(pixels.compute,
                                       xgrids.total,
                                       ygrids.total, 0)
+    pixels.compute <- include.boundaries(pixels.compute,
+                                         num.edge.points,
+                                         xgrids.total,
+                                         ygrids.total, 0)
 
     predefine.num.pixels <- 0
     num.pixels.iteration <- c(100, 63, 153, 398, 923, 1973, 3552, 5356)

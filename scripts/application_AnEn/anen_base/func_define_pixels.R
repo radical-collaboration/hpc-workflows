@@ -203,8 +203,6 @@ define_pixels <- function(
                 for (k in 1:length(polys.triangles)) {
                     control.points <- polys.triangles[k]@polygons[[1]]@Polygons[[1]]@coords
                     control.points <- control.points[-1, ]
-                    control.points <- xy.to.pixels(control.points[, 1], control.points[, 2],
-                                                   xgrids.total = xgrids.total, start = 1)
                     control.points.values <- rast.obs[cellFromXY(rast.obs, control.points)]
 
                     random.points <- as.matrix(random.points.in.triangle(polys.triangles, num.error.pixels))
