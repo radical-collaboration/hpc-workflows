@@ -29,6 +29,7 @@ The R packages you need to install before running the `master.py` are the follow
 7. splancs
 8. RAnEnExtra
 9. spatstat
+10. prodlim
 
 To install 1 ~ 7 packages, you can do the following in the R session:
 
