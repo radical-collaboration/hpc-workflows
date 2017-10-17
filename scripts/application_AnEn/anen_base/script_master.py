@@ -146,7 +146,7 @@ if __name__ == '__main__':
         else:
             print "Predefined the number of pixels to compute for the next iteration"
             if iteration_count+1 == max_iterations:
-                print "This is the last iteration specified by the mas iterations"
+                print "This is the last iteration specified by the max iterations"
                 pixels_to_compute = []
                 
             else:
@@ -179,7 +179,7 @@ if __name__ == '__main__':
             appman.resource_terminate()
         sys.exit(0)
 
-    if not initial_config['evaluation.method'] == 2:
+    if initial_config['evaluation.method'] == 2:
         # exit when evaluation method is raster evaluation
         # because at this point, we should already have
         # the interpolated map

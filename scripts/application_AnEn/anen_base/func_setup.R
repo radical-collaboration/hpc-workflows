@@ -106,7 +106,7 @@ initial_config <- function (user = 'Weiming') {
     # whether to download the interpolation map
     # TODO: it does not actually download the maps for now
     #
-    download.AnEn.rasters <- 1
+    download.AnEn.rasters <- 0
 
     # choose one evaluation method from the below
     # 1 ---- evaluate on the vertices

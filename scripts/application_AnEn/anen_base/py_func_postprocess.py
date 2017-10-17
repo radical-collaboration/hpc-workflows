@@ -20,6 +20,10 @@ def postprocess (configs, pre_exec):
     str_folder_raster_anen = configs['folder.raster.anen']
     str_file_pixels_computed = configs['file.pixels.computed']
     str_folder_local = configs['folder.local']
+    verbose = configs['verbose']
+
+    if verbose > 0:
+        print "Start postprocessing"
 
     # get number of iterations
     with open('func_get_list_length.R', 'r') as f:
