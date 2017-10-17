@@ -9,50 +9,68 @@ initial_config <- function (user = 'Weiming') {
 
     prefix_time <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S")
 
+
+    ################################
+    # parameters specific to users #
+    ################################
     if (user == 'Weiming') {
+        docker.port <- 32773
         command.exe <- '/home/whu/github/CAnalogsV2/install/bin/canalogs'
         file.forecasts <- "/home/whu/data/chunk_NAM/Forecasts_NAM_sliced.nc"
         file.observations <- "/home/whu/data/chunk_NAM/Analysis_NAM.nc"
         folder.scripts <- '/home/whu/github/hpc-workflows/scripts/application_AnEn/anen_base/'
         folder.prefix <- paste('/home/whu/experiments/anen_smart/',        
                                prefix_time, '/', sep = '')
-        docker.port <- 32773
         
     } else if (user == 'Vivek') {
-        # setup on supermic
+        docker.port <- 32773
         command.exe <- '/work/vivek91/modules/CAnalogsV2/build/canalogs'
         file.forecasts <- "/work/vivek91/chunk_NAM/Forecasts_NAM_sliced.nc"
         file.observations <- "/work/vivek91/chunk_NAM/Analysis_NAM.nc"
         folder.scripts <- '/home/vivek91/repos/hpc-workflows/scripts/application_AnEn/anen_base/'
         folder.prefix <- paste('/work/vivek91/anen_smart/',
                                prefix_time, '/', sep = '')
-        docker.port <- 32773
     }
 
-    folder.local <- paste('./local_', prefix_time, '/', sep = '')
-    dir.create(folder.local, recursive = T)
-    
-    file.pixels.computed <- paste(folder.local, 'pixels_computed_list.rdata', sep = '')
 
-    verbose <- '2'
+    #####################
+    # folders and files #
+    #####################
+    folder.local <- paste('./local_', prefix_time, '/', sep = '')
+    file.pixels.computed <- paste(folder.local, 'pixels_computed_list.rdata', sep = '')
     folder.accumulate <- paste(folder.prefix, 'anen_accumulate/', sep = '')
     folder.output <- paste(folder.prefix, 'anen_output/', sep = '')
     folder.raster.anen <- paste(folder.prefix, 'anen_raster/', sep = '')
     folder.raster.obs <- paste(folder.prefix, 'obs_raster/', sep = '')
     folder.triangles <- paste(folder.prefix, 'triangles/', sep = '')
+    dir.create(folder.local, recursive = T)
 
+
+    ###################
+    # AnEn parameters #
+    ###################
+    # AnEn data information
     num.flts <- 4
     num.times <- 822
     num.times.to.compute <- 2
     num.parameters <- 13
+
+    # domain information
     ygrids.total <- 428
     xgrids.total <- 614
     grids.total <- xgrids.total*ygrids.total
+
+    # how many random points to start with
     init.num.pixels.compute <- 100
+
+    # how many extra points should be selected on edges
     num.edge.points <- 5
+
+    # parameters for defining the subregions
     yinterval <- 15
     ycuts <- seq(from = 1, to = ygrids.total, by = yinterval)
 
+    # AnEn computation parameters
     quick <- F
     cores <- 8
     rolling <- 0
@@ -64,14 +82,30 @@ initial_config <- function (user = 'Weiming') {
     weights <- rep(1, num.parameters)
     members.size <- 20
 
-    num.neighbors <- 2
+
+    ##############################
+    # adaptive analog parameters #
+    ##############################
+    debug <- 0
+    verbose <- 2
     init.iteration <- 1
     max.iterations <- 8
+
+    # number of neighbors to find for final interpolation
+    num.neighbors <- 2
+
+    # error threshold for evaluating triangles
     threshold.triangle <- 3
+
+    # number of random pixels to select in each triangle
     num.pixels.increase <- 1
 
-    debug <- 0
+    # whether to generate interpolation map from AnEn results
     interpolate.AnEn.rasters <- 1
+
+    # whether to download the interpolation map
+    # TODO: it does not actually download the maps for now
+    #
     download.AnEn.rasters <- 1
 
     # choose one evaluation method from the below
@@ -81,12 +115,31 @@ initial_config <- function (user = 'Weiming') {
     #
     evaluation.method <- 3
 
-
     # parameters for evaluation method #3
+
+    # number of individuals in each tournament
     tournament.size <- 2
+
+    # number of champions from each tournament
     num.champions <- 1
+
+    # number of pixels to select while evaluating the
+    # fittness for each triangle
+    #
     num.error.pixels <- 1
+
+    # sample size for tournament selection
     num.triangles.from.tournament <- 100
+
+    # predefine the number of pixels to compute for each iteration
+    # this is only for convenient use for experiments
+    #
+    predefine.num.pixels <- 0
+    num.pixels.iteration <- c(100, 63, 153, 398, 923, 1973, 3552, 5356)
+    if (predefine.num.pixels == 1) {
+        max.iterations = length(num.pixels.iteration)
+    }
+
 
     # randomly select pixels to compute
     pixels.compute <- sample(0:(grids.total-1), 
@@ -98,12 +151,6 @@ initial_config <- function (user = 'Weiming') {
                                          num.edge.points,
                                          xgrids.total,
                                          ygrids.total, 0)
-
-    predefine.num.pixels <- 0
-    num.pixels.iteration <- c(100, 63, 153, 398, 923, 1973, 3552, 5356)
-    if (predefine.num.pixels == 1) {
-        max.iterations = length(num.pixels.iteration)
-    }
 
     list.init.config <- list(command.exe = command.exe,
                              verbose = verbose,
