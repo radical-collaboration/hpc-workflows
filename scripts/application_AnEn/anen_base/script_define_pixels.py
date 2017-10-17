@@ -40,6 +40,7 @@ if __name__ == '__main__':
         R_code = f.read()
 
     ncdf4 = importr("ncdf4")
+    ncdf4 = importr("prodlim")
     raster = importr("raster")
     deldir = importr("deldir")
     stringr = importr("stringr")

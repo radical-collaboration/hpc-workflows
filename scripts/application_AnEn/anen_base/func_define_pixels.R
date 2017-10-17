@@ -22,6 +22,7 @@ define_pixels <- function(
     require(RAnEnExtra)
     require(stringr)
     require(ncdf4)
+    require(prodlim)
 
     # convert argument types
     iteration <- str_pad(as.numeric(iteration), 4, pad = '0')
@@ -45,13 +46,17 @@ define_pixels <- function(
     #############################
     print("Define and save triangles")
 
-    # convert pixel indices to x and y coordinates
-    x <- pixels.to.x.by.row(pixels.computed, xgrids.total, 0)
-    y <- pixels.to.y.by.row(pixels.computed, xgrids.total, 0)
+    # convert pixel to x and y coordinates
+    rast.base <- raster(nrows = ygrids.total, ncols = xgrids.total,
+                        xmn = 0.5, xmx = xgrids.total+.5,
+                        ymn = 0.5, ymx = ygrids.total+.5)
+    rast.base.xy <- expand.grid(1:xgrids.total, 1:ygrids.total)
+    colnames(rast.base.xy) <- c('x', 'y')
+    x.computed <- rast.base.xy[(pixels.computed+1), 'x']
+    y.computed <- rast.base.xy[(pixels.computed+1), 'y']
 
     # define triangles
-    df <- data.frame(x, y)
-    #W <- ripras(df, shape = 'rectangle')
+    df <- data.frame(x.computed, y.computed)
     W <- owin(xrange = c(1, xgrids.total), yrange = c(1, ygrids.total))
     polys.triangles <- as(delaunay(as.ppp(df, W = W)), "SpatialPolygons")
 
@@ -59,22 +64,6 @@ define_pixels <- function(
     file.triangles <- paste(folder.triangles, 'iteration',
                             iteration, '.rdata', sep = '')
     save(polys.triangles, file = file.triangles)
- 
-
-    rast.base <- raster(nrows = ygrids.total, ncols = xgrids.total,
-                        xmn = 0.5, xmx = xgrids.total+.5,
-                        ymn = 0.5, ymx = ygrids.total+.5)
-    indices <- cellFromXY(rast.base, cbind(x, y))
-
-    if (verbose > 1) {
-        print("The x vector is:")
-        print(x)
-        print("The y vector is:")
-        print(y)
-        print("The indices are:")
-        print(indices)
-    }
-
 
     if (evaluation.method == 1) {
 
@@ -109,7 +98,8 @@ define_pixels <- function(
                                          '_flt', j, '.rdata', sep = '')
                 if (file.exists(file.raster.obs)) {
                     load(file.raster.obs)
-                    data.obs <- rast.obs[indices]
+                    data.obs <- rast.obs[cellFromXY(rast.base, cbind(x.computed,
+                                                                     y.computed))]
                 } else {
                     stop(paste("Can't find observation raster", file.raster.obs))
                 }
@@ -121,17 +111,8 @@ define_pixels <- function(
                     control.points <- polys.triangles[k]@polygons[[1]]@Polygons[[1]]@coords
                     control.points <- control.points[-1, ]
                     control.points <- xy.to.pixels(control.points[, 1], control.points[, 2],
-                                                   xgrids.total = xgrids.total, start = 0)
-                    index <- unlist(lapply(control.points,
-                                           function (x, l) {return(which(l == x))},
-                                           l = pixels.computed))
-
-                    if (length(index) == length(control.points)) {
-                        errors.triangle[i, j, k] <- mean(errors.vertex[index], na.rm = T)
-                    } else {
-                        stop(paste("Some vertex not found in the computed list. ",
-                                   "The desired vertices are ", control.points, sep = ''))
-                    }
+                                                   xgrids.total = xgrids.total, start = 1)
+                    errors.triangle[i, j, k] <- mean(errors.vertex[control.points], na.rm = T)
                 }
             }
         }
@@ -173,8 +154,9 @@ define_pixels <- function(
                 # compute errors for each triangle area
                 for (k in 1:length(polys.triangles)) {
                     pts.in.triangle <- get.points.in.triangle(polys.triangles[k])
-                    index.vertices <- cellFromXY(rast.base, pts.in.triangle)
-                    errors.triangle[i, j, k] <- mean(rast.obs[index.vertices] - rast.int[index.vertices],
+                    pts.in.triangle <- cellFromXY(rast.base, pts.in.triangle)
+                    errors.triangle[i, j, k] <- mean(rast.obs[pts.in.triangle] -
+                                                     rast.int[pts.in.triangle],
                                                      na.rm = T)
                 }
             }
@@ -221,20 +203,29 @@ define_pixels <- function(
                 for (k in 1:length(polys.triangles)) {
                     control.points <- polys.triangles[k]@polygons[[1]]@Polygons[[1]]@coords
                     control.points <- control.points[-1, ]
-                    control.points.indices <- cellFromXY(rast.obs, control.points)
+                    control.points <- xy.to.pixels(control.points[, 1], control.points[, 2],
+                                                   xgrids.total = xgrids.total, start = 1)
+                    control.points.values <- rast.obs[cellFromXY(rast.obs, control.points)]
+
                     random.points <- as.matrix(random.points.in.triangle(polys.triangles, num.error.pixels))
-                    random.points.interpolate <- inverse.distance.interpolation(random.points,
-                                                                                control.points,
-                                                                                rast.obs[control.points.indices])
                     random.points.true <- rast.obs[cellFromXY(rast.obs, random.points)]
-                    errors.triangle[i, j, k] <- mean(abs(random.points.true-random.points.interpolate),
+
+                    # inverse distance interpolation
+                    #random.points.estimate <- inverse.distance.interpolation(random.points,
+                    #                                                            control.points,
+                    #                                                            rast.obs[control.points.indices])
+
+                    # vertex average assignment
+                    random.points.estimate <- rep(mean(control.points.values,
+                                                       na.rm = T), nrow(random.points))
+
+                    errors.triangle[i, j, k] <- mean(abs(random.points.true-random.points.estimate),
                                                      na.rm = T)
                 }
             }
         }
 
         errors.triangle.average <- apply(errors.triangle, 3, mean, na.rm = T)
-
         triangles.index.to.continue <- tournament.selection(errors.triangle.average,
                                                             num.triangles.from.tournament)
 
