@@ -253,11 +253,11 @@ define_pixels <- function(
               file = 'evaluation_log.txt', append = T)
         for (i in 1 : length(errors.triangle.average)) {
 	    if (i %in% triangles.index.to.continue) {
-                write(paste("The averaged error of vertices #", i, " is ",
+                write(paste("The averaged error of triangle #", i, " is ",
                             errors.triangle.average[i], " [selected]", sep = ''),
                       file = 'evaluation_log.txt', append = T)
 	    } else {
-                write(paste("The averaged error of vertices #", i, " is ",
+                write(paste("The averaged error of triangle #", i, " is ",
                             errors.triangle.average[i], sep = ''),
                       file = 'evaluation_log.txt', append = T)
 	    }
