@@ -65,7 +65,11 @@ define_pixels <- function(
                             iteration, '.rdata', sep = '')
     save(polys.triangles, file = file.triangles)
 
-    if (evaluation.method == 1) {
+    if (evaluation.method == 0) {
+        print("skip the evaluation")
+        return(NA)
+
+    } else if  (evaluation.method == 1) {
 
         #############################################
         # compute errors over the triangle vertices #
@@ -248,9 +252,15 @@ define_pixels <- function(
                     " triangles that need more pixels.", sep = ''),
               file = 'evaluation_log.txt', append = T)
         for (i in 1 : length(errors.triangle.average)) {
-            write(paste("The averaged error of vertices #", i, " is ",
-                        errors.triangle.average[i], sep = ''),
-                  file = 'evaluation_log.txt', append = T)
+	    if (i %in% triangles.index.to.continue) {
+                write(paste("The averaged error of vertices #", i, " is ",
+                            errors.triangle.average[i], " [selected]", sep = ''),
+                      file = 'evaluation_log.txt', append = T)
+	    } else {
+                write(paste("The averaged error of vertices #", i, " is ",
+                            errors.triangle.average[i], sep = ''),
+                      file = 'evaluation_log.txt', append = T)
+	    }
         }
         write(paste("***********************************************", sep = ''),
               file = 'evaluation_log.txt', append = T)
@@ -289,4 +299,5 @@ define_pixels <- function(
     write(pixels.next.iteration, file = 'pixels_next_iteration.txt',
           ncolumns = length(pixels.next.iteration))
     print("Done!")
+    return(0)
 }

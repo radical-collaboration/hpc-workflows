@@ -89,7 +89,7 @@ initial_config <- function (user = 'Weiming') {
     debug <- 0
     verbose <- 2
     init.iteration <- 1
-    max.iterations <- 8
+    max.iterations <- 5
 
     # number of neighbors to find for final interpolation
     num.neighbors <- 2
@@ -126,16 +126,17 @@ initial_config <- function (user = 'Weiming') {
     # number of pixels to select while evaluating the
     # fittness for each triangle
     #
-    num.error.pixels <- 1
+    num.error.pixels <- 2
 
     # sample size for tournament selection
-    num.triangles.from.tournament <- 100
+    num.triangles.from.tournament <- 400
 
     # predefine the number of pixels to compute for each iteration
     # this is only for convenient use for experiments
     #
     predefine.num.pixels <- 0
-    num.pixels.iteration <- c(100, 63, 153, 398, 923, 1973, 3552, 5356)
+    #num.pixels.iteration <- c(100, 63, 153, 398, 923, 1973, 3552, 5356)
+    num.pixels.iteration <- c(100, 100, 100, 98, 96, 97, 88, 88)
     if (predefine.num.pixels == 1) {
         max.iterations = length(num.pixels.iteration)
     }

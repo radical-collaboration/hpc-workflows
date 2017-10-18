@@ -26,3 +26,8 @@ Don't run jobs on loggin node; run it on computing nodes:
 ```
 qsub -I -l walltime=00:30:00,nodes=1:ppn=20 -A TG-MCB090174
 ```
+
+To start a rabbit mq
+```
+docker run -d --name rabbit-1 -p 32773:5672 rabbitmq:3
+```
