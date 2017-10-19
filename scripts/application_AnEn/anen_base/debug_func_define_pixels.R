@@ -11,7 +11,7 @@ plot.extra.points <- F
 read.next.iteration.pixels <- F
 call.func.define.pixels <- F
 folder.triangles <- paste('~/Desktop/test/', sep = '')
-folder.root <- '/Volumes/ExFat-Hu/Experiments/results_random_for_tourname_iteration_8/'
+folder.root <- '~/Desktop/test/'
 
 # auto setup
 source('func_setup.R')

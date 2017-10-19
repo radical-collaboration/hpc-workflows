@@ -188,11 +188,23 @@ define_pixels <- function(
         print("Define random points in each triangle")
         values(rast.base) <- 1
         rnd.points.df <- list()
+        triangles.without.inner.points <- vector('numeric')
         for (k in 1:length(polys.triangles)) {
           rast.mask <- mask(crop(rast.base, polys.triangles[k]), polys.triangles[k])
-          rnd.points.df <- c(rnd.points.df,
-                             sampleRandom(rast.mask, num.error.pixels, na.rm = T, sp = T))
+          rnd.point.df <- tryCatch(
+            {sampleRandom(rast.mask, num.error.pixels, na.rm = T, sp = T)},
+            error = function(e) {
+              print(paste('Error:', e$message))
+              print("Probabily this is the smallest possible triangle already")
+              return(NA)})
+          
+          if (typeof(rnd.point.df) == 'logical') {
+            triangles.without.inner.points <- c(triangles.without.inner.points, k)
+          } else {
+            rnd.points.df <- c(rnd.points.df, rnd.point.df)
+          }
         }
+        polys.triangles <- polys.triangles[-triangles.without.inner.points]
         
         print("Compute errors for each triangle")
         for (i in 1:num.times.to.compute) {
