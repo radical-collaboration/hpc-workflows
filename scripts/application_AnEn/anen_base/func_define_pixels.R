@@ -227,7 +227,7 @@ define_pixels <- function(
                                                control.points[1, 2] - control.points[3, 2]),
                                              na.rm = T) / 2)
                     errors.triangle[i, j, k] <- mean(abs(random.points.true-random.points.estimate),
-                                                     na.rm = T) * 
+                                                     na.rm = T) * area.triangle
                 }
             }
         }

@@ -3,3 +3,7 @@
 *local*
 *.swp
 rp*
+*RData
+*Rhistory
+*Rproj
+pixels_next_iteration.txt
