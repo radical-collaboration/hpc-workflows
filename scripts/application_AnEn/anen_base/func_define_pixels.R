@@ -221,8 +221,13 @@ define_pixels <- function(
                     random.points.estimate <- rep(mean(control.points.values,
                                                        na.rm = T), nrow(random.points))
 
+                    area.triangle <- abs(sum(control.points[, 1] * 
+                                             c(control.points[2, 2] - control.points[3, 2],
+                                               control.points[3, 2] - control.points[1, 2],
+                                               control.points[1, 2] - control.points[3, 2]),
+                                             na.rm = T) / 2)
                     errors.triangle[i, j, k] <- mean(abs(random.points.true-random.points.estimate),
-                                                     na.rm = T)
+                                                     na.rm = T) * 
                 }
             }
         }
