@@ -204,7 +204,10 @@ define_pixels <- function(
             rnd.points.df <- c(rnd.points.df, rnd.point.df)
           }
         }
-        polys.triangles <- polys.triangles[-triangles.without.inner.points]
+        
+        if (length(triangles.without.inner.points) != 0) {
+          polys.triangles <- polys.triangles[-triangles.without.inner.points]
+        }
         
         print("Compute errors for each triangle")
         for (i in 1:num.times.to.compute) {

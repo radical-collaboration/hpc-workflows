@@ -5,8 +5,8 @@ library(stringr)
 library(RAnEnExtra)
 
 # developer's setup
-iteration <- 3
-clean.debug.files <- T
+iteration <- 1
+clean.debug.files <- F
 plot.extra.points <- F
 read.next.iteration.pixels <- F
 call.func.define.pixels <- F
