@@ -54,6 +54,7 @@ define_pixels <- function(
     colnames(rast.base.xy) <- c('x', 'y')
     x.computed <- rast.base.xy[(pixels.computed+1), 'x']
     y.computed <- rast.base.xy[(pixels.computed+1), 'y']
+    pts.computed <- SpatialPoints(cbind(x.computed,y.computed))
 
     # define triangles
     df <- data.frame(x.computed, y.computed)
@@ -90,10 +91,11 @@ define_pixels <- function(
                     data.anen <- ncvar_get(nc, 'Data',
                                            start = c(1, i, j, 1),
                                            count = c(length(pixels.computed), 1, 1, members.size))
+                    nc_close(nc)
                 } else {
                     stop(paste("Can't find AnEn file", file.anen))
                 }
-
+                
                 # compute the average across all ensemble members
                 data.anen <- apply(data.anen, 1, mean, na.rm = T)
 
@@ -115,8 +117,10 @@ define_pixels <- function(
                     control.points <- polys.triangles[k]@polygons[[1]]@Polygons[[1]]@coords
                     control.points <- control.points[-1, ]
                     control.points <- xy.to.pixels(control.points[, 1], control.points[, 2],
-                                                   xgrids.total = xgrids.total, start = 1)
-                    errors.triangle[i, j, k] <- mean(errors.vertex[control.points], na.rm = T)
+                                                   xgrids.total = xgrids.total, start = 0)
+                    control.points.index <- unlist(lapply(control.points, function(i, v) {
+                      return(which(v == i))}, v = pixels.computed))
+                    errors.triangle[i, j, k] <- mean(errors.vertex[control.points.index], na.rm = T)
                 }
             }
         }
@@ -175,10 +179,22 @@ define_pixels <- function(
         # compute errors and use the binary tournament selection #
         ##########################################################
         print("Tournament selection is chosen")
-        print("Compute errors for each triangle")
         
+        points.next.iteration <- list()
         errors.triangle <- array(NA, dim = c(num.times.to.compute, num.flts,
                                              length(polys.triangles)))
+        
+        # define random pixels in each triangle
+        print("Define random points in each triangle")
+        values(rast.base) <- 1
+        rnd.points.df <- list()
+        for (k in 1:length(polys.triangles)) {
+          rast.mask <- mask(crop(rast.base, polys.triangles[k]), polys.triangles[k])
+          rnd.points.df <- c(rnd.points.df,
+                             sampleRandom(rast.mask, num.error.pixels, na.rm = T, sp = T))
+        }
+        
+        print("Compute errors for each triangle")
         for (i in 1:num.times.to.compute) {
             for (j in 1:num.flts) {
                 print(paste("Processing test day ", i, " flt", j, sep = ''))
@@ -191,10 +207,16 @@ define_pixels <- function(
                     data.anen <- ncvar_get(nc, 'Data',
                                            start = c(1, i, j, 1),
                                            count = c(length(pixels.computed), 1, 1, members.size))
+                    nc_close(nc)
                 } else {
                     stop(paste("Can't find AnEn file", file.anen))
                 }
-
+                
+                # compute the average across all ensemble members
+                data.anen <- apply(data.anen, 1, mean, na.rm = T)
+                pts.df = SpatialPointsDataFrame(pts.computed,
+                                                data = data.frame(data.anen))
+                
                 # read observation raster
                 file.raster.obs <- paste(folder.raster.obs, 'time', i,
                                          '_flt', j, '.rdata', sep = '')
@@ -203,31 +225,21 @@ define_pixels <- function(
                 } else {
                     stop(paste("Can't find observation raster", file.raster.obs))
                 }
-
+                
                 for (k in 1:length(polys.triangles)) {
-                    control.points <- polys.triangles[k]@polygons[[1]]@Polygons[[1]]@coords
-                    control.points <- control.points[-1, ]
-                    control.points.values <- rast.obs[cellFromXY(rast.obs, control.points)]
-
-                    random.points <- as.matrix(random.points.in.triangle(polys.triangles, num.error.pixels))
-                    random.points.true <- rast.obs[cellFromXY(rast.obs, random.points)]
-
-                    # inverse distance interpolation
-                    #random.points.estimate <- inverse.distance.interpolation(random.points,
-                    #                                                            control.points,
-                    #                                                            rast.obs[control.points.indices])
-
-                    # vertex average assignment
-                    random.points.estimate <- rep(mean(control.points.values,
-                                                       na.rm = T), nrow(random.points))
-
-                    area.triangle <- abs(sum(control.points[, 1] * 
-                                             c(control.points[2, 2] - control.points[3, 2],
-                                               control.points[3, 2] - control.points[1, 2],
-                                               control.points[1, 2] - control.points[3, 2]),
-                                             na.rm = T) / 2)
-                    errors.triangle[i, j, k] <- mean(abs(random.points.true-random.points.estimate),
-                                                     na.rm = T) * area.triangle
+                  # get coordinates and values for vertices
+                  v = !is.na( over(pts.df, polys.triangles[k]))
+                  control.points <- coordinates(pts.df)[v, ]
+                  control.points.value <- pts.df@data[v, ]
+                  
+                  # get true and estimated values for random points
+                  rnd.point.df <- rnd.points.df[[k]]
+                  rnd.point.estimate <- rep(mean(control.points.value,na.rm = T),
+                                            num.error.pixels)
+                  rnd.point.true <- extract(rast.obs, rnd.point.df)
+                  
+                  errors.triangle[i, j, k] <- mean(abs(rnd.point.true - rnd.point.estimate),
+                                                   na.rm = T)
                 }
             }
         }
@@ -237,8 +249,7 @@ define_pixels <- function(
                                                             num.triangles.from.tournament)
 
     } else {
-        print(paste("The selected evaluation method is", evaluation.method))
-        stop("But it is not implemented yet.")
+        stop(paste("Wrong evaluation method #", evaluation.method))
     }
 
     #################
@@ -272,20 +283,33 @@ define_pixels <- function(
     }
 
     # define pixels for the next iteration
-    pixels.next.iteration <- vector(mode = 'numeric')
-    for (i in triangles.index.to.continue) {
+    if (evaluation.method == 3) {
+      # reuse the pixels for evaluating triangles
+      coords.next.iteration <- rnd.points.df[triangles.index.to.continue]
+      coords.next.iteration <- lapply(coords.next.iteration, coordinates)
+      coords.next.iteration <- do.call(rbind, coords.next.iteration)
+      pixels.next.iteration <- xy.to.pixels(coords.next.iteration[, 1],
+                                            coords.next.iteration[, 2],
+                                            xgrids.total, 0)
+      
+    } else {
+      # generate random pixels in each triangle
+      pixels.next.iteration <- vector(mode = 'numeric')
+      for (i in triangles.index.to.continue) {
         triangle <- polys.triangles[i]
         pts.selected <- random.points.in.triangle(triangle, num.pixels.increase)
         if (length(pts.selected) > 0) {
-            pixels.next.iteration <- c(pixels.next.iteration,
-                                       xy.to.pixels(pts.selected[, 1],
-                                                    pts.selected[, 2],
-                                                    xgrids.total, 0))
+          pixels.next.iteration <- c(pixels.next.iteration,
+                                     xy.to.pixels(pts.selected[, 1],
+                                                  pts.selected[, 2],
+                                                  xgrids.total, 0))
         }
         if (NA %in% pixels.next.iteration) {
-            stop(paste("NA generated in pixels.next.iteration for triangle", i))
+          stop(paste("NA generated in pixels.next.iteration for triangle", i))
         }
+      } 
     }
+    
     pixels.next.iteration <- remove.vector.duplicates(c(pixels.computed,
                                                         pixels.next.iteration))
     pixels.next.iteration <- pixels.next.iteration[(length(pixels.computed)+1) :
