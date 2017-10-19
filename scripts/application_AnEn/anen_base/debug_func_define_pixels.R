@@ -15,7 +15,7 @@ folder.root <- '~/Desktop/test/'
 
 # auto setup
 source('func_setup.R')
-initial.settings <- initial_config()
+initial.settings <- initial_config('Weiming', 1)
 verbose <- initial.settings$verbose
 num.flts <- initial.settings$num.flts
 xgrids.total <- initial.settings$xgrids.total
@@ -81,11 +81,18 @@ if (read.next.iteration.pixels) {
 # clean up files
 if (clean.debug.files) {
   files.to.remove <- vector('character')
-  target.file.names <- c('evaluation_log.txt',
+  target.files <- c('evaluation_log.txt',
                          'pixels_next_iteration.txt')
-  for (name in target.file.names) {
+  for (name in target.files) {
     files.to.remove <- c(files.to.remove,
                          list.files(pattern = name, full.names = T))
   }
-  file.remove(files.to.remove)
+  
+  folders.to.remove <- vector('character')
+  target.folders <- c('debug_local_*')
+  for (name in target.folders) {
+    folders.to.remove <- c(folders.to.remove,
+                           list.files(pattern = name, full.names = T))
+  }
+  unlink(folders.to.remove)
 }

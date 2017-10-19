@@ -209,6 +209,7 @@ define_pixels <- function(
           polys.triangles <- polys.triangles[-triangles.without.inner.points]
         }
         
+        # compute errors for each triangle
         print("Compute errors for each triangle")
         for (i in 1:num.times.to.compute) {
             for (j in 1:num.flts) {

@@ -4,7 +4,7 @@
 # Created: Sep 2017
 #
 # This script sets up the basic parameters for running EnTK and AnEn
-initial_config <- function (user = 'Weiming') {
+initial_config <- function (user = 'Weiming', debug = 0) {
     require(RAnEnExtra)
 
     prefix_time <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S")
@@ -36,7 +36,12 @@ initial_config <- function (user = 'Weiming') {
     #####################
     # folders and files #
     #####################
-    folder.local <- paste('./local_', prefix_time, '/', sep = '')
+    if (debug) {
+      folder.local <- paste('./debug_local_', prefix_time, '/', sep = '')
+    } else {
+      folder.local <- paste('./local_', prefix_time, '/', sep = '')
+    }
+    
     file.pixels.computed <- paste(folder.local, 'pixels_computed_list.rdata', sep = '')
     folder.accumulate <- paste(folder.prefix, 'anen_accumulate/', sep = '')
     folder.output <- paste(folder.prefix, 'anen_output/', sep = '')
@@ -86,7 +91,6 @@ initial_config <- function (user = 'Weiming') {
     ##############################
     # adaptive analog parameters #
     ##############################
-    debug <- 0
     verbose <- 2
     init.iteration <- 1
     max.iterations <- 5
