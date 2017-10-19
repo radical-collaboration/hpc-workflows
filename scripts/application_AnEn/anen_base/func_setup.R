@@ -109,16 +109,17 @@ initial_config <- function (user = 'Weiming') {
     download.AnEn.rasters <- 0
 
     # choose one evaluation method from the below
+    # 0 ---- skip evaluation (useful for cases with predefined pixels)
     # 1 ---- evaluate on the vertices
     # 2 ---- evaluate on the interpolated maps
-    # 3 ---- evaluate using binary tournament
+    # 3 ---- evaluate using tournament
     #
     evaluation.method <- 3
 
     # parameters for evaluation method #3
 
     # number of individuals in each tournament
-    tournament.size <- 2
+    tournament.size <- 5
 
     # number of champions from each tournament
     num.champions <- 1
@@ -136,7 +137,9 @@ initial_config <- function (user = 'Weiming') {
     #
     predefine.num.pixels <- 0
     #num.pixels.iteration <- c(100, 63, 153, 398, 923, 1973, 3552, 5356)
-    num.pixels.iteration <- c(100, 100, 100, 98, 96, 97, 88, 88)
+    #num.pixels.iteration <- c(100, 100, 100, 98, 96, 97, 88, 88)
+    #num.pixels.iteration <- c(100, 169, 387, 373, 358)
+    num.pixels.iteration <- c(100, 400, 400, 400, 400, 400, 400, 400, 400, 400)
     if (predefine.num.pixels == 1) {
         max.iterations = length(num.pixels.iteration)
     }
