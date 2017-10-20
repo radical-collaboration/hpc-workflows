@@ -17,7 +17,7 @@ define_pixels <- function(
 
     require(raster)
     require(deldir)
-    require(spatstat) 
+    require(spatstat)
     require(maptools)
     require(RAnEnExtra)
     require(stringr)

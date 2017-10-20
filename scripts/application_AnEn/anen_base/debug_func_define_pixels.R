@@ -5,13 +5,13 @@ library(stringr)
 library(RAnEnExtra)
 
 # developer's setup
-iteration <- 2
+iteration <- 3
 clean.debug.files <- F
 plot.extra.points <- F
 read.next.iteration.pixels <- F
 call.func.define.pixels <- F
 folder.triangles <- paste('~/Desktop/test/', sep = '')
-folder.root <- '~/Desktop/results_new_evaluation_1/'
+folder.root <- '~/Desktop/results_new_evaluation_6/'
 
 # auto setup
 source('func_setup.R')
