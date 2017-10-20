@@ -5,13 +5,13 @@ library(stringr)
 library(RAnEnExtra)
 
 # developer's setup
-iteration <- 2
-clean.debug.files <- F
+iteration <- 3
+clean.debug.files <- T
 plot.extra.points <- F
 read.next.iteration.pixels <- F
 call.func.define.pixels <- F
 folder.triangles <- paste('~/Desktop/test/', sep = '')
-folder.root <- '~/Desktop/results_new_evaluation_1/'
+folder.root <- '~/Desktop/results_new_evaluation_6/'
 
 # auto setup
 source('func_setup.R')
@@ -24,13 +24,8 @@ members.size <- initial.settings$members.size
 num.champions <- initial.settings$num.champions
 tournament.size <- initial.settings$tournament.size
 num.error.pixels <- initial.settings$num.error.pixels
-
 evaluation.method <- initial.settings$evaluation.method
-evaluation.method <- 3
-
 interpolation.method <- initial.settings$interpolation.method
-interpolation.method <- 2
-
 threshold.triangle <- initial.settings$threshold.triangle
 num.pixels.increase <- initial.settings$num.pixels.increase
 num.times.to.compute <- initial.settings$num.times.to.compute
