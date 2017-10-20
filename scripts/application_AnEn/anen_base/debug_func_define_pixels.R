@@ -6,7 +6,7 @@ library(RAnEnExtra)
 
 # developer's setup
 iteration <- 2
-clean.debug.files <- F
+clean.debug.files <- T
 plot.extra.points <- F
 read.next.iteration.pixels <- F
 call.func.define.pixels <- F

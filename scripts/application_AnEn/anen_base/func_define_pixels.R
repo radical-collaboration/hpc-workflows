@@ -39,6 +39,7 @@ define_pixels <- function(
     num.champions <- as.numeric(num.champions)
     num.error.pixels <- as.numeric(num.error.pixels)
     num.triangles.from.tournament <- as.numeric(num.triangles.from.tournament)
+    interpolation.method <- as.numeric(interpolation.method)
     evaluation.method <- as.numeric(evaluation.method)
     verbose <- as.numeric(verbose)
 
