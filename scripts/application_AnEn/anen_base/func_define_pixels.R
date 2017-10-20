@@ -209,6 +209,7 @@ define_pixels <- function(
           polys.triangles <- polys.triangles[-triangles.without.inner.points]
         }
         
+        # compute errors for each triangle
         print("Compute errors for each triangle")
         for (i in 1:num.times.to.compute) {
             for (j in 1:num.flts) {
@@ -254,7 +255,7 @@ define_pixels <- function(
                   rnd.point.true <- extract(rast.obs, rnd.point.df)
                   
                   errors.triangle[i, j, k] <- mean(abs(rnd.point.true - rnd.point.estimate),
-                                                   na.rm = T)
+                                                   na.rm = T) * area(polys.triangles[k])
                 }
             }
         }
