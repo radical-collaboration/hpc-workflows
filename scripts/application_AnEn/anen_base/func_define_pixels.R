@@ -257,9 +257,30 @@ define_pixels <- function(
                     rnd.point.estimate <- rep(mean(control.points.value,na.rm = T),
                                               num.error.pixels)
                   } else if (interpolation.method == 2) {
-                    rnd.point.estimate <- idw(control.points.value,
-                                              control.points,
-                                              coordinates(rnd.point.df))[, 'Z']
+                    # because the Rpy2 has issue with %*%
+                    # these codes are exported from phylin:idw
+                    #
+                    #----------- Start of codes from phylin::idw __________________
+                    # use Shepard method
+                    d.real <- real.dist(control.points, coordinates(rnd.point.df))
+                    dimensions <- dim(d.real)
+                    w <- 1/d.real^2
+                    for (i in 1:nrow(w)) {
+                      if (sum(is.infinite(w[i, ])) > 0) {
+                        w[i, !is.infinite(w[i, ])] <- 0
+                        w[i, is.infinite(w[i, ])] <- 1
+                      }
+                    }
+                    w.sum <- apply(w, 1, sum, na.rm = TRUE)
+                    
+                    m <- diag(control.points.value)
+                    wx <- matrix(NA, nrow = dim(w)[1], ncol = length(control.points.value))
+                    for (i in 1:dim(w)[1]) {
+                      wx[i, ] <- apply(w[i, ] * m, 1, sum, na.rm = T)
+                    }
+                    rnd.point.estimate <- apply(wx/w.sum, 1, sum, na.rm = TRUE)
+                    #----------- End of codes from phylin::idw _____________________
+                    
                   } else {
                     stop(paste("Wrong evaluation method #", interpolation.method))
                   }

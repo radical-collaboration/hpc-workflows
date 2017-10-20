@@ -6,12 +6,12 @@ library(RAnEnExtra)
 
 # developer's setup
 iteration <- 2
-clean.debug.files <- T
+clean.debug.files <- F
 plot.extra.points <- F
 read.next.iteration.pixels <- F
 call.func.define.pixels <- F
 folder.triangles <- paste('~/Desktop/test/', sep = '')
-folder.root <- '~/Desktop/results_new_evaluation_3_idw_remove_area/'
+folder.root <- '~/Desktop/results_new_evaluation_1/'
 
 # auto setup
 source('func_setup.R')
@@ -27,6 +27,9 @@ num.error.pixels <- initial.settings$num.error.pixels
 
 evaluation.method <- initial.settings$evaluation.method
 evaluation.method <- 3
+
+interpolation.method <- initial.settings$interpolation.method
+interpolation.method <- 2
 
 threshold.triangle <- initial.settings$threshold.triangle
 num.pixels.increase <- initial.settings$num.pixels.increase
