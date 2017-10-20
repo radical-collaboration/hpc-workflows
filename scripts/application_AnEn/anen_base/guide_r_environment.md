@@ -30,6 +30,7 @@ The R packages you need to install before running the `master.py` are the follow
 8. RAnEnExtra
 9. spatstat
 10. prodlim
+11. gstat (optional, for interpolation method #2)
 
 To install 1 ~ 7 packages, you can do the following in the R session:
 
