@@ -14,7 +14,8 @@ initial_config <- function (user = 'Weiming', debug = 0) {
     # parameters specific to users #
     ################################
     if (user == 'Weiming') {
-        docker.port <- 32773
+        #docker.port <- 32773
+        docker.port <- 32777
         command.exe <- '/home/whu/github/CAnalogsV2/install/bin/canalogs'
         file.forecasts <- "/home/whu/data/chunk_NAM/Forecasts_NAM_sliced.nc"
         file.observations <- "/home/whu/data/chunk_NAM/Analysis_NAM.nc"
@@ -93,7 +94,7 @@ initial_config <- function (user = 'Weiming', debug = 0) {
     ##############################
     verbose <- 2
     init.iteration <- 1
-    max.iterations <- 7
+    max.iterations <- 5
 
     # number of neighbors to find for final interpolation
     num.neighbors <- 2
@@ -122,7 +123,7 @@ initial_config <- function (user = 'Weiming', debug = 0) {
 
     # parameters for evaluation method #3
     # number of individuals in each tournament
-    tournament.size <- 5
+    tournament.size <- 80
 
     # number of champions from each tournament
     num.champions <- 1
@@ -130,10 +131,10 @@ initial_config <- function (user = 'Weiming', debug = 0) {
     # number of pixels to select while evaluating the
     # fittness for each triangle
     #
-    num.error.pixels <- 2
+    num.error.pixels <- 1
 
     # sample size for tournament selection
-    num.triangles.from.tournament <- 200
+    num.triangles.from.tournament <- 20
 
 
     # choose one interpolation method from the below
