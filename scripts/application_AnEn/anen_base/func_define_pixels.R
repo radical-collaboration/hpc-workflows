@@ -255,7 +255,7 @@ define_pixels <- function(
                   rnd.point.true <- extract(rast.obs, rnd.point.df)
                   
                   errors.triangle[i, j, k] <- mean(abs(rnd.point.true - rnd.point.estimate),
-                                                   na.rm = T) * area(polys.triangles[k])
+                                                   na.rm = T)# * area(polys.triangles[k])
                 }
             }
         }

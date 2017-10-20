@@ -87,6 +87,7 @@ if (clean.debug.files) {
     files.to.remove <- c(files.to.remove,
                          list.files(pattern = name, full.names = T))
   }
+  file.remove(files.to.remove)
   
   folders.to.remove <- vector('character')
   target.folders <- c('debug_local_*')
@@ -94,5 +95,5 @@ if (clean.debug.files) {
     folders.to.remove <- c(folders.to.remove,
                            list.files(pattern = name, full.names = T))
   }
-  unlink(folders.to.remove)
+  file.remove(folders.to.remove)
 }
