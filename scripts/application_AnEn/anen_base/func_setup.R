@@ -121,7 +121,6 @@ initial_config <- function (user = 'Weiming', debug = 0) {
     evaluation.method <- 3
 
     # parameters for evaluation method #3
-
     # number of individuals in each tournament
     tournament.size <- 5
 
