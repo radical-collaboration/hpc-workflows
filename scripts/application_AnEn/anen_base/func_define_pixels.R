@@ -295,7 +295,8 @@ define_pixels <- function(
 
         errors.triangle.average <- apply(errors.triangle, 3, mean, na.rm = T)
         triangles.index.to.continue <- tournament.selection(errors.triangle.average,
-                                                            num.triangles.from.tournament)
+                                                            num.triangles.from.tournament,
+                                                            replacement = T)
 
     } else {
         stop(paste("Wrong evaluation method #", evaluation.method))
