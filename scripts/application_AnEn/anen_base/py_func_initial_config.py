@@ -25,7 +25,8 @@ def test_initial_config(d):
             'threshold.triangle', 'num.pixels.increase', 'debug', 'docker.port',
             'pixels.compute', 'interpolate.AnEn.rasters', 'download.AnEn.rasters',
             'num.pixels.iteration', 'predefine.num.pixels', 'tournament.size',
-            'num.champions', 'num.error.pixels', 'num.triangles.from.tournament']
+            'num.champions', 'num.error.pixels', 'num.triangles.from.tournament',
+            'interpolation.method']
 
     all_ok = True
 
@@ -71,7 +72,8 @@ def process_initial_config(initial_config):
             'interpolate.AnEn.rasters', 'verbose',
             'download.AnEn.rasters', 'predefine.num.pixels',
             'evaluation.method', 'tournament.size', 'num.champions',
-            'num.error.pixels', 'num.triangles.from.tournament']
+            'num.error.pixels', 'num.triangles.from.tournament',
+            'interpolation.method']
 
     for key in keys_list_int:
         initial_config[key] = [int(k) for k in list(initial_config[key])]

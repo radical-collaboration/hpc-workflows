@@ -17,6 +17,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_neighbors')
     parser.add_argument('--xgrids_total')
     parser.add_argument('--ygrids_total')
+    parser.add_argument('--interpolation_method')
 
     args = parser.parse_args()
     
@@ -30,6 +31,7 @@ if __name__ == '__main__':
 
     ncdf4 = importr("ncdf4")
     raster = importr("raster")
+    raster = importr("gstat")
     raster = importr("RAnEnExtra")
 
     interpolate_anen = STAP(R_code, 'interpolate_anen')
@@ -38,4 +40,5 @@ if __name__ == '__main__':
             args.prefix_anen_raster, pixels_computed,
             args.num_times_to_compute, args.num_flts,
             args.members_size, args.num_neighbors,
-            args.xgrids_total, args.ygrids_total)
+            args.xgrids_total, args.ygrids_total,
+            args.interpolation_method)

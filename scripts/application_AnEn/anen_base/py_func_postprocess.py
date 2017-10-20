@@ -93,7 +93,8 @@ def postprocess (configs, pre_exec):
                 '--members_size', configs['members.size'],
                 '--num_neighbors', configs['num.neighbors'],
                 '--xgrids_total', configs['xgrids.total'],
-                '--ygrids_total', configs['ygrids.total']]
+                '--ygrids_total', configs['ygrids.total'],
+                '--interpolation_method', configs['interpolation.method']]
 
         if configs['verbose'] > 1:
             print "Create a task for postprocessing %d / %d" % (

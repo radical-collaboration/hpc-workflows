@@ -7,10 +7,15 @@
 #
 interpolate_anen <- function(
     file.anen, prefix.anen.raster, pixels.computed, times, flts,
-    members.size, num.neighbors, xgrids.total, ygrids.total) {
+    members.size, num.neighbors, xgrids.total, ygrids.total,
+    interpolation.method) {
     require(ncdf4)
     require(raster)
     require(RAnEnExtra)
+
+    if (interpolation.method == 2) {
+        require(gstat)
+    }
 
     # convert argument types
     pixels.computed <- as.numeric(unlist(pixels.computed))
@@ -49,13 +54,13 @@ interpolate_anen <- function(
 
     nc_close(nc)
 
-    # convert pixel indices to x and y coordinates
-    x <- pixels.to.x.by.row(pixels.computed, xgrids.total, 0)
-    y <- pixels.to.y.by.row(pixels.computed, xgrids.total, 0)
-
     rast.base <- raster(nrows = ygrids.total, ncols = xgrids.total,
                         xmn = 0.5, xmx = xgrids.total+.5,
                         ymn = 0.5, ymx = ygrids.total+.5)
+    rast.base.xy <- expand.grid(1:xgrids.total, 1:ygrids.total)
+    colnames(rast.base.xy) <- c('x', 'y')
+    x.computed <- rast.base.xy[(pixels.computed+1), 'x']
+    y.computed <- rast.base.xy[(pixels.computed+1), 'y']
 
     for (time in 1 : times) {
         for (flt in 1 : flts) {
@@ -73,11 +78,32 @@ interpolate_anen <- function(
                 nc_close(nc)
 
                 z <- apply(analogs, 1, mean, rm.na=T)
-                if (length(pixels.computed) == xgrids.total*ygrids.total) {
-                    rast.int <- rasterize(cbind(x, y), rast.base, z)
+
+                if (interpolation.method == 1) {
+                    # nearest neighbor interpolation
+                    if (length(pixels.computed) == xgrids.total*ygrids.total) {
+                        rast.int <- rasterize(cbind(x.computed, y.computed),
+                                              rast.base, z)
+                    } else {
+                        rast.int <- nni(x.computed, y.computed, z, rast.base, n=num.neighbors)
+                    }
+
+                } else if (interpolation.method == 2) {
+                    # inverse distance weighted interpolation
+                    if (length(pixels.computed) == xgrids.total*ygrids.total) {
+                        rast.int <- rasterize(cbind(x.computed, y.computed),
+                                              rast.base, z)
+                    } else {
+                        data <- data.frame(x = x.computed, y = y.computed, values = z)
+                        values(rast.base)[cellFromXY(rast.base, data[, c(1, 2)])] <- z
+                        model.idw <- gstat(id = "values", formula = values~1, locations = ~x+y,
+                                           data=data, nmax=7, set=list(idp = .5))
+                        rast.int <- interpolate(rast.base, model.idw)
+                    }
                 } else {
-                    rast.int <- nni(x, y, z, rast.base, n=num.neighbors)
+                    stop(paste("Wrong interpolation method #", interpolation.method))
                 }
+
                 save(rast.int, file = file.raster.anen)
             } else {
                 print(paste("File already exists", file.raster.anen))
@@ -85,3 +111,5 @@ interpolate_anen <- function(
         }
     }
 }
+
+

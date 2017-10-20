@@ -135,6 +135,14 @@ initial_config <- function (user = 'Weiming', debug = 0) {
     # sample size for tournament selection
     num.triangles.from.tournament <- 200
 
+
+    # choose one interpolation method from the below
+    # 1 ---- nearest neighbor interpolation
+    # 2 ---- inverse distance weighted interpolation
+    #
+    interpolation.method <-2
+
+
     # predefine the number of pixels to compute for each iteration
     # this is only for convenient use for experiments
     #
@@ -206,6 +214,7 @@ initial_config <- function (user = 'Weiming', debug = 0) {
                              tournament.size = tournament.size,
                              num.champions = num.champions,
                              num.error.pixels = num.error.pixels,
+                             interpolation.method = interpolation.method,
                              num.triangles.from.tournament = num.triangles.from.tournament,
                              docker.port = docker.port,
                              debug = debug)
