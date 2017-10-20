@@ -44,6 +44,7 @@ def start_iteration (
     num_error_pixels = configs['num.error.pixels']
     num_triangles_from_tournament = configs['num.triangles.from.tournament']
     evaluation_method = configs['evaluation.method']
+    interpolation_method = configs['interpolation.method']
     verbose = configs['verbose']
 
     str_iteration = str(iteration).zfill(4)
@@ -284,6 +285,7 @@ def start_iteration (
             '--num_error_pixels', num_error_pixels,
             '--num_triangles_from_tournament', num_triangles_from_tournament,
             '--evaluation_method', evaluation_method,
+            '--interpolation_method', interpolation_method,
             '--verbose', verbose]
     t3.download_output_data = [
             'pixels_next_iteration.txt > %spixels_defined_after_iteration%s.txt' % (

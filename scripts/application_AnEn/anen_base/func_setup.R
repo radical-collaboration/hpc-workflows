@@ -137,10 +137,12 @@ initial_config <- function (user = 'Weiming', debug = 0) {
 
 
     # choose one interpolation method from the below
+    # this method will be used both during evalution
+    # and final interpolation of AnEn raster
     # 1 ---- nearest neighbor interpolation
     # 2 ---- inverse distance weighted interpolation
     #
-    interpolation.method <-2
+    interpolation.method <- 2
 
 
     # predefine the number of pixels to compute for each iteration

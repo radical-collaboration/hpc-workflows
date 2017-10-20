@@ -13,7 +13,7 @@ define_pixels <- function(
     num.flts, num.pixels.increase, num.times.to.compute, members.size,
     threshold.triangle, tournament.size, num.champions,
     num.error.pixels, num.triangles.from.tournament,
-    evaluation.method, verbose) {
+    evaluation.method, interpolation.method, verbose) {
 
     require(raster)
     require(deldir)
@@ -23,6 +23,7 @@ define_pixels <- function(
     require(stringr)
     require(ncdf4)
     require(prodlim)
+    require(phylin)
 
     # convert argument types
     iteration <- str_pad(as.numeric(iteration), 4, pad = '0')
@@ -250,8 +251,18 @@ define_pixels <- function(
                   
                   # get true and estimated values for random points
                   rnd.point.df <- rnd.points.df[[k]]
-                  rnd.point.estimate <- rep(mean(control.points.value,na.rm = T),
-                                            num.error.pixels)
+                  
+                  if (interpolation.method == 1) {
+                    rnd.point.estimate <- rep(mean(control.points.value,na.rm = T),
+                                              num.error.pixels)
+                  } else if (interpolation.method == 2) {
+                    rnd.point.estimate <- idw(control.points.value,
+                                              control.points,
+                                              coordinates(rnd.point.df))[, 'Z']
+                  } else {
+                    stop(paste("Wrong evaluation method #", interpolation.method))
+                  }
+                  
                   rnd.point.true <- extract(rast.obs, rnd.point.df)
                   
                   errors.triangle[i, j, k] <- mean(abs(rnd.point.true - rnd.point.estimate),

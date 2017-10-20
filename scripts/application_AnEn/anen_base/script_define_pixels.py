@@ -26,6 +26,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_error_pixels')
     parser.add_argument('--num_triangles_from_tournament')
     parser.add_argument('--evaluation_method')
+    parser.add_argument('--interpolation_method')
     parser.add_argument('--verbose')
 
     args = parser.parse_args()
@@ -46,7 +47,8 @@ if __name__ == '__main__':
     stringr = importr("stringr")
     spatstat = importr("spatstat") 
     maptools = importr("maptools")
-    maptools = importr("splancs")
+    splancs = importr("splancs")
+    phylin = importr("phylin")
     RAnEnExtra = importr("RAnEnExtra")
 
     define_pixels = STAP(R_code, 'define_pixels')
@@ -56,4 +58,5 @@ if __name__ == '__main__':
             args.xgrids_total, args.ygrids_total, args.num_flts, args.num_pixels_increase,
             args.num_times_to_compute, args.members_size, args.threshold_triangle,
             args.tournament_size, args.num_champions, args.num_error_pixels,
-            args.num_triangles_from_tournament, args.evaluation_method, args.verbose)
+            args.num_triangles_from_tournament, args.evaluation_method,
+            args.interpolation_method, args.verbose)

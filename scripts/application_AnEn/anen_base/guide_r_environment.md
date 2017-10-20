@@ -30,7 +30,8 @@ The R packages you need to install before running the `master.py` are the follow
 8. prodlim
 9. spatstat
 10. RAnEnExtra
-11. gstat (optional, for interpolation method #2)
+11. phylin
+12. gstat (optional, for interpolation method #2)
 
 To install 1 ~ 9 packages, you can do the following in the R session:
 
@@ -44,9 +45,9 @@ And then install `RAnEnExtra` which is from Github:
 install_github("Weiming-Hu/RAnEnExtra")
 ```
 
-For the package `gstat`, if you fail at the first time, and you are receiving the error message
+For the package `gstat` and `phylin`, if you fail at the first time, and you are receiving the error message
 ```
-gstat not avaiable for R version (#.#)
+package not avaiable for R version (#.#)
 ```
 Try another CRAN mirror. It might work.
 
