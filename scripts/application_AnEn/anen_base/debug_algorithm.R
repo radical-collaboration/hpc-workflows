@@ -17,9 +17,9 @@ size <- 30
 pts.edge <- 5
 pts.growth <- 30
 iterations <- 10
-repetition <- 20
+repetition <- 30
 
-output.plot <- T
+output.plot <- F
 save.plot.data <- T
 
 
@@ -170,7 +170,7 @@ for (it in 1:repetition) {
     #print(overall.e[i])
     
     sp = SpatialPoints(triangles.spdf@data[,c('PX','PY')])
-    plot(sp,add=T,pch=19, cex = 0.5)
+    #plot(sp,add=T,pch=19, cex = 0.5)
     e                  <- evaluate( triangles.spdf )
     
     
@@ -210,7 +210,8 @@ for (it in 1:repetition) {
     
     if (i != length(nums.rnd.pts)) {
       pop.new.spdf = generate.inital.population(rast.obs,
-                                                size = (nums.rnd.pts[i+1]-nums.rnd.pts[i]))
+                                                size = (nums.rnd.pts[i+1]-nums.rnd.pts[i]),
+                                                pts.edge = 0)
     } 
     pop.spdf     = spRbind(pop.spdf, pop.new.spdf)
   }
