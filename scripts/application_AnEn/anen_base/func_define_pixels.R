@@ -135,7 +135,7 @@ define_pixels <- function(
         ##############################################
         # compute errors on the interpolated rasters #
         ##############################################
-        print("Compute errors over the iterpolated area of the triangle")
+        print("Compute errors over the interpolated triangle")
 
         errors.triangle <- array(NA, dim = c(num.times.to.compute, num.flts,
                                              length(polys.triangles)))
@@ -161,7 +161,7 @@ define_pixels <- function(
                     stop(paste("Can't find observation raster", file.raster.obs))
                 }
 
-                # compute errors for each triangle area
+                # compute errors for each triangle
                 for (k in 1:length(polys.triangles)) {
                     pts.in.triangle <- get.points.in.triangle(polys.triangles[k])
                     pts.in.triangle <- cellFromXY(rast.base, pts.in.triangle)
@@ -272,7 +272,6 @@ define_pixels <- function(
                       }
                     }
                     w.sum <- apply(w, 1, sum, na.rm = TRUE)
-                    
                     m <- diag(control.points.value)
                     wx <- matrix(NA, nrow = dim(w)[1], ncol = length(control.points.value))
                     for (i in 1:dim(w)[1]) {
@@ -287,8 +286,10 @@ define_pixels <- function(
                   
                   rnd.point.true <- extract(rast.obs, rnd.point.df)
                   
+                  # errors.triangle[i, j, k] <- mean(abs(rnd.point.true - rnd.point.estimate),
+                  #                                  na.rm = T) * area(polys.triangles[k])
                   errors.triangle[i, j, k] <- mean(abs(rnd.point.true - rnd.point.estimate),
-                                                   na.rm = T)# * area(polys.triangles[k])
+                                                   na.rm = T) * area(polys.triangles[k])
                 }
             }
         }

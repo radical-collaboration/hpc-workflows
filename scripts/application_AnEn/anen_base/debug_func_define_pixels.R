@@ -1,4 +1,4 @@
-# debug script for func_define_pixels.R
+p# debug script for func_define_pixels.R
 # for convenient local debugging
 #
 library(stringr)
