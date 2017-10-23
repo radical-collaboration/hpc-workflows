@@ -15,9 +15,9 @@ load(file.raster.obs)
 
 size <- 30
 pts.edge <- 5
-pts.growth <- 30
+pts.growth <- 200
 iterations <- 10
-repetition <- 30
+repetition <- 1
 
 output.plot <- F
 save.plot.data <- T
@@ -260,7 +260,7 @@ if (output.plot) {
 p <- ggplot(df, aes(pixels, error, fill=method)) +
   geom_boxplot(outlier.shape = NA) +
   scale_fill_brewer(palette = 'Dark2') +
-  coord_cartesian(ylim=c(lower, 103)) +
+  coord_cartesian(ylim=c(lower, upper)) +
   theme(legend.justification=c(1,1),
         legend.position=c(1,1),
         text = element_text(size = 25))
