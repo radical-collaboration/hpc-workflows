@@ -9,7 +9,8 @@ library(ggplot2)
 library(reshape2)
 
 
-file.raster.obs <- '~/Desktop/results_new_evaluation_6/obs_raster/time1_flt1.rdata'
+#file.raster.obs <- '~/Desktop/results_new_evaluation_6/obs_raster/time1_flt1.rdata'
+file.raster.obs <- '~/geolab_storage_V2/data/Analogs/NAM_analysis_raster/time1_flt1.rdata'
 load(file.raster.obs)
 
 
