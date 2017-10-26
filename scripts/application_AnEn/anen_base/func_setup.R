@@ -14,8 +14,8 @@ initial_config <- function (user = 'Weiming', debug = 0) {
     # parameters specific to users #
     ################################
     if (user == 'Weiming') {
-        #docker.port <- 32773
-        docker.port <- 32777
+        docker.port <- 32773
+        #docker.port <- 32777
         command.exe <- '/home/whu/github/CAnalogsV2/install/bin/canalogs'
         file.forecasts <- "/home/whu/data/chunk_NAM/Forecasts_NAM_sliced.nc"
         file.observations <- "/home/whu/data/chunk_NAM/Analysis_NAM.nc"
@@ -67,7 +67,7 @@ initial_config <- function (user = 'Weiming', debug = 0) {
     grids.total <- xgrids.total*ygrids.total
 
     # how many random points to start with
-    init.num.pixels.compute <- 100
+    init.num.pixels.compute <- 30
 
     # how many extra points should be selected on edges
     num.edge.points <- 5
@@ -94,7 +94,7 @@ initial_config <- function (user = 'Weiming', debug = 0) {
     ##############################
     verbose <- 2
     init.iteration <- 1
-    max.iterations <- 5
+    max.iterations <- 10
 
     # number of neighbors to find for final interpolation
     num.neighbors <- 2
