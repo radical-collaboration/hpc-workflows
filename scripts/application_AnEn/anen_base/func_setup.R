@@ -135,6 +135,9 @@ initial_config <- function (user = 'Weiming', debug = 0) {
 
     # sample size for tournament selection
     num.triangles.from.tournament <- 20
+    
+    # whether to only evaluate the triangle center
+    triangle.center <- 1
 
 
     # choose one interpolation method from the below
@@ -220,6 +223,7 @@ initial_config <- function (user = 'Weiming', debug = 0) {
                              interpolation.method = interpolation.method,
                              num.triangles.from.tournament = num.triangles.from.tournament,
                              docker.port = docker.port,
+                             triangle.center = triangle.center,
                              debug = debug)
 
     return(list.init.config)

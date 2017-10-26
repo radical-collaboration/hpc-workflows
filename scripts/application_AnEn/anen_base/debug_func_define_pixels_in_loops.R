@@ -22,14 +22,14 @@ tournament.size <- initial.settings$tournament.size
 num.champions <- initial.settings$num.champions
 num.error.pixels <- initial.settings$num.error.pixels
 num.triangles.from.tournament <- 20
-evaluation.method <- 3
-interpolation.method <- 1
+evaluation.method <- 1
+interpolation.method <- 2
 verbose <- initial.settings$verbose
 
-source('perfect.R')
+source('func_define_pixels_copied.R')
 load('~/Desktop/testloop/obs_raster/time1_flt1.rdata')
 plot(rast.obs)
-for (i in 1:5) {
+for (i in 1:10) {
   # get data anen arr
   arr.data.anen <- array(NA, dim = c(2, 4, length(pixels.computed)))
   x <- pixels.to.x.by.row(pixels.computed, ncol(rast.obs), 0)
@@ -52,6 +52,6 @@ for (i in 1:5) {
   
   load(paste(folder.triangles, 'iteration', str_pad(as.numeric(iteration), 4, pad = '0'),
              '.rdata', sep = ''))
-  plot(polys.triangles, add = T, border = i, cex = 0.4)
+  plot(triangles, add = T, border = i, lwd = 0.4)
   pixels.computed <- c(pixels.computed, pixels.next)
 }

@@ -13,7 +13,7 @@ define_pixels <- function(
   num.flts, num.pixels.increase, num.times.to.compute, members.size,
   threshold.triangle, tournament.size, num.champions,
   num.error.pixels, num.triangles.from.tournament,
-  evaluation.method, interpolation.method, triangle.center, verbose) {
+  evaluation.method, interpolation.method, verbose) {
   
   require(raster)
   require(deldir)
@@ -41,8 +41,8 @@ define_pixels <- function(
   num.triangles.from.tournament <- as.numeric(num.triangles.from.tournament)
   interpolation.method <- as.numeric(interpolation.method)
   evaluation.method <- as.numeric(evaluation.method)
-  triangle.center <- as.numeric(triangle.center)
   verbose <- as.numeric(verbose)
+  triangle.center <- T
   
   #############################
   # define and save triangles #

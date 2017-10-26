@@ -1,4 +1,4 @@
-p# debug script for func_define_pixels.R
+# debug script for func_define_pixels.R
 # for convenient local debugging
 #
 library(stringr)
@@ -11,7 +11,7 @@ plot.extra.points <- F
 read.next.iteration.pixels <- F
 call.func.define.pixels <- F
 folder.triangles <- paste('~/Desktop/test/', sep = '')
-folder.root <- '~/Desktop/results_new_evaluation_6/'
+folder.root <- '~/Desktop/testloop/'
 
 # auto setup
 source('func_setup.R')
