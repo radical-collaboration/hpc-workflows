@@ -7,21 +7,27 @@ library(prodlim)
 library(RAnEnExtra)
 library(ggplot2)
 library(reshape2)
+library(RColorBrewer)
+library(stringr)
 
 
 #file.raster.obs <- '~/Desktop/results_new_evaluation_6/obs_raster/time1_flt1.rdata'
 file.raster.obs <- '~/geolab_storage_V2/data/Analogs/NAM_analysis_raster/time1_flt1.rdata'
 load(file.raster.obs)
+values(rast.obs) <- values(rast.obs) - 273.15
 
 
 size <- 30
 pts.edge <- 5
-pts.growth <- 200
-iterations <- 10
+pts.growth <- 20
+iterations <- 20
 repetition <- 1
 
-output.plot <- F
+output.error.plot <- T
+output.triangle.plot <- T
 save.plot.data <- T
+plot.results <- T
+
 
 
 generate.inital.population = function( raster, size=100, pts.edge=5 ) {
@@ -147,7 +153,8 @@ for (it in 1:repetition) {
   rast.base <- raster(nrows = nrow(rast.obs), ncols = ncol(rast.obs),
                       xmn = 0.5, xmx = ncol(rast.obs) + .5,
                       ymn = 0.5, ymx = nrow(rast.obs) + .5)
-  #plot(rast.obs)
+  
+  plot(rast.obs, col = brewer.pal(11, 'Spectral')[11:1])
   pop.spdf.init           <- generate.inital.population( rast.obs, size, pts.edge )
   
   pop.spdf <- pop.spdf.init
@@ -157,9 +164,18 @@ for (it in 1:repetition) {
   for ( i in 1:iterations) {
     print(paste('adaptive #', i, sep = ''))
     
-    triangles.spdf     <- triangulate(pop.spdf, rast.obs, 'random')
+    if (output.triangle.plot & plot.results) {
+      file <- paste('adaptive_it', str_pad(i, 4, pad = '0'),
+                    '_rep', str_pad(it, 4, pad = '0'), '.png', sep = '')
+      png(file, width = 10, height = 8, res = 100, units = 'in')
+      plot(rast.obs, col = brewer.pal(11, 'Spectral')[11:1])
+    }
     
-    #plot(triangles.spdf,add=T,border=i)
+    triangles.spdf     <- triangulate(pop.spdf, rast.obs)
+    
+    if (plot.results) {
+      plot(triangles.spdf,add=T,border='black', lwd = 0.5)
+    }
     
     
     x.computed <- coordinates(pop.spdf)[, 'x']
@@ -168,10 +184,12 @@ for (it in 1:repetition) {
     rast.int <- nni(x.computed, y.computed, z, rast.base, n=2)
     overall.e[i] <- mean(values(rast.int - rast.obs) ^ 2)
     num.points[i] <- length(pop.spdf)
-    #print(overall.e[i])
+    print(overall.e[i])
     
     sp = SpatialPoints(triangles.spdf@data[,c('PX','PY')])
-    #plot(sp,add=T,pch=19, cex = 0.5)
+    # if (plot.results) {
+    #   plot(sp,add=T,pch=19, cex = 0.5, col = 'red')
+    # }
     e                  <- evaluate( triangles.spdf )
     
     
@@ -184,7 +202,9 @@ for (it in 1:repetition) {
     # sg <- triangles.spdf[sg, ]
     
     sel.spdf = SpatialPointsDataFrame(sg@data[,c('PX','PY')], data=data.frame(value = sg@data[,c('PTrue')]))
-    #plot(sel.spdf,add=T,pch=19,col="red", cex = 0.5)
+    if (plot.results) {
+      plot(sel.spdf,add=T,pch=19, col = 'green', cex = 0.5)
+    }
     
     coords = rbind(coordinates(pop.spdf), coordinates(sel.spdf))
     values = rbind(pop.spdf@data, sel.spdf@data)
@@ -192,29 +212,57 @@ for (it in 1:repetition) {
     rownames(coords)=NULL
     
     pop.spdf = SpatialPointsDataFrame(coords, data = data.frame(values))
+    
+    if (output.triangle.plot & plot.results) {
+      dev.off()
+    }
   }
   
   pop.spdf       <- pop.spdf.init
   nums.rnd.pts <- seq(from = size, by = pts.growth, length.out = iterations)
   overall.e.rnd  <- rep(NA, length(nums.rnd.pts))
   
+  if (plot.results) {
+    plot(rast.obs, col = brewer.pal(11, 'Spectral')[11:1])
+    plot(pop.spdf,add=T,pch=19, col = 'green', cex = 0.5)
+  }
   
   for ( i in 1:length(nums.rnd.pts)) {
     print(paste('random #', i, sep = ''))
+    
+    if (output.triangle.plot & plot.results) {
+      file <- paste('random_it', str_pad(i, 4, pad = '0'),
+                    '_rep', str_pad(it, 4, pad = '0'), '.png', sep = '')
+      png(file, width = 10, height = 8, res = 100, units = 'in')
+      plot(rast.obs, col = brewer.pal(11, 'Spectral')[11:1])
+    }
+    
+    if (plot.results) {
+      triangles.spdf     <- triangulate(pop.spdf, rast.obs)
+      plot(triangles.spdf,add=T,border='black', lwd = 0.5)
+    }
     
     x.computed <- coordinates(pop.spdf)[, 'x']
     y.computed <- coordinates(pop.spdf)[, 'y']
     z <- pop.spdf@data[, 1]
     rast.int <- nni(x.computed, y.computed, z, rast.base, n=2)
     overall.e.rnd[i] <- mean(values(rast.int - rast.obs) ^ 2)
-    #print(overall.e.rnd[i])
+    if (plot.results) {
+      print(overall.e.rnd[i])
+    }
     
     if (i != length(nums.rnd.pts)) {
       pop.new.spdf = generate.inital.population(rast.obs,
                                                 size = (nums.rnd.pts[i+1]-nums.rnd.pts[i]),
                                                 pts.edge = 0)
+      plot(pop.new.spdf,add=T,pch=19, col = 'green', cex = 0.5)
     } 
-    pop.spdf     = spRbind(pop.spdf, pop.new.spdf)
+    pop.spdf <- spRbind(pop.spdf, pop.new.spdf)
+    pop.spdf <- remove.duplicates(pop.spdf)
+    
+    if (output.triangle.plot & plot.results) {
+      dev.off()
+    }
   }
   
   
@@ -224,16 +272,16 @@ for (it in 1:repetition) {
   # lines(num.points, overall.e.greedy, lty = 'solid', col = 'purple')
   # legend('topright', legend = c('random', 'tournament directive', 'greedy directive'),
   # col = c('red', 'blue', 'purple'), lty = 1)
-  legend('topright', legend = c('random', 'tournament directive'),
-         col = c('red', 'blue'), lty = 1)
+  # legend('topright', legend = c('random', 'tournament directive'),
+  #        col = c('red', 'blue'), lty = 1)
   
   errors <- c(errors, list(nums.rnd.pts, overall.e.rnd,
                            num.points, overall.e))
 }
 
 
-mat.errors.rnd <- matrix(nrow = repetition, ncol = 10)
-mat.errors.tri <- matrix(nrow= repetition, ncol = 10)
+mat.errors.rnd <- matrix(nrow = repetition, ncol = iterations)
+mat.errors.tri <- matrix(nrow= repetition, ncol = iterations)
 for ( i in 1:repetition ) {
   mat.errors.rnd[i, ] <- unlist(errors[(i-1)*4 + 2])
   mat.errors.tri[i, ] <- unlist(errors[(i-1)*4 + 4])
@@ -253,7 +301,7 @@ range <- range(rbind(mat.errors.rnd, mat.errors.tri))
 lower <- floor(range[1])
 upper <- ceiling(range[2])
 
-if (output.plot) {
+if (output.error.plot) {
   png('EX_PSU_errors.png', width = 10, height = 8,
       res = 100, units = 'in')
 }
@@ -267,7 +315,7 @@ p <- ggplot(df, aes(pixels, error, fill=method)) +
         text = element_text(size = 25))
 p
 
-if (output.plot) {
+if (output.error.plot) {
   dev.off()
 }
  
