@@ -21,12 +21,13 @@ size <- 30
 pts.edge <- 5
 pts.growth <- 20
 iterations <- 20
-repetition <- 1
+repetition <- 10
 
+plot.results <- F
+save.plot.data <- F
+output.speedup.plot <- T
 output.error.plot <- T
 output.triangle.plot <- T
-save.plot.data <- T
-plot.results <- T
 
 
 
@@ -147,6 +148,8 @@ select.area <- function(triangles.spdf, e, n=100) {
 }
 
 errors <- list()
+mat.errors.rnd <- matrix(nrow = repetition, ncol = iterations)
+mat.errors.tri <- matrix(nrow= repetition, ncol = iterations)
 for (it in 1:repetition) {
   print(paste('repetition #', it, sep = ''))
   
@@ -158,8 +161,8 @@ for (it in 1:repetition) {
   pop.spdf.init           <- generate.inital.population( rast.obs, size, pts.edge )
   
   pop.spdf <- pop.spdf.init
-  overall.e <- rep(NA, iterations)
-  num.points <- rep(NA, iterations)
+  overall.e.tri <- rep(NA, iterations)
+  nums.tri.pts <- rep(NA, iterations)
   
   for ( i in 1:iterations) {
     print(paste('adaptive #', i, sep = ''))
@@ -182,9 +185,9 @@ for (it in 1:repetition) {
     y.computed <- coordinates(pop.spdf)[, 'y']
     z <- pop.spdf@data[, 1]
     rast.int <- nni(x.computed, y.computed, z, rast.base, n=2)
-    overall.e[i] <- mean(values(rast.int - rast.obs) ^ 2)
-    num.points[i] <- length(pop.spdf)
-    print(overall.e[i])
+    overall.e.tri[i] <- sqrt(mean(values(rast.int - rast.obs) ^ 2))
+    nums.tri.pts[i] <- length(pop.spdf)
+    print(overall.e.tri[i])
     
     sp = SpatialPoints(triangles.spdf@data[,c('PX','PY')])
     # if (plot.results) {
@@ -246,7 +249,7 @@ for (it in 1:repetition) {
     y.computed <- coordinates(pop.spdf)[, 'y']
     z <- pop.spdf@data[, 1]
     rast.int <- nni(x.computed, y.computed, z, rast.base, n=2)
-    overall.e.rnd[i] <- mean(values(rast.int - rast.obs) ^ 2)
+    overall.e.rnd[i] <- sqrt(mean(values(rast.int - rast.obs) ^ 2))
     if (plot.results) {
       print(overall.e.rnd[i])
     }
@@ -266,50 +269,53 @@ for (it in 1:repetition) {
   }
   
   
-  #plot(nums.rnd.pts, overall.e.rnd, type = 'l', col = 'red',
-       #ylim = range(c(overall.e.rnd, overall.e)))
-  #lines(num.points, overall.e, lty = 'solid', col = 'blue')
-  # lines(num.points, overall.e.greedy, lty = 'solid', col = 'purple')
+  # plot(nums.rnd.pts, overall.e.rnd, type = 'l', col = 'red',
+  # ylim = range(c(overall.e.rnd, overall.e.tri)))
+  # lines(nums.tri.pts, overall.e.tri, lty = 'solid', col = 'blue')
+  # lines(nums.tri.pts, overall.e.greedy, lty = 'solid', col = 'purple')
   # legend('topright', legend = c('random', 'tournament directive', 'greedy directive'),
   # col = c('red', 'blue', 'purple'), lty = 1)
   # legend('topright', legend = c('random', 'tournament directive'),
   #        col = c('red', 'blue'), lty = 1)
   
-  errors <- c(errors, list(nums.rnd.pts, overall.e.rnd,
-                           num.points, overall.e))
+  
+  mat.errors.rnd[it, ] <- overall.e.rnd
+  mat.errors.tri[it, ] <- overall.e.tri
 }
 
-
-mat.errors.rnd <- matrix(nrow = repetition, ncol = iterations)
-mat.errors.tri <- matrix(nrow= repetition, ncol = iterations)
-for ( i in 1:repetition ) {
-  mat.errors.rnd[i, ] <- unlist(errors[(i-1)*4 + 2])
-  mat.errors.tri[i, ] <- unlist(errors[(i-1)*4 + 4])
-}
 colnames(mat.errors.rnd) <- nums.rnd.pts
 colnames(mat.errors.tri) <- nums.rnd.pts
 
-# plots
+#########
+# plots #
+#########
+# ------------------------------------------------------
+# A. error plot
 combine <- rbind(mat.errors.rnd, mat.errors.tri)
 df <- as.data.frame(combine)
 method <- c(rep('random method', repetition),
             rep('adaptive method', repetition))
 df<-melt(cbind(df, method), id = 'method')
-colnames(df) <- c('method', 'pixels', 'error')
+colnames(df) <- c('method', 'pixels', 'RMSE')
+
+if (save.plot.data) {
+  save(df, file = 'error_plot.rdata')
+}
 
 range <- range(rbind(mat.errors.rnd, mat.errors.tri))
-lower <- floor(range[1])
-upper <- ceiling(range[2])
+lower <- range[1] - 0.3
+upper <- range[2] + 0.3
 
 if (output.error.plot) {
-  png('EX_PSU_errors.png', width = 10, height = 8,
+  png('EX_PSU_errors.png', width = 11, height = 8,
       res = 100, units = 'in')
 }
 
-p <- ggplot(df, aes(pixels, error, fill=method)) +
+p <- ggplot(df, aes(pixels, RMSE, fill=method)) +
   geom_boxplot(outlier.shape = NA) +
   scale_fill_brewer(palette = 'Dark2') +
   coord_cartesian(ylim=c(lower, upper)) +
+  xlab("# of points computed") +
   theme(legend.justification=c(1,1),
         legend.position=c(1,1),
         text = element_text(size = 25))
@@ -318,7 +324,98 @@ p
 if (output.error.plot) {
   dev.off()
 }
- 
-if (save.plot.data) {
-  save(df, file = 'error_plot.rdata')
+
+# ------------------------------------------------------
+# B. speedup plot
+
+# get average of data
+num.powers <- 20
+RMSE.sample.size <- 40
+xticks.to.show <- 5
+selected.ticks <- round(seq(from = 1, to = RMSE.sample.size,
+                            length.out = xticks.to.show), digits = 0)
+selected.ticks <- unique(selected.ticks)
+mat.speedup <- matrix(NA, nrow = repetition, ncol = RMSE.sample.size)
+for (it in 1:repetition) {
+  RMSE.rnd <- mat.errors.rnd[it, ]
+  RMSE.tri <- mat.errors.tri[it, ]
+  pixels   <- as.numeric(as.character(colnames(mat.errors.rnd)))
+  
+  powers <- seq(from = -1, to = -10, length.out = num.powers)
+  avg.resids <- sapply(powers, function(power, RMSE) {
+    RMSE.power <- RMSE^power
+    lm <- lm(pixels ~ RMSE.power)
+    return(mean(abs(resid(lm))))
+  }, RMSE = RMSE.rnd)
+  best.power.rnd <- powers[order(avg.resids)[1]]
+  RMSE.power <- RMSE.rnd^best.power.rnd
+  lm.rnd <- lm(pixels ~ RMSE.power)
+  print(paste("The best average residual for random is",
+              avg.resids[order(avg.resids)[1]]))
+  print(paste("The best power for random is", best.power.rnd))
+  
+  # find the best power function to fit
+  avg.resids <- sapply(powers, function(power, RMSE) {
+    RMSE.power <- RMSE^power
+    lm <- lm(pixels ~ RMSE.power)
+    return(mean(abs(resid(lm))))
+  }, RMSE = RMSE.tri)
+  best.power.tri <- powers[order(avg.resids)[1]]
+  RMSE.power <- RMSE.tri^best.power.tri
+  lm.tri <- lm(pixels ~ RMSE.power)
+  print(paste("The best average residual for adaptive is",
+              avg.resids[order(avg.resids)[1]]))
+  print(paste("The best power for adaptive is", best.power.tri))
+  
+  plot(RMSE.tri, predict(lm.tri), type = 'l')
+  points(RMSE.tri, pixels, pch = 19, cex = 0.5)
+  lines(RMSE.rnd, predict(lm.rnd), col = 'red')
+  points(RMSE.rnd, pixels, pch = 19, cex = 0.5, col = 'red')
+  legend("topright", legend = c("triangulation", "random"),
+         col = c('black', 'red'), lty = c('solid', 'solid'))
+  
+  RMSE.samples <- seq(max(c(range(RMSE.tri)[1], range(RMSE.rnd)[1])),
+                      min(c(range(RMSE.tri)[2], range(RMSE.rnd)[2])),
+                      length.out = RMSE.sample.size)
+  pixels.rnd <- predict(lm.rnd, newdata = data.frame(RMSE.power = RMSE.samples^best.power.rnd))
+  pixels.tri <- predict(lm.tri, newdata = data.frame(RMSE.power = RMSE.samples^best.power.tri))
+  dif <- pixels.rnd-pixels.tri
+  speedup <- dif/pixels.rnd
+  
+  df <- data.frame(RMSE = RMSE.samples, rate = speedup)
+  p <- ggplot(data = df, aes(x = RMSE, y = rate, group = 1)) +
+    geom_line() +
+    ylab('Speedup Rate') +
+    theme(legend.justification=c(1,1),
+          legend.position=c(1,1),
+          text = element_text(size = 20))
+  plot(p)
+  
+  mat.speedup[it, ] <- speedup
+}
+
+if (output.speedup.plot) {
+  pdf('EX_PSU_speedup.pdf', width = 10, height = 8)
+}
+
+df <- data.frame(mat.speedup)
+RMSE.samples <- round(RMSE.samples, digits = 2)
+colnames(df) <- RMSE.samples
+df <- melt(df)
+colnames(df) <- c("RMSE", "rate")
+p <- ggplot(df, aes(x = RMSE, y = rate)) +
+  geom_boxplot(outlier.shape = NA) +
+  ylab('Speedup Rate') +
+  scale_x_discrete(breaks = RMSE.samples[selected.ticks]) +
+  theme(legend.justification=c(1,1),
+        legend.position=c(1,1),
+        text = element_text(size = 20),
+        plot.margin = unit(c(.3,.5,.5,.3), "cm"))
+p
+
+# plot(error.samples, dif, type = 'l')
+# plot(error.samples, speedup, type = 'l')
+
+if (output.speedup.plot) {
+  dev.off()
 }
