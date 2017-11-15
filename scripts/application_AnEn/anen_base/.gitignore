@@ -4,6 +4,9 @@
 *.swp
 rp*
 *RData
+*rdata
+*rData
+*Rdata
 *Rhistory
 *Rproj
 pixels_next_iteration.txt

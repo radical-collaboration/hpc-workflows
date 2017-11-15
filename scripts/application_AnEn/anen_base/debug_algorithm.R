@@ -3,7 +3,6 @@ library(raster)
 library(deldir)
 library(spatstat)
 library(maptools)
-library(prodlim)
 library(RAnEnExtra)
 library(ggplot2)
 library(reshape2)
@@ -19,15 +18,17 @@ values(rast.obs) <- values(rast.obs) - 273.15
 
 size <- 30
 pts.edge <- 5
-pts.growth <- 20
-iterations <- 20
+pts.growth <- 50
+iterations <- 50
 repetition <- 10
 
 plot.results <- F
-save.plot.data <- F
-output.speedup.plot <- T
+save.plot.data <- T
 output.error.plot <- T
-output.triangle.plot <- T
+output.speedup.plot <- T
+output.triangle.plot <- F
+
+x.ticks.display.limit <- 10
 
 
 
@@ -311,14 +312,22 @@ if (output.error.plot) {
       res = 100, units = 'in')
 }
 
+x.ticks <- unique(as.numeric(as.character(df$pixels)))
+if (length(original.x.ticks) > x.ticks.display.limit) {
+  x.ticks <- x.ticks[floor(seq(from = 1, to = length(x.ticks),
+                               length.out = x.ticks.display.limit))]
+}
+
 p <- ggplot(df, aes(pixels, RMSE, fill=method)) +
   geom_boxplot(outlier.shape = NA) +
   scale_fill_brewer(palette = 'Dark2') +
+  scale_x_discrete(name = '# of points computed',
+                   breaks = x.ticks) +
   coord_cartesian(ylim=c(lower, upper)) +
-  xlab("# of points computed") +
   theme(legend.justification=c(1,1),
         legend.position=c(1,1),
-        text = element_text(size = 25))
+        text = element_text(size = 25),
+        plot.margin = margin(.5,.8,0,.1, 'cm'))
 p
 
 if (output.error.plot) {
@@ -400,11 +409,23 @@ if (output.speedup.plot) {
 
 df <- data.frame(mat.speedup)
 RMSE.samples <- round(RMSE.samples, digits = 2)
-colnames(df) <- RMSE.samples
+colnames(df) <- as.factor(RMSE.samples)
 df <- melt(df)
 colnames(df) <- c("RMSE", "rate")
+
+# remove outliers
+# outliers are data that don't lie within the range
+# (Q1 - 1.5IQR, Q3 + 1.5IQR)
+#
+Q1 <- quantile(df$rate)[2]
+Q3 <- quantile(df$rate)[4]
+IQR <- Q3 - Q1
+bound.lower <- Q1 - 1.5 * IQR
+bound.upper <- Q3 + 1.5 * IQR
+df <- df[which((df$rate > bound.lower) & (df$rate < bound.upper)),]
+
 p <- ggplot(df, aes(x = RMSE, y = rate)) +
-  geom_boxplot(outlier.shape = NA) +
+  geom_boxplot(outlier.shape = NA, na.rm = T) +
   ylab('Speedup Rate') +
   scale_x_discrete(breaks = RMSE.samples[selected.ticks]) +
   theme(legend.justification=c(1,1),
