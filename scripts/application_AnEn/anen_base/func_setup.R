@@ -67,7 +67,7 @@ initial_config <- function (user = 'Weiming', debug = 0) {
     grids.total <- xgrids.total*ygrids.total
 
     # how many random points to start with
-    init.num.pixels.compute <- 30
+    init.num.pixels.compute <- 100
 
     # how many extra points should be selected on edges
     num.edge.points <- 5
@@ -77,7 +77,7 @@ initial_config <- function (user = 'Weiming', debug = 0) {
     ycuts <- seq(from = 1, to = ygrids.total, by = yinterval)
 
     # AnEn computation parameters
-    quick <- F
+    quick <- T
     cores <- 8
     rolling <- 0
     observation.ID <- 0
@@ -123,7 +123,7 @@ initial_config <- function (user = 'Weiming', debug = 0) {
 
     # parameters for evaluation method #3
     # number of individuals in each tournament
-    tournament.size <- 80
+    tournament.size <- 20
 
     # number of champions from each tournament
     num.champions <- 1
@@ -134,7 +134,7 @@ initial_config <- function (user = 'Weiming', debug = 0) {
     num.error.pixels <- 1
 
     # sample size for tournament selection
-    num.triangles.from.tournament <- 20
+    num.triangles.from.tournament <- 50
     
     # whether to only evaluate the triangle center
     triangle.center <- 1
