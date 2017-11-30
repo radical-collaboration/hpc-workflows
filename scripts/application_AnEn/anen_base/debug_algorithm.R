@@ -23,9 +23,9 @@ iterations <- 50
 repetition <- 10
 
 plot.results <- F
-save.plot.data <- T
-output.error.plot <- T
-output.speedup.plot <- T
+save.plot.data <- F
+output.error.plot <- F
+output.speedup.plot <- F
 output.triangle.plot <- F
 
 x.ticks.display.limit <- 10
@@ -299,21 +299,23 @@ method <- c(rep('random method', repetition),
 df<-melt(cbind(df, method), id = 'method')
 colnames(df) <- c('method', 'pixels', 'RMSE')
 
+
 if (save.plot.data) {
   save(df, file = 'error_plot.rdata')
 }
 
-range <- range(rbind(mat.errors.rnd, mat.errors.tri))
+#range <- range(rbind(mat.errors.rnd, mat.errors.tri))
+range <- range(df$RMSE)
 lower <- range[1] - 0.3
 upper <- range[2] + 0.3
 
 if (output.error.plot) {
-  png('EX_PSU_errors.png', width = 11, height = 8,
-      res = 100, units = 'in')
+  png('EX_PSU_errors.png', width = 14, height = 8,
+      res = 200, units = 'in')
 }
 
 x.ticks <- unique(as.numeric(as.character(df$pixels)))
-if (length(original.x.ticks) > x.ticks.display.limit) {
+if (length(x.ticks) > x.ticks.display.limit) {
   x.ticks <- x.ticks[floor(seq(from = 1, to = length(x.ticks),
                                length.out = x.ticks.display.limit))]
 }
@@ -376,15 +378,19 @@ for (it in 1:repetition) {
               avg.resids[order(avg.resids)[1]]))
   print(paste("The best power for adaptive is", best.power.tri))
   
-  plot(RMSE.tri, predict(lm.tri), type = 'l')
-  points(RMSE.tri, pixels, pch = 19, cex = 0.5)
-  lines(RMSE.rnd, predict(lm.rnd), col = 'red')
-  points(RMSE.rnd, pixels, pch = 19, cex = 0.5, col = 'red')
-  legend("topright", legend = c("triangulation", "random"),
-         col = c('black', 'red'), lty = c('solid', 'solid'))
+  if (plot.regression) {
+    plot(RMSE.tri, predict(lm.tri), type = 'l')
+    points(RMSE.tri, pixels, pch = 19, cex = 0.5)
+    lines(RMSE.rnd, predict(lm.rnd), col = 'red')
+    points(RMSE.rnd, pixels, pch = 19, cex = 0.5, col = 'red')
+    legend("topright", legend = c("triangulation", "random"),
+           col = c('black', 'red'), lty = c('solid', 'solid'))
+    if (readline() == 'q') {stop('Stop the execution!')}
+  }
   
   RMSE.samples <- seq(max(c(range(RMSE.tri)[1], range(RMSE.rnd)[1])),
-                      min(c(range(RMSE.tri)[2], range(RMSE.rnd)[2])),
+  #                    min(c(range(RMSE.tri)[2], range(RMSE.rnd)[2])),
+                      5,
                       length.out = RMSE.sample.size)
   pixels.rnd <- predict(lm.rnd, newdata = data.frame(RMSE.power = RMSE.samples^best.power.rnd))
   pixels.tri <- predict(lm.tri, newdata = data.frame(RMSE.power = RMSE.samples^best.power.tri))
@@ -392,21 +398,24 @@ for (it in 1:repetition) {
   speedup <- dif/pixels.rnd
   
   df <- data.frame(RMSE = RMSE.samples, rate = speedup)
-  p <- ggplot(data = df, aes(x = RMSE, y = rate, group = 1)) +
-    geom_line() +
-    ylab('Speedup Rate') +
-    theme(legend.justification=c(1,1),
-          legend.position=c(1,1),
-          text = element_text(size = 20))
-  plot(p)
   
+  if (plot.regression) {
+    p <- ggplot(data = df, aes(x = RMSE, y = rate, group = 1)) +
+      geom_line() +
+      ylab('Speedup Rate') +
+      theme(legend.justification=c(1,1),
+            legend.position=c(1,1),
+            text = element_text(size = 20))
+    plot(p)
+    if (readline() == 'q') {stop('Stop the execution!')}
+  }
   mat.speedup[it, ] <- speedup
 }
 
 if (output.speedup.plot) {
   pdf('EX_PSU_speedup.pdf', width = 10, height = 8)
-}
 
+}
 df <- data.frame(mat.speedup)
 RMSE.samples <- round(RMSE.samples, digits = 2)
 colnames(df) <- as.factor(RMSE.samples)
