@@ -19,14 +19,16 @@ values(rast.obs) <- values(rast.obs) - 273.15
 size <- 30
 pts.edge <- 5
 pts.growth <- 50
-iterations <- 50
-repetition <- 10
+iterations <- 20
+repetition <- 1
 
-plot.results <- F
+plot.results <- T
 save.plot.data <- F
 output.error.plot <- F
 output.speedup.plot <- F
 output.triangle.plot <- F
+
+grey.scale <- T
 
 x.ticks.display.limit <- 10
 
@@ -158,7 +160,12 @@ for (it in 1:repetition) {
                       xmn = 0.5, xmx = ncol(rast.obs) + .5,
                       ymn = 0.5, ymx = nrow(rast.obs) + .5)
   
-  plot(rast.obs, col = brewer.pal(11, 'Spectral')[11:1])
+  if (grey.scale) {
+    plot(rast.obs, col = brewer.pal(9, 'Greys')[9:1])
+  } else {
+    plot(rast.obs, col = brewer.pal(11, 'Spectral')[11:1])
+  }
+  
   pop.spdf.init           <- generate.inital.population( rast.obs, size, pts.edge )
   
   pop.spdf <- pop.spdf.init
@@ -172,13 +179,20 @@ for (it in 1:repetition) {
       file <- paste('adaptive_it', str_pad(i, 4, pad = '0'),
                     '_rep', str_pad(it, 4, pad = '0'), '.png', sep = '')
       png(file, width = 10, height = 8, res = 100, units = 'in')
-      plot(rast.obs, col = brewer.pal(11, 'Spectral')[11:1])
+      if (grey.scale) {
+        plot(rast.obs, col = brewer.pal(9, 'Greys')[9:1])
+      } else {
+        plot(rast.obs, col = brewer.pal(11, 'Spectral')[11:1])
+      }
     }
     
     triangles.spdf     <- triangulate(pop.spdf, rast.obs)
     
     if (plot.results) {
-      plot(triangles.spdf,add=T,border='black', lwd = 0.5)
+      if (grey.scale) 
+        plot(triangles.spdf,add=T,border='yellow', lwd = 0.3)
+      else 
+        plot(triangles.spdf,add=T,border='black', lwd = 0.5)
     }
     
     
