@@ -9,11 +9,20 @@ library(reshape2)
 library(RColorBrewer)
 library(stringr)
 
+addalpha <- function(colors, alpha=1.0) {
+  r <- col2rgb(colors, alpha=T)
+  # Apply alpha
+  r[4,] <- alpha*255
+  r <- r/255.0
+  return(rgb(r[1,], r[2,], r[3,], r[4,]))
+}
+
 
 #file.raster.obs <- '~/Desktop/results_new_evaluation_6/obs_raster/time1_flt1.rdata'
 file.raster.obs <- '~/geolab_storage_V2/data/Analogs/NAM_analysis_raster/time1_flt1.rdata'
 load(file.raster.obs)
 values(rast.obs) <- values(rast.obs) - 273.15
+
 
 
 size <- 30
@@ -28,7 +37,12 @@ output.error.plot <- F
 output.speedup.plot <- F
 output.triangle.plot <- F
 
-grey.scale <- T
+transparent.plot <- T
+# gradient.col <- c('#ffffcc', '#ffeda0', '#fed976', '#feb24c', '#fd8d3c',
+#                   '#fc4e2a', '#e31a1c', '#bd0026', '#800026')
+
+gradient.col <- brewer.pal(11, 'Spectral')[11:1]
+alpha <- .6
 
 x.ticks.display.limit <- 10
 
@@ -160,8 +174,8 @@ for (it in 1:repetition) {
                       xmn = 0.5, xmx = ncol(rast.obs) + .5,
                       ymn = 0.5, ymx = nrow(rast.obs) + .5)
   
-  if (grey.scale) {
-    plot(rast.obs, col = brewer.pal(9, 'Greys')[9:1])
+  if (transparent.plot) {
+    plot(rast.obs, col = addalpha(col = gradient.col, alpha))
   } else {
     plot(rast.obs, col = brewer.pal(11, 'Spectral')[11:1])
   }
@@ -179,8 +193,8 @@ for (it in 1:repetition) {
       file <- paste('adaptive_it', str_pad(i, 4, pad = '0'),
                     '_rep', str_pad(it, 4, pad = '0'), '.png', sep = '')
       png(file, width = 10, height = 8, res = 100, units = 'in')
-      if (grey.scale) {
-        plot(rast.obs, col = brewer.pal(9, 'Greys')[9:1])
+      if (transparent.plot) {
+        plot(rast.obs, col = addalpha(col = gradient.col, alpha))
       } else {
         plot(rast.obs, col = brewer.pal(11, 'Spectral')[11:1])
       }
@@ -189,10 +203,7 @@ for (it in 1:repetition) {
     triangles.spdf     <- triangulate(pop.spdf, rast.obs)
     
     if (plot.results) {
-      if (grey.scale) 
-        plot(triangles.spdf,add=T,border='yellow', lwd = 0.3)
-      else 
-        plot(triangles.spdf,add=T,border='black', lwd = 0.5)
+      plot(triangles.spdf,add=T,border='black', lwd = 0.5)
     }
     
     
@@ -241,7 +252,13 @@ for (it in 1:repetition) {
   overall.e.rnd  <- rep(NA, length(nums.rnd.pts))
   
   if (plot.results) {
-    plot(rast.obs, col = brewer.pal(11, 'Spectral')[11:1])
+    
+    if (transparent.plot) {
+      plot(rast.obs, col = addalpha(col = gradient.col, alpha))
+    } else {
+      plot(rast.obs, col = brewer.pal(11, 'Spectral')[11:1])
+    }
+    
     plot(pop.spdf,add=T,pch=19, col = 'green', cex = 0.5)
   }
   
@@ -252,7 +269,13 @@ for (it in 1:repetition) {
       file <- paste('random_it', str_pad(i, 4, pad = '0'),
                     '_rep', str_pad(it, 4, pad = '0'), '.png', sep = '')
       png(file, width = 10, height = 8, res = 100, units = 'in')
-      plot(rast.obs, col = brewer.pal(11, 'Spectral')[11:1])
+      
+      if (transparent.plot) {
+        plot(rast.obs, col = addalpha(col = gradient.col, alpha))
+      } else {
+        plot(rast.obs, col = brewer.pal(11, 'Spectral')[11:1])
+      }
+      
     }
     
     if (plot.results) {
