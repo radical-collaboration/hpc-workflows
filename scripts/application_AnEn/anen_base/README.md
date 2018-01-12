@@ -6,7 +6,8 @@
 
 - **figures/** contains figures.
 - **anen_base.Rproj**
-- **debug_algorithm.R** has the main codes for developing and testing the adaptive algorithm.
+- **debug_algorithm.R** has the main codes for developing and testing the adaptive algorithm without the AnEn method. Values are not calculated from the AnEn method; they are taking directly from observations instead. Consider this as a idealistic case.
+- **debug_algorithm_with_AnEn.R** has the main codes for developing and testing the adaptive algorithm with the AnEn method.
 - **debug_func_define_pixels.R** is a script to debug the function "func_define_pixels.R".
 - **debug_func_define_pixels_in_loops.R** is a script to debug the function "func_define_pixels.R" in iterations.
 - **error_plot.rdata** stores the errors calculated in the script "debug_algorithm.R".
