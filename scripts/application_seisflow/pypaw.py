@@ -1,4 +1,4 @@
-from radical.entk import Pipeline, Stage, Task, AppManager, ResourceManager
+from radical.entk import Pipeline, Stage, Task, AppManager
 
 NUM_SIMS = 3
 
@@ -279,17 +279,12 @@ if __name__ == '__main__':
 
     try:
 
-        # Create a Resource Manager using the above description
-        rman = ResourceManager(res_dict)
-
         # Create an Application Manager for our application
         appman = AppManager()
-
-        # Assign the resource manager to be used by the application manager
-        appman.resource_manager = rman
+        appman.resource_desc = res_dict
 
         # Assign the workflow to be executed by the application manager
-        appman.assign_workflow(set([p]))
+        appman.workflow = set([p])
 
         # Run the application manager -- blocking call
         appman.run()        
