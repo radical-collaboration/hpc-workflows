@@ -15,14 +15,42 @@ pip install radical.ensemblemd radical.entk
 deactivate
 ```
 
-RabitMQ has been installed using docker.
+RabbitMQ has been installed using docker.
 
 ```
 # Print the local available containers
 docker ps
 
-# Run the RabitMQ container
-docker run -d --name rabitmq -P rabbitmq:3
+# Run the RabbitMQ container
+docker run -d --name rabbitmq -P rabbitmq:3
+```
+
+Because setting up RabbitMQ on Cheyenne can be hussle. I directly used Vivek's service.
+
+```
+AppManager(hostname='two.radical-project.org', port=33239)
+```
+
+I also need MongoDB, which I set up on Mlab.
+
+```
+export RADICAL_PILOT_DBURL='mongo url'
+```
+
+
+To use EnTK on Cheyenne, I need to checkout the specific branch with Cheyenne features.
+
+```
+git clone https://github.com/radical-cybertools/radical.pilot
+cd radical.pilot/
+git checkout feature/cheyenne
+pip install . --upgrade
+cd ..
+
+git clone https://github.com/radical-cybertools/saga-python
+cd saga-python/
+git checkout feature/cheyenne
+pip install . --upgrade
 ```
 
 

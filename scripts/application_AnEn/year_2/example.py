@@ -91,19 +91,20 @@ if __name__ == '__main__':
     # resource is 'local.localhost' to execute locally
     res_dict = {
 
-            'resource': 'xsede.supermic',
+            'resource': 'ncar.cheyenne',
             'walltime': ((duration*(MAX_STAGES+1))/60) + 20,
             'cores': 17*20,
-            'project': 'TG-MCB090174',
-            'access_schema': 'gsissh',
-            'queue': 'hybrid'
+            #'project': 'TG-MCB090174', # account from Cheyenne
+            #'access_schema': 'gsissh',
+            #'queue': 'hybrid' # which queue do I submit to (doc)
     }
 
     # Create Resource Manager object with the above resource description
     rman = ResourceManager(res_dict)
 
     # Create Application Manager
-    appman = AppManager(port=33076)
+    #appman = AppManager(port=33076)
+    appman = AppManager(hostname='two.radical-project.org', port=33239)
 
     # Assign resource manager to the Application Manager
     appman.resource_manager = rman
