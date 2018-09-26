@@ -53,6 +53,12 @@ git checkout feature/cheyenne
 pip install . --upgrade
 ```
 
+MongoDB needs to be set up. The following setting should be in environment variables.
+
+```
+export RADICAL_PILOT_DBURL="mongodb://<dbuser>:<dbpassword>@ds058579.mlab.com:58579/wuh20"
+```
+
 
 ## Old Notes
 
