@@ -6,6 +6,13 @@ import os
 if os.environ.get('RADICAL_ENTK_VERBOSE') == None:
     os.environ['RADICAL_ENTK_REPORT'] = 'True'
 
+res_dict = {
+        'resource': 'xsede.supermic',
+        'walltime': 5,
+        'cpus': 5,
+        'project': 'TG-MCB090174',
+        'schema': 'gsissh'}
+
 if __name__ == "__main__":
 
     # Create a Pipeline object
@@ -19,18 +26,11 @@ if __name__ == "__main__":
     t.name = 'test-task'
     t.executable = ['~/github/AnalogsEnsemble/output/bin/similarityCalculator']
 
-    s.add_task(t)
+    s.add_tasks(t)
     p.add_stages(s)
 
     # Create Application manager
-    appman = AppManager()
-
-    res_dict = {
-            'resource': 'local.localhost',
-            'walltime': 10,
-            'project': 'wuh20',
-            'cpus': 1
-            }
+    appman = AppManager(hostname='two.radical-project.org', port=33239)
 
     appman.resource_desc = res_dict
 
