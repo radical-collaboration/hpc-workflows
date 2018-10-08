@@ -59,6 +59,31 @@ MongoDB needs to be set up. The following setting should be in environment varia
 export RADICAL_PILOT_DBURL="mongodb://<dbuser>:<dbpassword>@ds058579.mlab.com:58579/wuh20"
 ```
 
+## Setting up Open-SSh on Ubuntu Bionic
+
+To have Open-SSh set up, we need the following dependency:
+
+- Globus Toolkit
+- myproxy
+- gloxbus-proxy-utils
+- globux-simple-ca
+- gsi-openssh-clients
+
+First, install the latests Globus Toolkit from [Globus Toolkit website](http://toolkit.globus.org/toolkit/downloads/latest-stable/). By doing this, you should see the additional repostiory file from `Globus` added into the folder `/etc/apt/sources.list.d`.
+
+Then install the other dependencies.
+
+```
+sudo apt-get update
+sudo apt-get install myproxy myproxy-server myproxy-admin
+sudo apt-get install globus-proxy-utils globus-simple-ca
+sudo apt-get install gsi-openssh-clients
+```
+
+[reference](https://github.com/vivek-bala/docs/blob/master/misc/gsissh_setup_stampede_ubuntu_xenial.sh)
+
+By now, you should have `gsissh` ready.
+
 
 ## Old Notes
 
