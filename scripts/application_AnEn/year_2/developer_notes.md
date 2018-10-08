@@ -84,6 +84,31 @@ sudo apt-get install gsi-openssh-clients
 
 By now, you should have `gsissh` ready.
 
+To set up `gsissh` access to XSEDE supercomputers, we need to prepare certificates locally.
+
+```
+# Create a folder to store the certificates.
+mkdir ~/.globus
+cd ~/.globus
+wget https://software.xsede.org/security/xsede-certs.tar.gz
+tar xvf xsede-certs.tar.gz
+rm xsede-certs.tar.gz
+
+# Generate certificate locally
+myproxy-logon -s myproxy.xsede.org -l <username>
+```
+
+By now you should have passwordless access to supercomputers. Try the following command to test it:
+
+```
+# gsissh should be connected using the port 2222.
+# Let's try to connect to stampede2. You should not be asked for password.
+#
+gsissh -p 2222 stampede2.tacc.xsede.org
+```
+
+**gsissh to Comet and SuperMIC is not working.**
+
 
 ## Old Notes
 
