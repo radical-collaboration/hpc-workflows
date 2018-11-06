@@ -7,8 +7,8 @@ if os.environ.get('RADICAL_ENTK_VERBOSE') == None:
     os.environ['RADICAL_ENTK_REPORT'] = 'True'
 
 res_dict = {
-        #'resource': 'xsede.wrangler',
-        'resource': 'xsede.stampede',
+        'resource': 'xsede.wrangler',
+        #'resource': 'xsede.stampede',
         'walltime': 5,
         'cpus': 5,
         'project': 'TG-MCB090174',
