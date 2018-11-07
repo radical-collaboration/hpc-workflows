@@ -2,20 +2,18 @@
 
 echo "Profile AnEn"
 
-declare -a arr=("element1" "element2" "element3")
+rm analogs.nc || true
+rm log* || true
 
-for i in {1..10}
-exit 0
+for r in {1..5}
+do
+    echo "Repetition #$r"
+    rm log_rep-$r.txt || true
 
-rm log.txt || true
-rm analogs.nc || true
-OMP_NUM_THREADS=1 analogGenerator --config config.cfg >> log.txt
-rm analogs.nc || true
-OMP_NUM_THREADS=2 analogGenerator --config config.cfg >> log.txt
-rm analogs.nc || true
-OMP_NUM_THREADS=4 analogGenerator --config config.cfg >> log.txt
-rm analogs.nc || true
-OMP_NUM_THREADS=8 analogGenerator --config config.cfg >> log.txt
-rm analogs.nc || true
-OMP_NUM_THREADS=16 analogGenerator --config config.cfg >> log.txt
-rm analogs.nc || true
+    for ((i=1; i <= 16 ; i=i*2))
+    do
+        echo "Profiling with $i threads ..." 
+        OMP_NUM_THREADS=$i analogGenerator --config config.cfg >> log_rep-$r.txt
+        rm analogs.nc || true
+    done
+done
