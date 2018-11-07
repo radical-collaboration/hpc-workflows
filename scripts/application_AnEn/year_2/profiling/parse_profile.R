@@ -14,14 +14,22 @@ profile <- list()
 profile$cpu <- list()
 profile$wall <- list()
 for (name in names(profile)) {
-  profile[[name]]$total <- matrix(NA, nrow = num.repetition, ncol = length(num.cores))
-  profile[[name]]$read <- matrix(NA, nrow = num.repetition, ncol = length(num.cores))
-  profile[[name]]$compute <- matrix(NA, nrow = num.repetition, ncol = length(num.cores))
-  profile[[name]]$sd <- matrix(NA, nrow = num.repetition, ncol = length(num.cores))
-  profile[[name]]$map <- matrix(NA, nrow = num.repetition, ncol = length(num.cores))
-  profile[[name]]$sim <- matrix(NA, nrow = num.repetition, ncol = length(num.cores))
-  profile[[name]]$select <- matrix(NA, nrow = num.repetition, ncol = length(num.cores))
-  profile[[name]]$write <- matrix(NA, nrow = num.repetition, ncol = length(num.cores))
+  profile[[name]]$total <- matrix(NA, nrow = num.repetition, ncol = length(num.cores),
+                                  dimnames = list(NULL, num.cores))
+  profile[[name]]$read <- matrix(NA, nrow = num.repetition, ncol = length(num.cores),
+                                 dimnames = list(NULL, num.cores))
+  profile[[name]]$compute <- matrix(NA, nrow = num.repetition, ncol = length(num.cores),
+                                    dimnames = list(NULL, num.cores))
+  profile[[name]]$sd <- matrix(NA, nrow = num.repetition, ncol = length(num.cores),
+                               dimnames = list(NULL, num.cores))
+  profile[[name]]$map <- matrix(NA, nrow = num.repetition, ncol = length(num.cores),
+                                dimnames = list(NULL, num.cores))
+  profile[[name]]$sim <- matrix(NA, nrow = num.repetition, ncol = length(num.cores),
+                                dimnames = list(NULL, num.cores))
+  profile[[name]]$select <- matrix(NA, nrow = num.repetition, ncol = length(num.cores),
+                                   dimnames = list(NULL, num.cores))
+  profile[[name]]$write <- matrix(NA, nrow = num.repetition, ncol = length(num.cores),
+                                  dimnames = list(NULL, num.cores))
 }
 
 # Read profiling results from log files
