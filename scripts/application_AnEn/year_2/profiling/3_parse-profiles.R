@@ -7,34 +7,34 @@ setwd('~/github/hpc-workflows/scripts/application_AnEn/year_2/profiling')
 num.cores <- c(1, 2, 4, 8, 16)
 
 # Define the number of repetition
-num.repetition <- 5
+search.sizes <- seq(100, 1000, by = 100)
 
 # Initialize a list to store all the profiling results
 profile <- list()
 profile$cpu <- list()
 profile$wall <- list()
 for (name in names(profile)) {
-  profile[[name]]$total <- matrix(NA, nrow = num.repetition, ncol = length(num.cores),
-                                  dimnames = list(NULL, num.cores))
-  profile[[name]]$read <- matrix(NA, nrow = num.repetition, ncol = length(num.cores),
-                                 dimnames = list(NULL, num.cores))
-  profile[[name]]$compute <- matrix(NA, nrow = num.repetition, ncol = length(num.cores),
-                                    dimnames = list(NULL, num.cores))
-  profile[[name]]$sd <- matrix(NA, nrow = num.repetition, ncol = length(num.cores),
-                               dimnames = list(NULL, num.cores))
-  profile[[name]]$map <- matrix(NA, nrow = num.repetition, ncol = length(num.cores),
-                                dimnames = list(NULL, num.cores))
-  profile[[name]]$sim <- matrix(NA, nrow = num.repetition, ncol = length(num.cores),
-                                dimnames = list(NULL, num.cores))
-  profile[[name]]$select <- matrix(NA, nrow = num.repetition, ncol = length(num.cores),
-                                   dimnames = list(NULL, num.cores))
-  profile[[name]]$write <- matrix(NA, nrow = num.repetition, ncol = length(num.cores),
-                                  dimnames = list(NULL, num.cores))
+  profile[[name]]$total <- matrix(NA, nrow = length(search.sizes), ncol = length(num.cores),
+                                  dimnames = list(search.sizes, num.cores))
+  profile[[name]]$read <- matrix(NA, nrow = length(search.sizes), ncol = length(num.cores),
+                                 dimnames = list(search.sizes, num.cores))
+  profile[[name]]$compute <- matrix(NA, nrow = length(search.sizes), ncol = length(num.cores),
+                                    dimnames = list(search.sizes, num.cores))
+  profile[[name]]$sd <- matrix(NA, nrow = length(search.sizes), ncol = length(num.cores),
+                               dimnames = list(search.sizes, num.cores))
+  profile[[name]]$map <- matrix(NA, nrow = length(search.sizes), ncol = length(num.cores),
+                                dimnames = list(search.sizes, num.cores))
+  profile[[name]]$sim <- matrix(NA, nrow = length(search.sizes), ncol = length(num.cores),
+                                dimnames = list(search.sizes, num.cores))
+  profile[[name]]$select <- matrix(NA, nrow = length(search.sizes), ncol = length(num.cores),
+                                   dimnames = list(search.sizes, num.cores))
+  profile[[name]]$write <- matrix(NA, nrow = length(search.sizes), ncol = length(num.cores),
+                                  dimnames = list(search.sizes, num.cores))
 }
 
 # Read profiling results from log files
-for (i.rep in 1:num.repetition) {
-  file <- paste('log_rep-', i.rep, '.txt', sep = '')
+for (i.search.size in 1:length(search.sizes)) {
+  file <- paste('log_rep-', search.sizes[i.search.size], '.txt', sep = '')
   stopifnot(file.exists(file))
   
   lines <- readLines(file)
@@ -45,23 +45,23 @@ for (i.rep in 1:num.repetition) {
   stopifnot(length(num.cores) * 22 == length(lines))
   
   for (i.chunk in 1:length(num.cores)) {
-    profile$cpu$total[i.rep, i.chunk] <- as.numeric(gsub("Total time: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 3]))
-    profile$cpu$read[i.rep, i.chunk] <- as.numeric(gsub("Reading data: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 4]))
-    profile$cpu$compute[i.rep, i.chunk] <- as.numeric(gsub("Computation: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 5]))
-    profile$cpu$sd[i.rep, i.chunk] <- as.numeric(gsub(" -- SD: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 6]))
-    profile$cpu$map[i.rep, i.chunk] <- as.numeric(gsub(" -- Mapping: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 7]))
-    profile$cpu$sim[i.rep, i.chunk] <- as.numeric(gsub(" -- Similarity: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 8]))
-    profile$cpu$select[i.rep, i.chunk] <- as.numeric(gsub(" -- Selection: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 9]))
-    profile$cpu$write[i.rep, i.chunk] <- as.numeric(gsub("Writing data: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 10]))
+    profile$cpu$total[i.search.size, i.chunk] <- as.numeric(gsub("Total time: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 3]))
+    profile$cpu$read[i.search.size, i.chunk] <- as.numeric(gsub("Reading data: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 4]))
+    profile$cpu$compute[i.search.size, i.chunk] <- as.numeric(gsub("Computation: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 5]))
+    profile$cpu$sd[i.search.size, i.chunk] <- as.numeric(gsub(" -- SD: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 6]))
+    profile$cpu$map[i.search.size, i.chunk] <- as.numeric(gsub(" -- Mapping: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 7]))
+    profile$cpu$sim[i.search.size, i.chunk] <- as.numeric(gsub(" -- Similarity: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 8]))
+    profile$cpu$select[i.search.size, i.chunk] <- as.numeric(gsub(" -- Selection: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 9]))
+    profile$cpu$write[i.search.size, i.chunk] <- as.numeric(gsub("Writing data: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 10]))
     
-    profile$wall$total[i.rep, i.chunk] <- as.numeric(gsub("Total wall time: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 14]))
-    profile$wall$read[i.rep, i.chunk] <- as.numeric(gsub("Reading data: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 15]))
-    profile$wall$compute[i.rep, i.chunk] <- as.numeric(gsub("Computation: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 16]))
-    profile$wall$sd[i.rep, i.chunk] <- as.numeric(gsub(" -- SD: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 17]))
-    profile$wall$map[i.rep, i.chunk] <- as.numeric(gsub(" -- Mapping: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 18]))
-    profile$wall$sim[i.rep, i.chunk] <- as.numeric(gsub(" -- Similarity: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 19]))
-    profile$wall$select[i.rep, i.chunk] <- as.numeric(gsub(" -- Selection: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 20]))
-    profile$wall$write[i.rep, i.chunk] <- as.numeric(gsub("Writing data: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 21]))
+    profile$wall$total[i.search.size, i.chunk] <- as.numeric(gsub("Total wall time: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 14]))
+    profile$wall$read[i.search.size, i.chunk] <- as.numeric(gsub("Reading data: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 15]))
+    profile$wall$compute[i.search.size, i.chunk] <- as.numeric(gsub("Computation: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 16]))
+    profile$wall$sd[i.search.size, i.chunk] <- as.numeric(gsub(" -- SD: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 17]))
+    profile$wall$map[i.search.size, i.chunk] <- as.numeric(gsub(" -- Mapping: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 18]))
+    profile$wall$sim[i.search.size, i.chunk] <- as.numeric(gsub(" -- Similarity: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 19]))
+    profile$wall$select[i.search.size, i.chunk] <- as.numeric(gsub(" -- Selection: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 20]))
+    profile$wall$write[i.search.size, i.chunk] <- as.numeric(gsub("Writing data: (.+?) seconds.*?$", "\\1", lines[(i.chunk-1) * 22 + 21]))
   }
 }
 
@@ -73,6 +73,21 @@ library(RColorBrewer)
 
 # Define the name of the variable you want to plot
 plot.name <- names(profile$cpu)[1]
+cols <- colorRampPalette(brewer.pal(8, 'Dark2'))(length(search.sizes))
+lwd <- 1.5
+
+if (T) {
+  ylim <- range(unlist(profile))
+  plot(num.cores, num.cores, type = 'n', ylim = ylim,
+       xlab = '# of Cores', ylab = 'Time (s)')
+  
+  for (i.row in 1:nrow(profile$wall$total)) {
+    lines(num.cores, profile$wall$total[i.row, ],
+          col = cols[i.row], lwd = lwd)
+  }
+  
+  legend('right', legend = search.sizes, col = cols, lwd = lwd)
+}
 
 # Define the proportion being parallelized
 parallel.portion <- .90

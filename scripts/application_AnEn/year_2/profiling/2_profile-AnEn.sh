@@ -15,7 +15,7 @@ do
     for ((i=1; i <= 16 ; i=i*2))
     do
         echo "-- Profiling with $i threads ..." 
-        OMP_NUM_THREADS=$i analogGenerator --config config-profiling.cfg --test-start 0 0 109499 0 --test-count 10 1 1 1 --search-start 0 0 0 0 --search-count 10 1 $days 1
+        OMP_NUM_THREADS=$i analogGenerator --config config-profiling.cfg --test-start 0 0 109499 0 --test-count 10 1 1 1 --search-start 0 0 0 0 --search-count 10 1 $days 1 >> log_rep-$r.txt 
 
         rm analogs.nc || true
     done
