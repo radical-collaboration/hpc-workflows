@@ -5,14 +5,14 @@ echo "Profile AnEn ..."
 rm analogs.nc || true
 rm log* || true
 
-for ((r=10000; r <= 20000; r=r+10000))
+for ((r=10000; r <= 20000; r=r+5000))
 do
     echo "Using $r years of serach data ..."
     rm log_rep-$r.txt || true
 
     days=$(( r * 365 ))
 
-    for ((i=1; i <= 16 ; i=i*2))
+    for ((i=1; i <= 64 ; i=i*2))
     do
         echo "-- Profiling with $i threads ..." 
 

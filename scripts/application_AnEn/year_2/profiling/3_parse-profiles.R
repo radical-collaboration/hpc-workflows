@@ -4,10 +4,10 @@
 setwd('~/github/hpc-workflows/scripts/application_AnEn/year_2/profiling')
 
 # Define the number of cores used to carry out the profiling
-num.cores <- c(1, 2, 4, 8, 16)
+num.cores <- c(1, 2, 4, 8, 16, 32, 64)
 
 # Define the number of repetition
-search.sizes <- seq(100, 1000, by = 100)
+search.sizes <- seq(10000, 20000, by = 5000)
 
 # Initialize a list to store all the profiling results
 profile <- list()
@@ -72,26 +72,79 @@ for (i.search.size in 1:length(search.sizes)) {
 library(RColorBrewer)
 
 # Define the name of the variable you want to plot
-plot.name <- names(profile$wall)[3]
-cols <- colorRampPalette(brewer.pal(8, 'Dark2'))(length(search.sizes))
+plot.name <- names(profile$wall)[6]
 lwd <- 1.5
 
-if (T) {
-  ylim <- range(unlist(profile$wall[[plot.name]]))
-  plot(num.cores, num.cores, type = 'n', ylim = ylim,
-       xlab = '# of Cores', ylab = 'Time (s)', xaxt = 'n')
-  axis(1, at = num.cores, labels = num.cores)
+# Define the proportion being parallelized
+parallel.portion <- .80
+
+pdf('profile.pdf', width = 15, height = 6)
+
+for (plot.name in names(profile$cpu)) {
   
-  for (i.row in 1:nrow(profile$wall[[plot.name]])) {
-    lines(num.cores, profile$wall[[plot.name]][i.row, ],
-          col = cols[i.row], lwd = lwd)
+  par(mfrow = c(1, 3))
+  
+  if (T) {
+    # Core plot
+    cols <- colorRampPalette(brewer.pal(8, 'Dark2'))(length(search.sizes))
+    ylim <- range(unlist(profile$wall[[plot.name]]))
+    plot(num.cores, num.cores, type = 'n', ylim = ylim, main = plot.name, 
+         xlab = '# of Cores', ylab = 'Time (s)', xaxt = 'n')
+    axis(1, at = num.cores, labels = num.cores)
+    
+    for (i.row in 1:nrow(profile$wall[[plot.name]])) {
+      lines(num.cores, profile$wall[[plot.name]][i.row, ],
+            col = cols[i.row], lwd = lwd)
+    }
+    
+    legend('topright', legend = search.sizes, col = cols, lwd = lwd)
   }
   
-  legend('right', legend = search.sizes, col = cols, lwd = lwd)
+  if (T) {
+    # Search size plot
+    cols <- colorRampPalette(brewer.pal(8, 'Dark2'))(length(num.cores))
+    ylim <- range(unlist(profile$wall[[plot.name]]))
+    plot(search.sizes, search.sizes, type = 'n', ylim = ylim, main = plot.name,
+         xlab = 'Search Years', ylab = 'Time (s)', xaxt = 'n')
+    axis(1, at = search.sizes, labels = search.sizes)
+    
+    for (i.col in 1:ncol(profile$wall[[plot.name]])) {
+      lines(search.sizes, profile$wall[[plot.name]][, i.col],
+            col = cols[i.col], lwd = lwd)
+    }
+    
+    legend('topleft', legend = num.cores, col = cols, lwd = lwd)
+  }
+  
+  if (T) {
+    # Speed up plot
+    amdahl.x <- seq(min(num.cores), max(num.cores), length.out = 1000)
+    amdahl.y <- 1 / (1 - parallel.portion + parallel.portion / amdahl.x)
+    amdahl <- data.frame(x = amdahl.x, y = amdahl.y, type = 'Amdahl')
+    
+    mat <- profile$wall[[plot.name]]
+    mat <- mat[, 1] / mat
+
+    cols <- colorRampPalette(brewer.pal(8, 'Dark2'))(length(search.sizes))
+    ylim <- range(c(mat, amdahl.y))
+    plot(num.cores, num.cores, type = 'n', ylim = ylim,
+         main = "Comparison with 90% Parallelization",
+         xlab = '# of Cores', ylab = 'Speed Up', xaxt = 'n')
+    axis(1, at = num.cores, labels = num.cores)
+    
+    for (i.row in 1:nrow(mat)) {
+      lines(num.cores, mat[i.row, ],
+            col = cols[i.row], lwd = lwd)
+    }
+    
+    lines(amdahl.x, amdahl.y, lwd = lwd, col = 'red', lty = 'dotted')
+    
+    legend('topright', legend = search.sizes, col = cols, lwd = lwd)
+  }
 }
 
-# # Define the proportion being parallelized
-# parallel.portion <- .90
+dev.off()
+
 # 
 # pdf('profile.pdf', width = 15, height = 8)
 # for (plot.name in names(profile$cpu)) {
