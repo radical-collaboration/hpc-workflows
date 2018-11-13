@@ -65,73 +65,74 @@ for (i.search.size in 1:length(search.sizes)) {
   }
 }
 
-library(grid)
-library(ggplot2)
-library(reshape2)
-require(gridExtra)
+# library(grid)
+# library(ggplot2)
+# library(reshape2)
+# require(gridExtra)
 library(RColorBrewer)
 
 # Define the name of the variable you want to plot
-plot.name <- names(profile$cpu)[1]
+plot.name <- names(profile$wall)[3]
 cols <- colorRampPalette(brewer.pal(8, 'Dark2'))(length(search.sizes))
 lwd <- 1.5
 
 if (T) {
-  ylim <- range(unlist(profile))
+  ylim <- range(unlist(profile$wall[[plot.name]]))
   plot(num.cores, num.cores, type = 'n', ylim = ylim,
-       xlab = '# of Cores', ylab = 'Time (s)')
+       xlab = '# of Cores', ylab = 'Time (s)', xaxt = 'n')
+  axis(1, at = num.cores, labels = num.cores)
   
-  for (i.row in 1:nrow(profile$wall$total)) {
-    lines(num.cores, profile$wall$total[i.row, ],
+  for (i.row in 1:nrow(profile$wall[[plot.name]])) {
+    lines(num.cores, profile$wall[[plot.name]][i.row, ],
           col = cols[i.row], lwd = lwd)
   }
   
   legend('right', legend = search.sizes, col = cols, lwd = lwd)
 }
 
-# Define the proportion being parallelized
-parallel.portion <- .90
-
-pdf('profile.pdf', width = 15, height = 8)
-for (plot.name in names(profile$cpu)) {
-  if (T) {
-    melted.cpu <- cbind(melt(profile$cpu[[plot.name]]), 'cpu')[2:4]
-    melted.wall <- cbind(melt(profile$wall[[plot.name]]), 'wall')[2:4]
-    colnames(melted.cpu) <- colnames(melted.wall) <- c('num.cores', 'time', 'type')
-    
-    melted.all <- rbind(melted.cpu, melted.wall)
-    melted.all$type <- as.factor(melted.all$type)
-    melted.all$num.cores <- as.factor(melted.all$num.cores)
-    
-    g1 <- ggplot(melted.all, aes(y = time, x = num.cores)) + 
-      xlab('Number of Cores') + ylab('Time (s)') +
-      geom_boxplot(aes(fill = type), outlier.shape = NA) + 
-      theme(legend.position = 'top', text = element_text(size=18)) +
-      guides(color = guide_legend(title = "Time Type"))
-    
-    # Calculate the theoretical optimum
-    amdahl.x <- seq(min(num.cores), max(num.cores), length.out = 1000)
-    amdahl.y <- 1 / (1 - parallel.portion + parallel.portion / amdahl.x)
-    amdahl <- data.frame(x = amdahl.x, y = amdahl.y, type = 'Amdahl')
-    
-    real.speed.up <- profile$wall[[plot.name]][, 1] / profile$wall[[plot.name]]
-    real.speed.up.mean <- colMeans(real.speed.up)
-    real.speed.up.sd <- apply(real.speed.up, 2, sd)
-    
-    real <- data.frame(x = num.cores, y = real.speed.up.mean, type = 'Real')
-    
-    g2 <- ggplot(rbind(real, amdahl), aes(y = y, x = x, group = type)) + 
-      xlab('Number of Cores') + ylab('Speed Up') +
-      geom_line(aes(linetype = type, color = type), size = 1.2) +
-      geom_errorbar(data = data.frame(
-        x = num.cores, y = real.speed.up.mean,
-        sd = real.speed.up.sd, type = 'Real'),
-        aes(ymin = y - sd, ymax = y + sd), width = .2) +
-      theme(legend.position="top", text = element_text(size=18))
-    
-    grid.arrange(g1, g2, ncol=2, top = textGrob(
-      paste('Profiling for Routine', plot.name), gp = gpar(fontsize = 20,font = 3)))
-  }
-  
-}
-dev.off()
+# # Define the proportion being parallelized
+# parallel.portion <- .90
+# 
+# pdf('profile.pdf', width = 15, height = 8)
+# for (plot.name in names(profile$cpu)) {
+#   if (T) {
+#     melted.cpu <- cbind(melt(profile$cpu[[plot.name]]), 'cpu')[2:4]
+#     melted.wall <- cbind(melt(profile$wall[[plot.name]]), 'wall')[2:4]
+#     colnames(melted.cpu) <- colnames(melted.wall) <- c('num.cores', 'time', 'type')
+#     
+#     melted.all <- rbind(melted.cpu, melted.wall)
+#     melted.all$type <- as.factor(melted.all$type)
+#     melted.all$num.cores <- as.factor(melted.all$num.cores)
+#     
+#     g1 <- ggplot(melted.all, aes(y = time, x = num.cores)) + 
+#       xlab('Number of Cores') + ylab('Time (s)') +
+#       geom_boxplot(aes(fill = type), outlier.shape = NA) + 
+#       theme(legend.position = 'top', text = element_text(size=18)) +
+#       guides(color = guide_legend(title = "Time Type"))
+#     
+#     # Calculate the theoretical optimum
+#     amdahl.x <- seq(min(num.cores), max(num.cores), length.out = 1000)
+#     amdahl.y <- 1 / (1 - parallel.portion + parallel.portion / amdahl.x)
+#     amdahl <- data.frame(x = amdahl.x, y = amdahl.y, type = 'Amdahl')
+#     
+#     real.speed.up <- profile$wall[[plot.name]][, 1] / profile$wall[[plot.name]]
+#     real.speed.up.mean <- colMeans(real.speed.up)
+#     real.speed.up.sd <- apply(real.speed.up, 2, sd)
+#     
+#     real <- data.frame(x = num.cores, y = real.speed.up.mean, type = 'Real')
+#     
+#     g2 <- ggplot(rbind(real, amdahl), aes(y = y, x = x, group = type)) + 
+#       xlab('Number of Cores') + ylab('Speed Up') +
+#       geom_line(aes(linetype = type, color = type), size = 1.2) +
+#       geom_errorbar(data = data.frame(
+#         x = num.cores, y = real.speed.up.mean,
+#         sd = real.speed.up.sd, type = 'Real'),
+#         aes(ymin = y - sd, ymax = y + sd), width = .2) +
+#       theme(legend.position="top", text = element_text(size=18))
+#     
+#     grid.arrange(g1, g2, ncol=2, top = textGrob(
+#       paste('Profiling for Routine', plot.name), gp = gpar(fontsize = 20,font = 3)))
+#   }
+#   
+# }
+# dev.off()
