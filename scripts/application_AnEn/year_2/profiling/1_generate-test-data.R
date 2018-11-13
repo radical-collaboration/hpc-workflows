@@ -6,7 +6,7 @@ out.observations <- 'syn_observations.nc'
 
 num.parameters <- 10
 num.stations <- 1
-num.times.forecasts <- 1000 * 365
+num.times.forecasts <- 20000 * 365
 num.flts <- 1
 num.times.observations <- num.times.forecasts * num.flts
 
