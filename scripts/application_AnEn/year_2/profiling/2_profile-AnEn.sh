@@ -12,7 +12,7 @@ do
 
     days=$(( r * 365 ))
 
-    for ((i=1; i <= 64 ; i=i*2))
+    for ((i=1; i <= 16 ; i=i*2))
     do
         echo "-- Profiling with $i threads ..." 
 

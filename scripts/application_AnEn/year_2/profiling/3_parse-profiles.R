@@ -4,7 +4,7 @@
 setwd('~/github/hpc-workflows/scripts/application_AnEn/year_2/profiling')
 
 # Define the number of cores used to carry out the profiling
-num.cores <- c(1, 2, 4, 8, 16, 32, 64)
+num.cores <- c(1, 2, 4, 8, 16)
 
 # Define the number of repetition
 search.sizes <- seq(10000, 20000, by = 5000)
