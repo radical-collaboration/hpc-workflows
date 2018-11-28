@@ -154,7 +154,7 @@ for (j in 1:length(search.files)) {
     if (plot.to.file) {
       dev.off()
       # If you are using Ubuntu, you can use pdfunite to combine pdf files
-      # pdfunite `ls *.nc | sort -r` combined.pdf
+      # pdfunite *.pdf combined.pdf
     }
   }
 }
