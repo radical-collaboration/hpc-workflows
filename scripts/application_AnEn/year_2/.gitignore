@@ -3,4 +3,6 @@
 *.Rproj
 *.RData
 *.Rhistory
+*log.txt
 
+similarity-nc
