@@ -32,7 +32,7 @@ time.match.mode <- 1
 observation.id <- 0
 max.par.nan <- 0
 max.flt.nan <- 1
-verbose <- 2
+verbose <- 3
 nrow <- 428
 ncol <- 614
 
@@ -56,6 +56,7 @@ pattern <- paste("with-wind_(", paste(2016:2017, collapse = "|"), ")", sep = '')
 search.files <- list.files(path = forecasts.folder, full.names = T, pattern = pattern)
 search.files <- sort(search.files, decreasing = T)
 
+# Check whether the similarity folder is empty
 if (length(list.files(sim.folder)) != 0) {
   cat(paste("Similarity folder", sim.folder, "is not empty. \n Do you want to empty it? "))
   if (readline() %in% c("Y", "YES", "yes", "y")) {
@@ -68,6 +69,7 @@ if (length(list.files(sim.folder)) != 0) {
   cat("Similarity folder is empty. Carry on ...")
 }
 
+# Generate similarity metric for each search forecasts
 for (j in 1:length(search.files)) {
   search.file <- search.files[j]
   search.time <- gsub("^.*//with-wind_(\\d{6})\\.nc$", "\\1", search.file)

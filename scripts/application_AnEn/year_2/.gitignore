@@ -5,4 +5,5 @@
 *.Rhistory
 *log.txt
 
-similarity-nc
+sim
+sds
