@@ -56,17 +56,9 @@ pattern <- paste("with-wind_(", paste(2016:2017, collapse = "|"), ")", sep = '')
 search.files <- list.files(path = forecasts.folder, full.names = T, pattern = pattern)
 search.files <- sort(search.files, decreasing = T)
 
-# Check whether the similarity folder is empty
-if (length(list.files(sim.folder)) != 0) {
-  cat(paste("Similarity folder", sim.folder, "is not empty. \n Do you want to empty it? "))
-  if (readline() %in% c("Y", "YES", "yes", "y")) {
-    cat(paste("Deleting the file", list.files(sim.folder, full.names = T)))
-    unlink(list.files(sim.folder, full.names = T))
-  } else {
-    stop("Similarity folder is not empty. Please clean it.")
-  }
-} else {
-  cat("Similarity folder is empty. Carry on ...")
+# Check whether the similarity folder exists
+if (!dir.exists(sim.folder)) {
+  stop(paste(sim.folder, "does not exists."))
 }
 
 # Generate similarity metric for each search forecasts
@@ -90,6 +82,11 @@ for (j in 1:length(search.files)) {
   
   # Define the output similarity nc file
   sim.nc <- paste(sim.folder, 'sim-', search.time, '.nc', sep = '')
+  
+  if (file.exists(sim.nc)) {
+    cat(sim.nc, 'already exists. Skip this file.\n')
+    next
+  }
   
   # Define how many times exist in the search forecast file
   nc <- nc_open(search.forecast.nc)
@@ -125,7 +122,7 @@ for (j in 1:length(search.files)) {
     stop(paste(sim.nc, "is not generated correctly."))
   }
   
-  # Analyze simularity the simularity file
+  # Analyze the simularity file
   nc <- nc_open(sim.nc)
   sim.mat <- ncvar_get(nc, 'SimilarityMatrices')
   nc_close(nc)

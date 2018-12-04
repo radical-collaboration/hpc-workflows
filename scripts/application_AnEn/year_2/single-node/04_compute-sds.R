@@ -47,7 +47,7 @@ for (i in 1:length(search.files.stations.start)) {
                     str_pad(i, width = 4, pad = '0'), '.nc', sep = '')
   
   if (file.exists(file.out)) {
-    cat(file.out, 'already exists. Skip this file.')
+    cat(file.out, 'already exists. Skip this file.\n')
     next
   } else {
     cat('Working on station', search.files.stations.start[i], '~', 
@@ -72,7 +72,7 @@ sds.files <- sort(sds.files, decreasing = F)
 command <- paste(
   '/home/graduate/wuh20/github/AnalogsEnsemble/output/bin/standardDeviationCalculator',
   '-v', verbose, '-t', 'StandardDeviation', '-i', paste(sds.files, collapse = ' '),
-  '-o', 'sds.nc', '-a', '1'
+  '-o', sds.folder, '/sds.nc', '-a', '1'
 )
 system(command)
 
