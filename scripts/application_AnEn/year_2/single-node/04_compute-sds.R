@@ -66,14 +66,15 @@ cat("Finished computing standard deviation!\n")
 
 # Combine sds files
 cat("Combining standard deviation files ...\n")
-sds.files <- list.files(path = sds.folder, pattern = '.txt', full.names = T)
+sds.files <- list.files(path = sds.folder, pattern = '.nc', full.names = T)
 sds.files <- sort(sds.files, decreasing = F)
 
 command <- paste(
-  '/home/graduate/wuh20/github/AnalogsEnsemble/output/bin/standardDeviationCalculator',
+  '/home/graduate/wuh20/github/AnalogsEnsemble/output/bin/fileAggregate',
   '-v', verbose, '-t', 'StandardDeviation', '-i', paste(sds.files, collapse = ' '),
-  '-o', sds.folder, '/sds.nc', '-a', '1'
+  '-o', paste(sds.folder, '/sds.nc', sep = ''), '-a', '1'
 )
+cat(command, '\n')
 system(command)
 
 cat("Finished combining standard deviation files!\n")
