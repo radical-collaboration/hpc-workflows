@@ -115,6 +115,20 @@ if (F) {
   axis(1, at = at, labels = search.forecast.times[at])
 }
 
+# Because the original search.forecast.times and sims are in the following order
+# 201712 1, 2, 3, ..., 31
+# 201711 1, 2, 3, ..., 30
+# ...
+#
+# I need to reorder them to the following order
+# 201712, 31, 30, ..., 1
+# 201711, 30, 29, ..., 1
+# ...
+#
+decreasing.order <- order(search.forecast.times, decreasing=T)
+search.forecast.times = search.forecast.times[decreasing.order]
+sims <- sims[ , decreasing.order, , drop = F]
+
 # Select analogs based on a spatial metric
 #
 # Define the products that we will be generating by the end of the selection
@@ -195,8 +209,8 @@ for (i in 1:length(search.forecast.times)) {
                  as.character(search.forecast.times[i])))
     map(add = T, col = 'grey')
     contour(rast.tmp, add = T, col = 'white', lwd = lwd)
-    mtext(paste('Lowest metric value:',
-                round(min(product.sims.mat, na.rm = T), 4)))
+    mtext(paste('Min:', round(min(product.sims.mat, na.rm = T), 4),
+                ' Mean:', round(mean(product.sims.mat, na.rm = T), 4)))
     
     rast.tmp <- rasterize(df, rast.template, product.end.i, fun = mean)
     if (i == 1) {
@@ -243,8 +257,9 @@ if (!bypass.visualization) {
                as.character(search.forecast.times[i])))
   map(add = T, col = 'grey')
   contour(rast.tmp, add = T, col = 'white', lwd = lwd)
-  mtext(paste('Lowest metric value:',
-              round(min(product.sims.mat, na.rm = T), 4)))
+  mtext(paste('Min:', round(min(product.sims.mat, na.rm = T), 4),
+              ' Mean:', round(mean(product.sims.mat, na.rm = T), 4)))
+    
   
   rast.tmp <- rasterize(df, rast.template, product.end.i, fun = mean)
   plot(rast.tmp, col = cols, main = 'Amount of Search Data')
