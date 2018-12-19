@@ -66,7 +66,7 @@ if (!dir.exists(sim.folder)) {
 
 # Generate similarity metric for each search forecasts
 search.forecast.times <- c()
-sims.time.rdata <- paste(sim.folder, 'times.RData', sep = '')
+sims.time.rdata <- paste(sim.folder, 'sims-times.RData', sep = '')
 for (j in 1:length(search.files)) {
   search.file <- search.files[j]
   search.time <- gsub("^.*//with-wind_(\\d{6})\\.nc$", "\\1", search.file)
