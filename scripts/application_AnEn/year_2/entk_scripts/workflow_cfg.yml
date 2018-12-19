@@ -1,0 +1,61 @@
+stage_1:
+  task_count: 1
+  task_desc:
+    executable: similarityCalculator
+    cpu:
+      processes: 1
+      process_type: None
+      threads_per_process: 1
+      thread_type: None
+    pre_exec: []
+    args:
+      test-forecast-nc:
+      search-forecast-nc:
+      observation-nc:
+      similarity-nc:
+      verbose:        
+      time-match-mode:
+      max-par-nan:
+      max-flt-nan:
+      sds-nc:
+      mapping-txt:
+      observation-id:
+      searchExtension:
+      distance:
+      extend-obs:
+      max-neighbors:
+      num-neighbors:
+      test-start:
+      test-count:
+      search-start:
+      search-count:
+      obs-start:
+      obs-count:
+      sds-start:
+      sds-count:
+
+
+stage_2:
+  task_count: 1
+  task_desc:
+    executable: similarityCalculator
+    cpu:
+      processes: 1
+      process_type: None
+      threads_per_process: 1
+      thread_type: None
+    pre_exec: []
+    args:
+      config: 
+      similarity-nc: 
+      observation-nc: 
+      mapping-txt: 
+      analog-nc: 
+      members: 
+      verbose: 
+      observation-id: 
+      obs-start: 
+      obs-count: 
+      quick: 
+      extend-obs: 
+      real-time: 
