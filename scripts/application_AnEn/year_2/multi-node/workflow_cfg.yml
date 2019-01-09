@@ -3,9 +3,27 @@ global:
   num_grids: 262792
 
 # Standard deviation calculation stage
+stage_sd_calc:
+  task_count: 10
+  task_desc:
+    executable: standardDeviationCalculator
+    cpu:
+      processes: 1
+      process_type: None
+      threads_per_process: 1
+      thread_type: None
+    pre_exec: []
+    args:
+      in:
+      out:
+      verbose:
+      stat:
+      count:
+
+
 
 # Similarity calculation stage
-stage_1:
+stage_sim_cal:
   task_count: 10
   task_desc:
     executable: similarityCalculator
@@ -28,7 +46,7 @@ stage_1:
 
 
 # Analog selection stage
-stage_2:
+stage_analog_select:
   task_count: 1
   task_desc:
     executable: similarityCalculator

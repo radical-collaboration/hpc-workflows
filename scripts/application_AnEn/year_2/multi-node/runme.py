@@ -4,8 +4,35 @@ import yaml
 import argparse
 from radical.entk import Pipeline, Stage, Task, AppManager
 
+
+
 def create_sd_calc_task(i, task_desc):
-    return None
+
+    t = Task()
+    t.name = 'task-%s'%i
+    t.pre_exec = task_desc['pre_exec']
+    t.executable = task_desc['executable']
+    t.cpu_threads = {
+        'processes': task_desc['cpu']['processes'],
+        'process_type': task_desc['cpu']['process_type'],
+        'threads_per_process': task_desc['cpu']['threads_per_process'],
+        'thread_type': task_desc['cpu']['thread_type'],
+    }
+    t.arguments = [
+        # The following arguments solely depend on the configuration file
+        '--in', task_desc['args']['in'],
+        '--out', task_desc['args']['out'],
+        '--verbose', task_desc['args']['verbose'],
+
+        # The following arguments depend on the configuration file and the task number i
+        '--start', task_desc['args']['start'],
+        '--count', task_desc['args']['count'],
+    ]
+
+    t.link_input_data = []
+    t.copy_output_data = []
+
+    return t
 
 
 
@@ -90,7 +117,7 @@ def create_pipelines(wcfg):
     # Create first stage for similarity calculator tasks
     s1 = Stage()
     s1.name = 'stage-1'
-    stage_cfg = wcfg['stage_1']
+    stage_cfg = wcfg['stage_sim_cal']
 
     for i in range(stage_cfg['task_count']):
         t = create_sim_calc_task(i, stage_cfg['task_desc'])
@@ -101,7 +128,7 @@ def create_pipelines(wcfg):
     # Create second stage for analog selector tasks
     s2 = Stage()
     s2.name = 'stage-2'
-    stage_cfg = wcfg['stage_2']
+    stage_cfg = wcfg['stage_analog_select']
 
     for i in range(stage_cfg['task_count']):
         t = create_analog_select_task(i, stage_cfg['task_desc'])
