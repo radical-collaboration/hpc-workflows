@@ -1,10 +1,15 @@
-import yaml
-from radical.entk import Pipeline, Stage, Task, AppManager
 import os
-import argparse
 import sys
+import yaml
+import argparse
+from radical.entk import Pipeline, Stage, Task, AppManager
 
-def create_simcalc_task(i, task_desc):
+def create_sd_calc_task(i, task_desc):
+    return None
+
+
+
+def create_sim_calc_task(i, task_desc):
 
     t = Task()
     t.name = 'task-%s'%i
@@ -17,30 +22,25 @@ def create_simcalc_task(i, task_desc):
                         'thread_type': task_desc['cpu']['thread_type'],
                     }
     t.arguments = [
+        # The following arguments solely depend on the configuration file
                     '--test-forecast-nc', task_desc['args']['test-forecast-nc'],
                     '--search-forecast-nc', task_desc['args']['search-forecast-nc'],
                     '--observation-nc', task_desc['args']['observation-nc'],
                     '--similarity-nc', task_desc['args']['similarity-nc'],
                     '--verbose', task_desc['args']['verbose'],
                     '--time-match-mode', task_desc['args']['time-match-mode'],
-                    '--max-par-nan', task_desc['args']['max-par-nan'],
-                    '--max-flt-nan', task_desc['args']['max-flt-nan'],
-                    '--sds-nc', task_desc['args']['sds-nc'],
-                    '--mapping-txt', task_desc['args']['mapping-txt'],
                     '--observation-id', task_desc['args']['observation-id'],
-                    '--searchExtension', task_desc['args']['searchExtension'],
-                    '--distance', task_desc['args']['distance'],
-                    '--extend-obs', task_desc['args']['extend-obs'],
-                    '--max-neighbors', task_desc['args']['max-neighbors'],
-                    '--num-neighbors', task_desc['args']['num-neighbors'],
+                    '--sds-nc', task_desc['args']['sds-nc'],
+
+        # The following arguments depend on the configuration file and the task number i
                     '--test-start', task_desc['args']['test-start'],
                     '--test-count', task_desc['args']['test-count'],
-                    '--search-start', task_desc['args']['search-start'],
-                    '--search-count', task_desc['args']['search-count'],
-                    '--obs-start', task_desc['args']['obs-start'],
-                    '--obs-count', task_desc['args']['obs-count'],
-                    '--sds-start', task_desc['args']['sds-start'],
-                    '--sds-count', task_desc['args']['sds-count']
+                    # '--search-start', task_desc['args']['search-start'],
+                    # '--search-count', task_desc['args']['search-count'],
+                    # '--obs-start', task_desc['args']['obs-start'],
+                    # '--obs-count', task_desc['args']['obs-count'],
+                    # '--sds-start', task_desc['args']['sds-start'],
+                    # '--sds-count', task_desc['args']['sds-count']
                 ]
 
     t.link_input_data = []
@@ -48,7 +48,9 @@ def create_simcalc_task(i, task_desc):
 
     return t
 
-def create_anaselect_task(i, task_desc):
+
+
+def create_analog_select_task(i, task_desc):
     t = Task()
     t.name = 'task-%s'%i
     t.pre_exec = task_desc['pre_exec']
@@ -81,6 +83,7 @@ def create_anaselect_task(i, task_desc):
     return t
 
 
+
 def create_pipelines(wcfg):
     p = Pipeline
 
@@ -90,7 +93,7 @@ def create_pipelines(wcfg):
     stage_cfg = wcfg['stage_1']
 
     for i in range(stage_cfg['task_count']):
-        t = create_simcalc_task(i, stage_cfg['task_desc'])
+        t = create_sim_calc_task(i, stage_cfg['task_desc'])
         s1.add_tasks(t)
 
     p.add_stages(s1)
@@ -101,18 +104,20 @@ def create_pipelines(wcfg):
     stage_cfg = wcfg['stage_2']
 
     for i in range(stage_cfg['task_count']):
-        t = create_anaselect_task(i, stage_cfg['task_desc'])
+        t = create_analog_select_task(i, stage_cfg['task_desc'])
         s2.add_tasks(t)
 
     p.add_stages(s2)
 
     return p
 
+
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Process some arguments to get resource and workflow cfgs')
-    parser.add_argument('--wcfg', help='path to workflow cfg file', required=True)
-    parser.add_argument('--rcfg', help='path to resource cfg file', required=True)
+    parser.add_argument('--wcfg', help='path to workflow cfg file', required=False, default='./workflow_cfg.yml')
+    parser.add_argument('--rcfg', help='path to resource cfg file', required=False, default='./resource_cfg.yml')
 
     args = parser.parse_args()
     if not os.path.isfile(args.wcfg):
@@ -133,11 +138,11 @@ if __name__ == '__main__':
                         port=rcfg['rabbitmq']['port'])
 
     res_desc = {
-            'resource'rcfg['resource_desc']['name'],
-            'walltime'rcfg['resource_desc']['walltime'],
-            'cpus'rcfg['resource_desc']['cpus'],
-            'queue'rcfg['resource_desc']['queue'],
-            'project'rcfg['resource_desc']['project']
+            'resource': rcfg['resource_desc']['name'],
+            'walltime': rcfg['resource_desc']['walltime'],
+            'cpus': rcfg['resource_desc']['cpus'],
+            'queue': rcfg['resource_desc']['queue'],
+            'project': rcfg['resource_desc']['project']
         }
     
     amgr.resource_desc = res_desc

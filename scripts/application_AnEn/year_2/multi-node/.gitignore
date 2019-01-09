@@ -1,3 +1,7 @@
+# Python
 .idea
 venv
 .pyc
+
+# EnTK
+re.session*

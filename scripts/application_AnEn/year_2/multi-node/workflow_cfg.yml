@@ -1,5 +1,12 @@
+# Global arguments
+global:
+  num_grids: 262792
+
+# Standard deviation calculation stage
+
+# Similarity calculation stage
 stage_1:
-  task_count: 1
+  task_count: 10
   task_desc:
     executable: similarityCalculator
     cpu:
@@ -15,26 +22,12 @@ stage_1:
       similarity-nc:
       verbose:        
       time-match-mode:
-      max-par-nan:
-      max-flt-nan:
       sds-nc:
-      mapping-txt:
       observation-id:
-      searchExtension:
-      distance:
-      extend-obs:
-      max-neighbors:
-      num-neighbors:
-      test-start:
-      test-count:
-      search-start:
-      search-count:
-      obs-start:
-      obs-count:
-      sds-start:
-      sds-count:
 
 
+
+# Analog selection stage
 stage_2:
   task_count: 1
   task_desc:

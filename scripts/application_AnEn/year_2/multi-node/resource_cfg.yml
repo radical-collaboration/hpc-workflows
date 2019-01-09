@@ -3,7 +3,7 @@ rabbitmq:
   port: 33239
 
 resource_desc:
-  label: 'local.localhost'
+  name: 'local.localhost'
   walltime: 30
   cpus: 30
   gpus: 0
