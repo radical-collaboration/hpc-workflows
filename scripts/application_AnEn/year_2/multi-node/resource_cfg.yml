@@ -2,10 +2,10 @@ rabbitmq:
   hostname: 'two.radical-project.org'
   port: 33239
 
-resource_desc:
+resource-desc:
   name: 'local.localhost'
   walltime: 30
-  cpus: 30
+  cpus: 2
   gpus: 0
   queue: ''
   project: ''

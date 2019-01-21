@@ -1,72 +1,54 @@
 # Global arguments
 global:
-  num_grids: 262792
+  task-count: 1
+  num-grids: 262792
+  observation-id: 0
+  search-month-start: "201001"
+  search-month-end: "201003"
+  sds-folder: "~/storage/anen_results/sds/"
+  sims-folder: "~/storage/anen_results/sims/"
+  analogs-folder: "~/storage/anen_results/analogs/"
+  forecasts-folder: "~/geolab_storage_V3/data/NAM/NCEI/forecasts_new/"
+  observations-folder: "~/geolab_storage_V3/data/NAM/NCEI/analysis_new/"
+
 
 # Standard deviation calculation stage
-stage_sd_calc:
-  task_count: 10
-  task_desc:
-    executable: standardDeviationCalculator
-    cpu:
-      processes: 1
-      process_type: None
-      threads_per_process: 1
-      thread_type: None
-    pre_exec: []
-    args:
-      in:
-      out:
-      verbose:
-      stat:
-      count:
-
+stage-sd-calc:
+  executable: "standardDeviationCalculator"
+  cpu:
+    processes: 1
+    process-type: None
+    threads-per-process: 1
+    thread-type: None
+  pre-exec: ["export PATH=$PATH:~/github/AnalogsEnsemble/output/bin"]
+  args:
+    verbose: 3
 
 
 # Similarity calculation stage
-stage_sim_cal:
-  task_count: 10
-  task_desc:
-    executable: similarityCalculator
-    cpu:
-      processes: 1
-      process_type: None
-      threads_per_process: 1
-      thread_type: None
-    pre_exec: []
-    args:
-      test-forecast-nc:
-      search-forecast-nc:
-      observation-nc:
-      similarity-nc:
-      verbose:        
-      time-match-mode:
-      sds-nc:
-      observation-id:
-
+stage-sim-calc:
+  executable: "similarityCalculator"
+  cpu:
+    processes: 1
+    process-type: None
+    threads-per-process: 1
+    thread-type: None
+  pre-exec: ["export PATH=$PATH:~/github/AnalogsEnsemble/output/bin"]
+  args:
+    verbose: 3
+    test-forecast-nc: "~/geolab_storage_V3/data/NAM/NCEI/forecasts_new/201805.nc"
 
 
 # Analog selection stage
-stage_analog_select:
-  task_count: 1
-  task_desc:
-    executable: similarityCalculator
-    cpu:
-      processes: 1
-      process_type: None
-      threads_per_process: 1
-      thread_type: None
-    pre_exec: []
-    args:
-      config: 
-      similarity-nc: 
-      observation-nc: 
-      mapping-txt: 
-      analog-nc: 
-      members: 
-      verbose: 
-      observation-id: 
-      obs-start: 
-      obs-count: 
-      quick: 
-      extend-obs: 
-      real-time: 
+stage-analog-select:
+  executable: "analogSelector"
+  cpu:
+    processes: 1
+    process-type: None
+    threads-per-process: 1
+    thread-type: None
+  pre-exec: ["export PATH=$PATH:~/github/AnalogsEnsemble/output/bin"]
+  args:
+    quick: 1
+    verbose: 3
+    members: 15
