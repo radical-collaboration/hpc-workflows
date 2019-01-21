@@ -10,6 +10,7 @@ global:
   analogs-folder: "~/storage/anen_results/analogs/"
   forecasts-folder: "~/geolab_storage_V3/data/NAM/NCEI/forecasts_new/"
   observations-folder: "~/geolab_storage_V3/data/NAM/NCEI/analysis_new/"
+  print-tasks-only: 1
 
 
 # Standard deviation calculation stage

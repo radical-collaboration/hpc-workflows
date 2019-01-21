@@ -52,7 +52,8 @@ def task_sd_calc(i, stage_cfg, global_cfg):
     t.link_input_data = []
     t.copy_output_data = []
 
-    pprint(t.to_dict())
+    if global_cfg['print-tasks-only']:
+        pprint(t.to_dict())
 
     return t
 
@@ -90,7 +91,9 @@ def task_sim_calc(i, month, stage_cfg, global_cfg):
     t.link_input_data = []
     t.copy_output_data = []
 
-    pprint(t.to_dict())
+    if global_cfg['print-tasks-only']:
+        pprint(t.to_dict())
+
     return t
 
 
@@ -121,7 +124,9 @@ def create_analog_select_task(i, month, stage_cfg, global_cfg):
 
     t.link_input_data = []
     t.copy_output_data = []
-    pprint(t.to_dict())
+
+    if global_cfg['print-tasks-only']:
+        pprint(t.to_dict())
 
     return t
 
@@ -216,4 +221,7 @@ if __name__ == '__main__':
 
     amgr.workflow = pipelines
 
-    #amgr.run()
+    if wcfg['global']['print-tasks-only']:
+        print("Print tasks created only. Nothing has been run.")
+    else:
+        amgr.run()
