@@ -1,8 +1,8 @@
 # Global arguments
 global:
-  no-run: 1
+  print-help: 1
   print-progress: 1
-  print-tasks-only: 1
+  print-tasks-only: 0
 
   task-count: 2
 

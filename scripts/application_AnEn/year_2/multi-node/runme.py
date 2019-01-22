@@ -10,6 +10,14 @@ from radical.entk import Pipeline, Stage, Task, AppManager
 
 
 def extract_month(file_path, pattern = '.*?/(\d{6})\.nc$'):
+    """
+    This function extracts the month string from a file path using the specified pattern.
+
+    :param file_path The string of the file path.
+    :param pattern The pattern string to be used.
+    :return: A string of the year and month, for example, 201001.
+    """
+
     month = re.search(pattern, file_path)
 
     if month is None:
@@ -229,7 +237,7 @@ def task_sd_calc(i, stage_cfg, global_cfg, files_dims):
         '--count', index_counts,
     ]
 
-    if global_cfg['no-run']:
+    if global_cfg['print-help']:
         t.arguments.extend(['-h'])
 
     t.link_input_data = []
@@ -287,7 +295,7 @@ def task_sim_calc(i, month, stage_cfg, global_cfg, files_dims):
         '--obs-count', obs_counts,
     ]
 
-    if global_cfg['no-run']:
+    if global_cfg['print-help']:
         t.arguments.extend(['-h'])
 
     t.link_input_data = []
@@ -339,7 +347,7 @@ def create_analog_select_task(i, month, stage_cfg, global_cfg, files_dims):
         '--obs-count', index_counts,
     ]
 
-    if global_cfg['no-run']:
+    if global_cfg['print-help']:
         t.arguments.extend(['-h'])
 
     t.link_input_data = []
