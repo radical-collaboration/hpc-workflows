@@ -1,19 +1,27 @@
 # Global arguments
 global:
-  verbose: 1
+  no-run: 1
+  print-progress: 1
+  print-tasks-only: 1
+
   task-count: 2
-  num-parameters: 17
+
+  num-forecast-parameters: 17
+  num-observation-parameters: 15
   num-grids: 262792
   num-flts: 53
+
   observation-id: 0
-  print-tasks-only: 1
+
+  test-forecast-nc: "~/geolab_storage_V3/data/NAM/NCEI/forecasts_new/201805.nc"
   search-month-start: "201001"
   search-month-end: "201003"
-  sds-folder: "/home/graduate/wuh20/storage/anen_results/sds/"
-  sims-folder: "/home/graduate/wuh20/storage/anen_results/sims/"
-  analogs-folder: "/home/graduate/wuh20/storage/anen_results/analogs/"
-  forecasts-folder: "/home/graduate/wuh20/geolab_storage_V3/data/NAM/NCEI/forecasts_new/"
-  observations-folder: "/home/graduate/wuh20/geolab_storage_V3/data/NAM/NCEI/analysis_new/"
+
+  sds-folder: "~/storage/anen_results/sds/"
+  sims-folder: "~/storage/anen_results/sims/"
+  analogs-folder: "~/storage/anen_results/analogs/"
+  forecasts-folder: "~/geolab_storage_V3/data/NAM/NCEI/forecasts_new/"
+  observations-folder: "~/geolab_storage_V3/data/NAM/NCEI/analysis_new/"
 
 
 # Standard deviation calculation stage
@@ -24,7 +32,7 @@ stage-sd-calc:
     process-type: None
     threads-per-process: 1
     thread-type: None
-  pre-exec: ["export PATH=$PATH:/home/graduate/wuh20/github/AnalogsEnsemble/output/bin"]
+  pre-exec: ["export PATH=$PATH:~/github/AnalogsEnsemble/output/bin"]
   args:
     verbose: 3
 
@@ -40,7 +48,6 @@ stage-sim-calc:
   pre-exec: ["export PATH=$PATH:~/github/AnalogsEnsemble/output/bin"]
   args:
     verbose: 3
-    test-forecast-nc: "/home/graduate/wuh20/geolab_storage_V3/data/NAM/NCEI/forecasts_new/201805.nc"
 
 
 # Analog selection stage
@@ -51,7 +58,7 @@ stage-analog-select:
     process-type: None
     threads-per-process: 1
     thread-type: None
-  pre-exec: ["export PATH=$PATH:/home/graduate/wuh20/github/AnalogsEnsemble/output/bin"]
+  pre-exec: ["export PATH=$PATH:~/github/AnalogsEnsemble/output/bin"]
   args:
     quick: 1
     verbose: 3
