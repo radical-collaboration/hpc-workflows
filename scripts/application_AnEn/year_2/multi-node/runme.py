@@ -3,6 +3,7 @@ import sys
 import yaml
 import datetime
 import argparse
+from netCDF4 import Dataset
 from pprint import pprint
 from radical.entk import Pipeline, Stage, Task, AppManager
 
@@ -21,6 +22,67 @@ def get_months_between(start, end, format="%Y%m", reverse=False):
 
     return months
 
+
+def get_files_dims(global_cfg, check_dims=True):
+    # Get a list of search months
+    months = get_months_between(global_cfg['search-month-start'], global_cfg['search-month-end'])
+
+    # Define the dimensions for both forecast and observation files
+    files_dims = dict.fromkeys(["forecasts", "observations"])
+    files_dims['forecasts'] = dict.fromkeys(months)
+    files_dims['observations'] = dict.fromkeys(months)
+
+    # Read dimensions from forecast files
+    forecast_files = ['{}{}{}'.format(global_cfg['forecasts-folder'], month, '.nc') for month in months]
+
+    for i in range(len(forecast_files)):
+        if global_cfg['verbose']:
+            sys.stdout.write('Processing {}'.format(forecast_files[i]))
+            sys.stdout.flush()
+
+        nc = Dataset(forecast_files[i])
+        dims = (len(nc.dimensions['num_parameters']), len(nc.dimensions['num_stations']),
+                len(nc.dimensions['num_times']), len(nc.dimensions['num_flts']))
+        nc.close()
+
+        if check_dims:
+            if (dims[0] != global_cfg['num-parameters']) or \
+                    (dims[1] != global_cfg['num-grids']) or \
+                    (dims[3] != global_cfg['num-flts']):
+                sys.exit("File ({}) does not meet the dimension requirement.".format(forecast_files[i]))
+
+        files_dims['forecasts'][months[i]] = dims
+
+        if global_cfg['verbose']:
+            sys.stdout.write(' Done!\n')
+
+    # Read dimensions from observation files
+    observation_files = ['{}{}{}'.format(global_cfg['observations-folder'], month, '.nc') for month in months]
+
+    for i in range(len(observation_files)):
+        if global_cfg['verbose']:
+            sys.stdout.write('Processing {}'.format(observation_files[i]))
+            sys.stdout.flush()
+
+        nc = Dataset(observation_files[i])
+        dims = (len(nc.dimensions['num_parameters']),
+                len(nc.dimensions['num_grids']),
+                len(nc.dimensions['num_times']))
+        nc.close()
+
+        if check_dims:
+            if (dims[0] != global_cfg['num-parameters']) or \
+                    (dims[1] != global_cfg['num-stations']):
+                sys.exit("File ({}) does not meet the dimension requirement.".format(forecast_files[i]))
+
+        files_dims['observations'][months[i]] = dims
+
+        if global_cfg['verbose']:
+            sys.stdout.write(' Done!\n')
+
+    return files_dims
+
+files_dims = get_files_dims(wcfg['global'])
 
 def task_sd_calc(i, stage_cfg, global_cfg):
     t = Task()
@@ -57,7 +119,6 @@ def task_sd_calc(i, stage_cfg, global_cfg):
 
     return t
 
-
 def task_sim_calc(i, month, stage_cfg, global_cfg):
     t = Task()
     t.name = 'task-sims-calc-{:05d}'.format(i)
@@ -78,8 +139,8 @@ def task_sim_calc(i, month, stage_cfg, global_cfg):
         '--observation-id', global_cfg['observation-id'],
         '--sds-nc', '{}task-sd-calc-{:05d}{}'.format(global_cfg['sds-folder'], i, '.nc')
 
-        #'--test-start', stage_cfg['args']['test-start'],
-        #'--test-count', stage_cfg['args']['test-count'],
+        # '--test-start', stage_cfg['args']['test-start'],
+        # '--test-count', stage_cfg['args']['test-count'],
         # '--search-start', stage_cfg['args']['search-start'],
         # '--search-count', stage_cfg['args']['search-count'],
         # '--obs-start', stage_cfg['args']['obs-start'],
@@ -118,8 +179,8 @@ def create_analog_select_task(i, month, stage_cfg, global_cfg):
         '--observation-nc', '{}{}{}'.format(global_cfg['observations-folder'], month, '.nc'),
         '--analog-nc', '{}{}-{:05d}{}'.format(global_cfg['analogs-folder'], month, i, '.nc'),
 
-        #'--obs-start', stage_cfg['args']['obs-start'],
-        #'--obs-count', stage_cfg['args']['obs-count'],
+        # '--obs-start', stage_cfg['args']['obs-start'],
+        # '--obs-count', stage_cfg['args']['obs-count'],
     ]
 
     t.link_input_data = []
