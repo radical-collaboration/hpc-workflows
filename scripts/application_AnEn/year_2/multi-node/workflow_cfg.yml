@@ -1,10 +1,10 @@
 # Global arguments
 global:
   verbose: 1
-  num-flts: 53
   task-count: 2
-  num-grids: 262792
   num-parameters: 17
+  num-grids: 262792
+  num-flts: 53
   observation-id: 0
   print-tasks-only: 1
   search-month-start: "201001"

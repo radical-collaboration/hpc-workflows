@@ -3,9 +3,17 @@ import sys
 import yaml
 import datetime
 import argparse
-from netCDF4 import Dataset
+from math import floor
 from pprint import pprint
+from netCDF4 import Dataset
 from radical.entk import Pipeline, Stage, Task, AppManager
+
+
+def expand_tilde(cfg):
+    # This function can use os.path.expanduser() to expand the tilde sign.
+    # First, get the expanded path of tilde, and then replace tildes in all strings.
+    #
+    return True
 
 
 def get_months_between(start, end, format="%Y%m", reverse=False):
@@ -71,8 +79,7 @@ def get_files_dims(global_cfg, check_dims=True):
         nc.close()
 
         if check_dims:
-            if (dims[0] != global_cfg['num-parameters']) or \
-                    (dims[1] != global_cfg['num-stations']):
+            if (dims[0] != global_cfg['num-parameters']) or (dims[1] != global_cfg['num-stations']):
                 sys.exit("File ({}) does not meet the dimension requirement.".format(forecast_files[i]))
 
         files_dims['observations'][months[i]] = dims
@@ -82,9 +89,7 @@ def get_files_dims(global_cfg, check_dims=True):
 
     return files_dims
 
-files_dims = get_files_dims(wcfg['global'])
-
-def task_sd_calc(i, stage_cfg, global_cfg):
+def task_sd_calc(i, stage_cfg, global_cfg, files_dims):
     t = Task()
     t.name = 'task-sd-calc-{:05d}'.format(i)
     t.pre_exec = stage_cfg['pre-exec']
@@ -103,12 +108,28 @@ def task_sd_calc(i, stage_cfg, global_cfg):
     in_files = ['{}{}{}'.format(global_cfg['forecasts-folder'], month, '.nc') for month in months]
     out_file = '{}{}{}'.format(global_cfg['sds-folder'], t.name, '.nc')
 
+    # Calculate the indices for starts and counts
+    index_starts = []; index_counts = []
+
+    for month in months:
+        index_starts.append(0)
+        index_counts.append(global_cfg['num-parameters'])
+        index_starts.append(int(global_cfg['num-grids'] / global_cfg['task-count']) * i)
+        if i == global_cfg['task-count'] - 1:
+            index_counts.append(global_cfg['num-grids'] - int(global_cfg['num-grids'] / global_cfg['task-count']) * i)
+        else:
+            index_counts.append(global_cfg['num-grids'] / global_cfg['task-count'])
+        index_starts.append(0)
+        index_counts.append(files_dims['forecasts'][month][2])
+        index_starts.append(0)
+        index_counts.append(global_cfg['num-flts'])
+
     t.arguments = [
         '--in', in_files,
         '--out', out_file,
         '--verbose', stage_cfg['args']['verbose'],
-        # '--start', stage_cfg['args']['start'],
-        # '--count', stage_cfg['args']['count'],
+        '--start', index_starts,
+        '--count', index_counts,
     ]
 
     t.link_input_data = []
@@ -119,7 +140,7 @@ def task_sd_calc(i, stage_cfg, global_cfg):
 
     return t
 
-def task_sim_calc(i, month, stage_cfg, global_cfg):
+def task_sim_calc(i, month, stage_cfg, global_cfg, files_dims):
     t = Task()
     t.name = 'task-sims-calc-{:05d}'.format(i)
     t.pre_exec = stage_cfg['pre-exec']
@@ -130,6 +151,29 @@ def task_sim_calc(i, month, stage_cfg, global_cfg):
         'threads-per-process': stage_cfg['cpu']['threads-per-process'],
         'thread-type': stage_cfg['cpu']['thread-type'],
     }
+
+    # Calculate the indices for starts and counts
+    test_starts = []; test_counts = []
+    search_starts = []; search_counts = []
+    obs_starts = []; obs_counts = []
+
+
+    for month in months:
+
+
+        ## This part can be written to a function
+        index_starts.append(0)
+        index_counts.append(global_cfg['num-parameters'])
+        index_starts.append(int(global_cfg['num-grids'] / global_cfg['task-count']) * i)
+        if i == global_cfg['task-count'] - 1:
+            index_counts.append(global_cfg['num-grids'] - int(global_cfg['num-grids'] / global_cfg['task-count']) * i)
+        else:
+            index_counts.append(global_cfg['num-grids'] / global_cfg['task-count'])
+        index_starts.append(0)
+        index_counts.append(files_dims['forecasts'][month][2])
+        index_starts.append(0)
+        index_counts.append(global_cfg['num-flts'])
+
     t.arguments = [
         '--test-forecast-nc', stage_cfg['args']['test-forecast-nc'],
         '--search-forecast-nc', '{}{}{}'.format(global_cfg['forecasts-folder'], month, '.nc'),
@@ -145,8 +189,6 @@ def task_sim_calc(i, month, stage_cfg, global_cfg):
         # '--search-count', stage_cfg['args']['search-count'],
         # '--obs-start', stage_cfg['args']['obs-start'],
         # '--obs-count', stage_cfg['args']['obs-count'],
-        # '--sds-start', stage_cfg['args']['sds-start'],
-        # '--sds-count', stage_cfg['args']['sds-count']
     ]
 
     t.link_input_data = []
@@ -158,7 +200,7 @@ def task_sim_calc(i, month, stage_cfg, global_cfg):
     return t
 
 
-def create_analog_select_task(i, month, stage_cfg, global_cfg):
+def create_analog_select_task(i, month, stage_cfg, global_cfg, files_dims):
     t = Task()
     t.name = 'task-analog-select-{:05d}'.format(i)
     t.pre_exec = stage_cfg['pre-exec']
@@ -169,6 +211,21 @@ def create_analog_select_task(i, month, stage_cfg, global_cfg):
         'threads-per-process': stage_cfg['cpu']['threads-per-process'],
         'thread-type': stage_cfg['cpu']['thread-type'],
     }
+
+    # Calculate the indices for starts and counts
+    index_starts = []
+    index_counts = []
+
+    index_starts.append(0)
+    index_counts.append(global_cfg['num-parameters'])
+    index_starts.append(int(global_cfg['num-grids'] / global_cfg['task-count']) * i)
+    if i == global_cfg['task-count'] - 1:
+        index_counts.append(global_cfg['num-grids'] - int(global_cfg['num-grids'] / global_cfg['task-count']) * i)
+    else:
+        index_counts.append(global_cfg['num-grids'] / global_cfg['task-count'])
+    index_starts.append(0)
+    index_counts.append(files_dims['observations'][month][2])
+
     t.arguments = [
         '--quick', stage_cfg['args']['quick'],
         '--members', stage_cfg['args']['members'],
@@ -179,8 +236,8 @@ def create_analog_select_task(i, month, stage_cfg, global_cfg):
         '--observation-nc', '{}{}{}'.format(global_cfg['observations-folder'], month, '.nc'),
         '--analog-nc', '{}{}-{:05d}{}'.format(global_cfg['analogs-folder'], month, i, '.nc'),
 
-        # '--obs-start', stage_cfg['args']['obs-start'],
-        # '--obs-count', stage_cfg['args']['obs-count'],
+        '--obs-start', index_starts,
+        '--obs-count', index_counts,
     ]
 
     t.link_input_data = []
@@ -193,6 +250,10 @@ def create_analog_select_task(i, month, stage_cfg, global_cfg):
 
 
 def create_pipelines(wcfg):
+
+    # Get dimensions of all forecast and observation files
+    files_dims = get_files_dims(wcfg['global'])
+
     p = Pipeline()
 
     # Create the stage for standard deviation calculator tasks
@@ -201,7 +262,7 @@ def create_pipelines(wcfg):
     stage_cfg = wcfg[s.name]
 
     for i in range(wcfg['global']['task-count']):
-        t = task_sd_calc(i, stage_cfg, wcfg['global'])
+        t = task_sd_calc(i, stage_cfg, wcfg['global'], files_dims)
         s.add_tasks(t)
 
     p.add_stages(s)
@@ -216,7 +277,7 @@ def create_pipelines(wcfg):
 
     for i in range(wcfg['global']['task-count']):
         for j in range(len(months)):
-            t = task_sim_calc(i, months[j], stage_cfg, wcfg['global'])
+            t = task_sim_calc(i, months[j], stage_cfg, wcfg['global'], files_dims)
             s.add_tasks(t)
 
     p.add_stages(s)
@@ -228,7 +289,7 @@ def create_pipelines(wcfg):
 
     for i in range(wcfg['global']['task-count']):
         for j in range(len(months)):
-            t = create_analog_select_task(i, months[j], stage_cfg, wcfg['global'])
+            t = create_analog_select_task(i, months[j], stage_cfg, wcfg['global'], files_dims)
             s.add_tasks(t)
 
     p.add_stages(s)
