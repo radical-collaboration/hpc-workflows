@@ -205,6 +205,10 @@ def task_sd_calc(i, stage_cfg, global_cfg, files_dims):
     """
     t = Task()
     t.name = 'task-sd-calc-{:05d}'.format(i)
+    
+    if global_cfg['print-progress']:
+        print "Creating standard deviation task {}".format(t.name)
+
     t.pre_exec = stage_cfg['pre-exec']
     t.executable = stage_cfg['executable']
     t.cpu_threads = {
@@ -230,12 +234,14 @@ def task_sd_calc(i, stage_cfg, global_cfg, files_dims):
         index_counts.extend(counts)
 
     t.arguments = [
-        '--in', in_files,
         '--out', out_file,
         '--verbose', stage_cfg['args']['verbose'],
-        '--start', index_starts,
-        '--count', index_counts,
     ]
+
+    # Add list arguments
+    t.arguments.append('--in'); t.arguments.extend(in_files)
+    t.arguments.append('--start'); t.arguments.extend(index_starts)
+    t.arguments.append('--count'); t.arguments.extend(index_counts)
 
     if global_cfg['print-help']:
         t.arguments.extend(['-h'])
@@ -262,6 +268,10 @@ def task_sim_calc(i, month, stage_cfg, global_cfg, files_dims):
 
     t = Task()
     t.name = 'task-sims-calc-{:05d}'.format(i)
+
+    if global_cfg['print-progress']:
+        print "Creating similarity task {}".format(t.name)
+
     t.pre_exec = stage_cfg['pre-exec']
     t.executable = stage_cfg['executable']
     t.cpu_threads = {
@@ -287,13 +297,15 @@ def task_sim_calc(i, month, stage_cfg, global_cfg, files_dims):
         '--verbose', stage_cfg['args']['verbose'],
         '--observation-id', global_cfg['observation-id'],
         '--sds-nc', '{}task-sd-calc-{:05d}{}'.format(global_cfg['sds-folder'], i, '.nc'),
-        '--test-start', test_starts,
-        '--test-count', test_counts,
-        '--search-start', search_starts,
-        '--search-count', search_counts,
-        '--obs-start', obs_starts,
-        '--obs-count', obs_counts,
     ]
+
+    # Add list arguments
+    t.arguments.append('--test-start'); t.arguments.extend(test_starts)
+    t.arguments.append('--test-count'); t.arguments.extend(test_counts)
+    t.arguments.append('--search-start'); t.arguments.extend(search_starts)
+    t.arguments.append('--search-count'); t.arguments.extend(search_counts)
+    t.arguments.append('--obs-start'); t.arguments.extend(obs_starts)
+    t.arguments.append('--obs-count'); t.arguments.extend(obs_counts)
 
     if global_cfg['print-help']:
         t.arguments.extend(['-h'])
@@ -321,6 +333,10 @@ def create_analog_select_task(i, month, stage_cfg, global_cfg, files_dims):
 
     t = Task()
     t.name = 'task-analog-select-{:05d}'.format(i)
+
+    if global_cfg['print-progress']:
+        print "Creating analog selection task {}".format(t.name)
+
     t.pre_exec = stage_cfg['pre-exec']
     t.executable = stage_cfg['executable']
     t.cpu_threads = {
@@ -342,10 +358,11 @@ def create_analog_select_task(i, month, stage_cfg, global_cfg, files_dims):
         '--similarity-nc', '{}{}-{:05d}{}'.format(global_cfg['sims-folder'], month, i, '.nc'),
         '--observation-nc', '{}{}{}'.format(global_cfg['observations-folder'], month, '.nc'),
         '--analog-nc', '{}{}-{:05d}{}'.format(global_cfg['analogs-folder'], month, i, '.nc'),
-
-        '--obs-start', index_starts,
-        '--obs-count', index_counts,
     ]
+
+    # Add list arguments
+    t.arguments.append('--obs-start'); t.arguments.extend(index_starts)
+    t.arguments.append('--obs-count'); t.arguments.extend(index_counts)
 
     if global_cfg['print-help']:
         t.arguments.extend(['-h'])
