@@ -1,27 +1,52 @@
 # Global arguments
 global:
-  print-help: 1
+
+  # Set this to 1 to only print help messages from AnEn executables
+  # without running any real computation.
+  #
+  print-help: 0
+
+  # Set this to 1 to print progress information from the runme.py script.
   print-progress: 1
+
+  # Set this to 1 to print tasks in a pretty dictionary form without
+  # actually running them.
+  #
   print-tasks-only: 0
 
-  task-count: 2
+  # Set this to 1 to convert all tasks to stages to make the execution
+  # serial. This is useful for executions on local machine when there is
+  # not enough memory space.
+  #
+  run-serially: 1
+
+  task-count: 5
 
   num-forecast-parameters: 17
-  num-observation-parameters: 15
+  num-observation-parameters: 17
   num-grids: 262792
   num-flts: 53
 
   observation-id: 0
 
-  test-forecast-nc: "~/geolab_storage_V3/data/NAM/NCEI/forecasts_new/201805.nc"
-  search-month-start: "201001"
-  search-month-end: "201003"
+  search-month-start: "201801"
+  search-month-end: "201801"
 
-  sds-folder: "~/storage/anen_results/sds/"
-  sims-folder: "~/storage/anen_results/sims/"
-  analogs-folder: "~/storage/anen_results/analogs/"
-  forecasts-folder: "~/geolab_storage_V3/data/NAM/NCEI/forecasts_new/"
-  observations-folder: "~/geolab_storage_V3/data/NAM/NCEI/analysis_new/"
+  # If data are on Grappa
+  # sds-folder: "~/storage/anen_results/sds/"
+  # sims-folder: "~/storage/anen_results/sims/"
+  # analogs-folder: "~/storage/anen_results/analogs/"
+  # forecasts-folder: "~/geolab_storage_V3/data/NAM/NCEI/forecasts_new/"
+  # observations-folder: "~/geolab_storage_V3/data/NAM/NCEI/analysis_new/"
+  # test-forecast-nc: "~/geolab_storage_V3/data/NAM/NCEI/forecasts_new/201805.nc"
+
+  # If data are local
+  sds-folder: "~/exfat-hu/Data/2019_Hu_AnEn-bias-correction/sds/"
+  sims-folder: "~/exfat-hu/Data/2019_Hu_AnEn-bias-correction/sims/"
+  analogs-folder: "~/exfat-hu/Data/2019_Hu_AnEn-bias-correction/analogs/"
+  forecasts-folder: "~/exfat-hu/Data/2019_Hu_AnEn-bias-correction/forecasts/"
+  observations-folder: "~/exfat-hu/Data/2019_Hu_AnEn-bias-correction/observations/"
+  test-forecast-nc: "~/exfat-hu/Data/2019_Hu_AnEn-bias-correction/forecasts/201802.nc"
 
 
 # Standard deviation calculation stage

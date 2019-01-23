@@ -205,7 +205,7 @@ def task_sd_calc(i, stage_cfg, global_cfg, files_dims):
     """
     t = Task()
     t.name = 'task-sd-calc-{:05d}'.format(i)
-    
+
     if global_cfg['print-progress']:
         print "Creating standard deviation task {}".format(t.name)
 
@@ -396,9 +396,18 @@ def create_pipelines(wcfg):
 
     for i in range(wcfg['global']['task-count']):
         t = task_sd_calc(i, stage_cfg, wcfg['global'], files_dims)
+
+        if (wcfg['global']['run-serially']):
+            s = Stage()
+            s.name = 'stage-{}'.format(t.name)
+
         s.add_tasks(t)
 
-    p.add_stages(s)
+        if (wcfg['global']['run-serially']):
+            p.add_stages(s)
+
+    if (not wcfg['global']['run-serially']):
+        p.add_stages(s)
 
     # Create the stage for similarity calculator tasks
     s = Stage()
@@ -410,10 +419,20 @@ def create_pipelines(wcfg):
 
     for i in range(wcfg['global']['task-count']):
         for j in range(len(months)):
+
             t = task_sim_calc(i, months[j], stage_cfg, wcfg['global'], files_dims)
+
+            if (wcfg['global']['run-serially']):
+                s = Stage()
+                s.name = 'stage-{}'.format(t.name)
+
             s.add_tasks(t)
 
-    p.add_stages(s)
+            if (wcfg['global']['run-serially']):
+                p.add_stages(s)
+
+    if (not wcfg['global']['run-serially']):
+        p.add_stages(s)
 
     # Create the stage for analog selector tasks
     s = Stage()
@@ -422,10 +441,20 @@ def create_pipelines(wcfg):
 
     for i in range(wcfg['global']['task-count']):
         for j in range(len(months)):
+
             t = create_analog_select_task(i, months[j], stage_cfg, wcfg['global'], files_dims)
+
+            if (wcfg['global']['run-serially']):
+                s = Stage()
+                s.name = 'stage-{}'.format(t.name)
+
             s.add_tasks(t)
 
-    p.add_stages(s)
+            if (wcfg['global']['run-serially']):
+                p.add_stages(s)
+
+    if (not wcfg['global']['run-serially']):
+        p.add_stages(s)
 
     return p
 
