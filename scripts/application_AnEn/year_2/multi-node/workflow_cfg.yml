@@ -14,12 +14,6 @@ global:
   #
   print-tasks-only: 0
 
-  # Set this to 1 to convert all tasks to stages to make the execution
-  # serial. This is useful for executions on local machine when there is
-  # not enough memory space.
-  #
-  run-serially: 1
-
   task-count: 5
 
   num-forecast-parameters: 17
