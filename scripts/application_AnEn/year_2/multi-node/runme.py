@@ -8,6 +8,23 @@ from pprint import pprint
 from netCDF4 import Dataset
 from radical.entk import Pipeline, Stage, Task, AppManager
 
+def check_empty(global_cfg):
+    empty = True
+
+    if len(os.listdir(global_cfg['sds-folder'])) != 0:
+        print "Directory {} is not empty.".format(global_cfg['sds-folder'])
+        empty = False
+
+    if len(os.listdir(global_cfg['sims-folder'])) != 0:
+        print "Directory {} is not empty.".format(global_cfg['sims-folder'])
+        empty = False
+
+    if len(os.listdir(global_cfg['analogs-folder'])) != 0:
+        print "Directory {} is not empty.".format(global_cfg['analogs-folder'])
+        empty = False
+
+    return empty
+
 
 def extract_month(file_path, pattern = '.*?/(\d{6})\.nc$'):
     """
@@ -482,6 +499,9 @@ if __name__ == '__main__':
         wcfg = yaml.load(fp)
 
     wcfg = expand_tilde(wcfg)
+
+    if not check_empty(wcfg['global']):
+        sys.exit(1)
 
     amgr = AppManager(hostname=rcfg['rabbitmq']['hostname'],
                       port=rcfg['rabbitmq']['port'])

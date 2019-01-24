@@ -5,7 +5,7 @@ rabbitmq:
 resource-desc:
   name: 'local.localhost'
   walltime: 6000
-  cpus: 32
+  cpus: 10
   gpus: 0
   queue: ''
   project: ''
