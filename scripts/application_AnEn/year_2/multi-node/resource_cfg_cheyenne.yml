@@ -3,7 +3,7 @@ rabbitmq:
   port: 33239
 
 resource-desc:
-  name: 'cheyenne'
+  name: 'ncar.cheyenne'
   walltime: 6000
   cpus: 20 # cores or nodes?
   gpus: 0

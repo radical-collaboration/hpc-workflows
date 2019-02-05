@@ -4,5 +4,5 @@ venv
 .pyc
 
 # EnTK
-re.session*
+*re.session*
 radical.log*
