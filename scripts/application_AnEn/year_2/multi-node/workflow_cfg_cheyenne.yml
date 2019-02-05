@@ -17,7 +17,7 @@ global:
   # Set this to 1 to run tasks serially.
   run-serially: 0
 
-  task-count: 4
+  task-count: 10
 
   num-forecast-parameters: 17
   num-observation-parameters: 17
@@ -34,7 +34,7 @@ global:
   sims-folder: "/glade/u/home/wuh20/scratch/data/AnEn/sims/"
   analogs-folder: "/glade/u/home/wuh20/scratch/data/AnEn/analogs/"
   forecasts-folder: "/glade/u/home/wuh20/scratch/data/AnEn/forecasts/"
-  observations-folder: "/glade/u/home/wuh20/scratch/data/AnEn/observations/"
+  observations-folder: "/glade/u/home/wuh20/scratch/data/AnEn/analysis/"
   test-forecast-nc: "/glade/u/home/wuh20/scratch/data/AnEn/forecasts/201802.nc"
 
 

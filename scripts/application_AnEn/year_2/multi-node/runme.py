@@ -495,9 +495,6 @@ if __name__ == '__main__':
     with open(args.wcfg, 'r') as fp:
         wcfg = yaml.load(fp)
 
-    with open('./workflow_cfg.yml', 'r') as fp:
-        wcfg = yaml.load(fp)
-
     wcfg = expand_tilde(wcfg)
 
     if not check_empty(wcfg['global']):
