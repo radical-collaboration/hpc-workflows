@@ -1,0 +1,11 @@
+rabbitmq:
+  hostname: 'two.radical-project.org'
+  port: 33239
+
+resource-desc:
+  name: 'cheyenne'
+  walltime: 6000
+  cpus: 20 # cores or nodes?
+  gpus: 0
+  queue: 'regular'
+  project: 'URTG0014'
