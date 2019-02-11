@@ -44,7 +44,7 @@ stage-sd-calc:
   cpu:
     processes: 1
     process-type: None
-    threads-per-process: 1
+    threads-per-process: 18
     thread-type: None
   pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
   args:
@@ -57,7 +57,7 @@ stage-sim-calc:
   cpu:
     processes: 1
     process-type: None
-    threads-per-process: 1
+    threads-per-process: 18
     thread-type: None
   pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
   args:
@@ -70,7 +70,7 @@ stage-analog-select:
   cpu:
     processes: 1
     process-type: None
-    threads-per-process: 1
+    threads-per-process: 18
     thread-type: None
   pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
   args:
