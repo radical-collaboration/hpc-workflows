@@ -12,7 +12,7 @@ global:
   # Set this to 1 to print tasks in a pretty dictionary form without
   # actually running them.
   #
-  print-tasks-only: 0
+  print-tasks-only: 1
 
   # Set this to 1 to run tasks serially.
   run-serially: 0
@@ -46,7 +46,7 @@ stage-sd-calc:
     process-type: None
     threads-per-process: 1
     thread-type: None
-  pre-exec: ["export PATH=$PATH:~/github/AnalogsEnsemble/output/bin"]
+  pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
   args:
     verbose: 3
 
@@ -59,7 +59,7 @@ stage-sim-calc:
     process-type: None
     threads-per-process: 1
     thread-type: None
-  pre-exec: ["export PATH=$PATH:~/github/AnalogsEnsemble/output/bin"]
+  pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
   args:
     verbose: 3
 
@@ -72,7 +72,7 @@ stage-analog-select:
     process-type: None
     threads-per-process: 1
     thread-type: None
-  pre-exec: ["export PATH=$PATH:~/github/AnalogsEnsemble/output/bin"]
+  pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
   args:
     quick: 1
     verbose: 3
