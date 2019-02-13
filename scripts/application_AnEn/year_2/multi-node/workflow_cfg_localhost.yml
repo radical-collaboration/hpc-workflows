@@ -4,7 +4,7 @@ global:
   # Set this to 1 to only print help messages from AnEn executables
   # without running any real computation.
   #
-  print-help: 0
+  print-help: 1
 
   # Set this to 1 to print progress information from the runme.py script.
   print-progress: 1
@@ -17,7 +17,7 @@ global:
   # Set this to 1 to run tasks serially.
   run-serially: 1
 
-  task-count: 4
+  task-count: 10
 
   num-forecast-parameters: 17
   num-observation-parameters: 17
