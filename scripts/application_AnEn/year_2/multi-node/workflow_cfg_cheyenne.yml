@@ -43,9 +43,9 @@ stage-sd-calc:
   executable: "standardDeviationCalculator"
   cpu:
     processes: 1
-    process-type: None
-    threads-per-process: 1
-    thread-type: None
+    process-type: 'MPI'
+    threads-per-process: 36
+    thread-type: 'OpenMP'
   pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
   args:
     verbose: 3
@@ -56,9 +56,9 @@ stage-sim-calc:
   executable: "similarityCalculator"
   cpu:
     processes: 1
-    process-type: None
-    threads-per-process: 1
-    thread-type: None
+    process-type: 'MPI'
+    threads-per-process: 36
+    thread-type: 'OpenMP'
   pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
   args:
     verbose: 3
@@ -69,9 +69,9 @@ stage-analog-select:
   executable: "analogSelector"
   cpu:
     processes: 1
-    process-type: None
-    threads-per-process: 1
-    thread-type: None
+    process-type: 'MPI'
+    threads-per-process: 36
+    thread-type: 'OpenMP'
   pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
   args:
     quick: 1

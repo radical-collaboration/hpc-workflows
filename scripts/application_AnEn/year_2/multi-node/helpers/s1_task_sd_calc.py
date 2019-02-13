@@ -21,11 +21,11 @@ def task_sd_calc(i, stage_cfg, global_cfg, files_dims):
 
     t.pre_exec = stage_cfg['pre-exec']
     t.executable = stage_cfg['executable']
-    t.cpu_threads = {
+    t.cpu_reqs = {
         'processes': stage_cfg['cpu']['processes'],
-        'process-type': stage_cfg['cpu']['process-type'],
-        'threads-per-process': stage_cfg['cpu']['threads-per-process'],
-        'thread-type': stage_cfg['cpu']['thread-type'],
+        'process_type': stage_cfg['cpu']['process-type'],
+        'threads_per_process': stage_cfg['cpu']['threads-per-process'],
+        'thread_type': stage_cfg['cpu']['thread-type'],
     }
 
     # Select input files based on the search month range

@@ -24,9 +24,9 @@ def create_analog_select_task(i, month, stage_cfg, global_cfg, files_dims):
     t.executable = stage_cfg['executable']
     t.cpu_threads = {
         'processes': stage_cfg['cpu']['processes'],
-        'process-type': stage_cfg['cpu']['process-type'],
-        'threads-per-process': stage_cfg['cpu']['threads-per-process'],
-        'thread-type': stage_cfg['cpu']['thread-type'],
+        'process_type': stage_cfg['cpu']['process-type'],
+        'threads_per_process': stage_cfg['cpu']['threads-per-process'],
+        'thread_type': stage_cfg['cpu']['thread-type'],
     }
 
     # Calculate the indices for starts and counts

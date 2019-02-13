@@ -22,11 +22,11 @@ def task_sim_calc(i, month, stage_cfg, global_cfg, files_dims):
 
     t.pre_exec = stage_cfg['pre-exec']
     t.executable = stage_cfg['executable']
-    t.cpu_threads = {
+    t.cpu_reqs = {
         'processes': stage_cfg['cpu']['processes'],
-        'process-type': stage_cfg['cpu']['process-type'],
-        'threads-per-process': stage_cfg['cpu']['threads-per-process'],
-        'thread-type': stage_cfg['cpu']['thread-type'],
+        'process_type': stage_cfg['cpu']['process-type'],
+        'threads_per_process': stage_cfg['cpu']['threads-per-process'],
+        'thread_type': stage_cfg['cpu']['thread-type'],
     }
 
     # Extract the test month from the test forecast file path
