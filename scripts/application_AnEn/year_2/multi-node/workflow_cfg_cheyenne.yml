@@ -7,7 +7,7 @@ global:
   print-help: 0
 
   # Set this to 1 to print progress information from the runme.py script.
-  print-progress: 1
+  print-progress: 0
 
   # Set this to 1 to print tasks in a pretty dictionary form without
   # actually running them.
