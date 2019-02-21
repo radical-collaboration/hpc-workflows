@@ -46,7 +46,7 @@ def create_analog_select_task(i, month, stage_cfg, global_cfg, files_dims):
     # Add list arguments
     t.arguments.append('--obs-start'); t.arguments.extend(index_starts)
     t.arguments.append('--obs-count'); t.arguments.extend(index_counts)
-    t.arguments.append('--mapping-txt'); t.arguments.extend(global_cfg['mapping-file'])
+    t.arguments.append('--mapping-txt'); t.arguments.append(global_cfg['mapping-file'])
 
     if global_cfg['print-help']:
         t.arguments.extend(['-h'])

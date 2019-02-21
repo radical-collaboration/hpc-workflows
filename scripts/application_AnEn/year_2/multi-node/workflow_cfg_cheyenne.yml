@@ -71,7 +71,7 @@ stage-analog-select:
   cpu:
     processes: 1
     process-type: 'MPI'
-    threads-per-process: 36
+    threads-per-process: 72
     thread-type: 'OpenMP'
   pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
   args:

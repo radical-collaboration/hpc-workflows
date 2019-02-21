@@ -163,18 +163,24 @@ def get_indices(type, month, task_i, files_dims, global_cfg):
 
 def check_empty(global_cfg):
     empty = True
+    num_sds_files = len(os.listdir(global_cfg['sds-folder']))
+    num_sims_files = len(os.listdir(global_cfg['sims-folder']))
+    num_analogs_files = len(os.listdir(global_cfg['analogs-folder'])) 
 
-    if len(os.listdir(global_cfg['sds-folder'])) != 0:
-        print "Directory {} is not empty.".format(global_cfg['sds-folder'])
-        empty = False
+    if num_sds_files != 0:
+        if num_sds_files != global_cfg['task-count'] + 1:
+            print "Directory {} is not empty.".format(global_cfg['sds-folder'])
+            empty = False
 
-    if len(os.listdir(global_cfg['sims-folder'])) != 0:
-        print "Directory {} is not empty.".format(global_cfg['sims-folder'])
-        empty = False
+    if num_sims_files != 0:
+        if num_sims_files != global_cfg['task-count']:
+            print "Directory {} is not empty.".format(global_cfg['sims-folder'])
+            empty = False
 
-    if len(os.listdir(global_cfg['analogs-folder'])) != 0:
-        print "Directory {} is not empty.".format(global_cfg['analogs-folder'])
-        empty = False
+    if num_analogs_files != 0:
+        if num_analogs_files != global_cfg['task-count']:
+            print "Directory {} is not empty.".format(global_cfg['analogs-folder'])
+            empty = False
 
     return empty
 
