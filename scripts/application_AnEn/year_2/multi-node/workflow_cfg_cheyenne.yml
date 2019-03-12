@@ -17,7 +17,7 @@ global:
   # Set this to 1 to run tasks serially.
   run-serially: 0
 
-  task-count: 25
+  task-count: 100
 
   num-forecast-parameters: 17
   num-observation-parameters: 17
@@ -26,8 +26,8 @@ global:
 
   observation-id: 0
 
-  search-month-start: "201801"
-  search-month-end: "201801"
+  search-month-start: "201701"
+  search-month-end: "201712"
 
   # Folders on Cheyenne
   sds-folder: "/glade/u/home/wuh20/scratch/data/AnEn/sds/"
@@ -36,7 +36,7 @@ global:
   forecasts-folder: "/glade/u/home/wuh20/scratch/data/AnEn/forecasts/"
   mapping-file: "/glade/u/home/wuh20/scratch/data/AnEn/sds/mapping.txt"
   observations-folder: "/glade/u/home/wuh20/scratch/data/AnEn/analysis/"
-  test-forecast-nc: "/glade/u/home/wuh20/scratch/data/AnEn/forecasts/201802.nc"
+  test-forecast-nc: "/glade/u/home/wuh20/scratch/data/AnEn/forecasts/201801.nc"
 
 
 # Standard deviation calculation stage
