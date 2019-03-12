@@ -4,8 +4,8 @@ rabbitmq:
 
 resource-desc:
   name: 'ncar.cheyenne'
-  walltime: 100
-  cpus: 360
+  walltime: 240
+  cpus: 3600
   gpus: 0
   queue: 'regular'
   project: 'URTG0014'

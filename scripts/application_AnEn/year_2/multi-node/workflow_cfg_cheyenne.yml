@@ -77,4 +77,4 @@ stage-analog-select:
   args:
     quick: 1
     verbose: 3
-    members: 15
+    members: 25
