@@ -46,8 +46,8 @@ def task_sd_calc(i, stage_cfg, global_cfg, files_dims):
 
     for month in months:
         [starts, counts] = get_indices('forecasts', month, i, files_dims, global_cfg)
-        index_starts.append(starts)
-        index_counts.append(counts)
+        index_starts.extend(starts)
+        index_counts.extend(counts)
 
     t.arguments = [
         '--out', out_file,

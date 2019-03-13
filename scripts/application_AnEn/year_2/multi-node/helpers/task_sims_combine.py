@@ -36,15 +36,16 @@ def task_sim_combine(i, stage_cfg, global_cfg):
 
     # This pattern matches similarity files for this specific geographic region for all months.
     pattern = r'[0-9]{{6}}-{:05d}\.nc'.format(i)
-    sims_in = [file for file in os.listdir(global_cfg['sims-folder']) if re.match(pattern, file)]
+    sims_in = ['{}{}'.format(global_cfg['sims-folder'], file) for file in os.listdir(global_cfg['sims-folder']) if re.match(pattern, file)]
 
     t.arguments = [
         '--type', 'Similarity',
-        '--in', sims_in,
         '--out', sim_comb_file,
         '--along', 3, # Appending along the dimension num_entries
         '--verbose', stage_cfg['args']['verbose'],
     ]
+
+    t.arguments.append('--in'); t.arguments.extend(sims_in)
 
     if global_cfg['print-help']:
         t.arguments.extend(['-h'])

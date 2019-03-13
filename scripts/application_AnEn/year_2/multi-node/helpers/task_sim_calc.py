@@ -16,7 +16,7 @@ def task_sim_calc(i, month, stage_cfg, global_cfg, files_dims):
     """
 
     t = Task()
-    t.name = 'task-sims-calc-{:05d}'.format(i)
+    t.name = 'task-sims-calc-{}-{:05d}'.format(month, i)
 
     sim_comb_file = '{}{:05d}{}'.format(global_cfg['analogs-folder'], i, '.nc')
     sim_file = '{}{}-{:05d}{}'.format(global_cfg['sims-folder'], month, i, '.nc')

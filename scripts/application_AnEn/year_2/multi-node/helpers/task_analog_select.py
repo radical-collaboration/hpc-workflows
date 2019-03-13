@@ -1,16 +1,14 @@
 from radical.entk import Task
-from utils import get_indices
 from pprint import pprint
 import os
 
-def create_analog_select_task(i, stage_cfg, global_cfg, files_dims):
+def create_analog_select_task(i, stage_cfg, global_cfg):
     """
     This function creates a analog selection task for the specified task number.
 
     :param i: The task number.
     :param stage_cfg: The configuration dictionary for this stage.
     :param global_cfg: The global configuration dictionary.
-    :param files_dims: The dimension information generated from the function get_files_dims.
     :return: A Task object.
     """
 
@@ -35,10 +33,6 @@ def create_analog_select_task(i, stage_cfg, global_cfg, files_dims):
         'thread_type': stage_cfg['cpu']['thread-type'],
     }
 
-
-    # Calculate the indices for starts and counts
-    [index_starts, index_counts] = get_indices('observations', month, i, files_dims, global_cfg)
-
     t.arguments = [
         '--quick', stage_cfg['args']['quick'],
         '--members', stage_cfg['args']['members'],
@@ -46,14 +40,10 @@ def create_analog_select_task(i, stage_cfg, global_cfg, files_dims):
         '--observation-id', global_cfg['observation-id'],
 
         '--similarity-nc', '{}{:05d}{}'.format(global_cfg['sims-folder'], i, '.nc'),
-        '--observation-nc', '{}{}{}'.format(global_cfg['observations-folder'], month, '.nc'),
+        '--observation-nc', '{}{:05d}{}'.format(global_cfg['observations-folder'], i, '.nc'),
+        '--mapping-txt', global_cfg['mapping-file'],
         '--analog-nc', analog_file,
     ]
-
-    # Add list arguments
-    t.arguments.append('--obs-start'); t.arguments.extend(index_starts)
-    t.arguments.append('--obs-count'); t.arguments.extend(index_counts)
-    t.arguments.append('--mapping-txt'); t.arguments.append(global_cfg['mapping-file'])
 
     if global_cfg['print-help']:
         t.arguments.extend(['-h'])

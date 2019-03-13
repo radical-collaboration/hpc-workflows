@@ -12,12 +12,12 @@ global:
   # Set this to 1 to print tasks in a pretty dictionary form without
   # actually running them.
   #
-  print-tasks-only: 1
+  print-tasks-only: 0
 
   # Set this to 1 to run tasks serially.
   run-serially: 0
 
-  task-count: 20
+  task-count: 40
 
   num-forecast-parameters: 17
   num-observation-parameters: 17
@@ -36,7 +36,7 @@ global:
   forecasts-folder: "/glade/u/home/wuh20/scratch/data/AnEn/forecasts/"
   mapping-file: "/glade/u/home/wuh20/scratch/data/AnEn/sds/mapping.txt"
   observations-folder: "/glade/u/home/wuh20/scratch/data/AnEn/observations/"
-  test-forecast-nc: "/glade/u/home/wuh20/scratch/data/AnEn/forecasts/201801.nc"
+  test-forecast-nc: "/glade/u/home/wuh20/scratch/data/AnEn/forecasts/201802.nc"
 
 
 # Standard deviation calculation stage

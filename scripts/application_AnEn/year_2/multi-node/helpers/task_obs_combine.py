@@ -40,15 +40,15 @@ def task_obs_combine(i, stage_cfg, global_cfg, files_dims):
     months = get_months_between(global_cfg['search-month-start'], global_cfg['search-month-end'])
 
     # Append the data folder prefix and the file format suffix
-    in_files = ['{}{}{}'.format(global_cfg['observation-folder'], month, '.nc') for month in months]
+    in_files = ['{}{}{}'.format(global_cfg['observations-folder'], month, '.nc') for month in months]
 
     # Calculate the indices for starts and counts
     index_starts = []; index_counts = []
 
     for month in months:
         [starts, counts] = get_indices('observations', month, i, files_dims, global_cfg)
-        index_starts.append(starts)
-        index_counts.append(counts)
+        index_starts.extend(starts)
+        index_counts.extend(counts)
 
     t.arguments = [
         '--type', 'Observations',
@@ -58,6 +58,7 @@ def task_obs_combine(i, stage_cfg, global_cfg, files_dims):
         '--verbose', stage_cfg['args']['verbose'],
     ]
 
+    t.arguments.append('--in'); t.arguments.extend(in_files)
     t.arguments.append('--start'); t.arguments.extend(index_starts)
     t.arguments.append('--count'); t.arguments.extend(index_counts)
 

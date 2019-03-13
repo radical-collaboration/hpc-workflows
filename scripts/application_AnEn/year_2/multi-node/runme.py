@@ -37,7 +37,7 @@ def create_pipelines(wcfg):
         t = task_sd_calc(i, stage_cfg, wcfg['global'], files_dims)
         if t: s.add_tasks(t) # Add the task if it is created successfully
 
-    p.add_stages(s)
+    if len(s.tasks) != 0: p.add_stages(s)
 
     # Create the stage for similarity calculator tasks
     print "Adding task sim calc stage ..."
@@ -50,7 +50,7 @@ def create_pipelines(wcfg):
             t = task_sim_calc(i, months[j], stage_cfg, wcfg['global'], files_dims)
             if t: s.add_tasks(t) # Add the task if it is created successfully
 
-    p.add_stages(s)
+    if len(s.tasks) != 0: p.add_stages(s)
 
     # Create the stage for combining similarity files
     print "Adding task similarity combination stage ..."
@@ -62,7 +62,7 @@ def create_pipelines(wcfg):
         t = task_sim_combine(i, stage_cfg, wcfg['global'])
         if t: s.add_tasks(t) # Add the task if it is created successfully
 
-    p.add_stages(s)
+    if len(s.tasks) != 0: p.add_stages(s)
 
     # Create the stage for combining observation files
     s = Stage()
@@ -73,7 +73,7 @@ def create_pipelines(wcfg):
         t = task_obs_combine(i, stage_cfg, wcfg['global'], files_dims)
         if t: s.add_tasks(t) # Add the task if it is created successfully
 
-    p.add_stages(s)
+    if len(s.tasks) != 0: p.add_stages(s)
 
     # Create the stage for analog selector tasks
     print "Adding task analog select stage ..."
@@ -82,11 +82,10 @@ def create_pipelines(wcfg):
     stage_cfg = wcfg[s.name]
 
     for i in range(wcfg['global']['task-count']):
-        for j in range(len(months)):
-            t = create_analog_select_task(i, months[j], stage_cfg, wcfg['global'], files_dims)
-            if t: s.add_tasks(t) # Add the task if it is created successfully
+        t = create_analog_select_task(i, stage_cfg, wcfg['global'])
+        if t: s.add_tasks(t) # Add the task if it is created successfully
 
-    p.add_stages(s)
+    if len(s.tasks) != 0: p.add_stages(s)
 
     return p
 
