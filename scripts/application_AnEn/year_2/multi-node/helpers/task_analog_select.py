@@ -1,13 +1,13 @@
 from radical.entk import Task
 from utils import get_indices
 from pprint import pprint
+import os
 
-def create_analog_select_task(i, month, stage_cfg, global_cfg, files_dims):
+def create_analog_select_task(i, stage_cfg, global_cfg, files_dims):
     """
     This function creates a analog selection task for the specified task number.
 
     :param i: The task number.
-    :param month: The string of year and month, for example, 201001.
     :param stage_cfg: The configuration dictionary for this stage.
     :param global_cfg: The global configuration dictionary.
     :param files_dims: The dimension information generated from the function get_files_dims.
@@ -16,6 +16,12 @@ def create_analog_select_task(i, month, stage_cfg, global_cfg, files_dims):
 
     t = Task()
     t.name = 'task-analog-select-{:05d}'.format(i)
+
+    analog_file = '{}{:05d}{}'.format(global_cfg['analogs-folder'], i, '.nc')
+
+    if os.path.isfile(analog_file):
+        print t.name + ": " + analog_file + " already exists. Skip generating this file!"
+        return False
 
     if global_cfg['print-progress']:
         print "Creating analog selection task {}".format(t.name)
@@ -39,9 +45,9 @@ def create_analog_select_task(i, month, stage_cfg, global_cfg, files_dims):
         '--verbose', stage_cfg['args']['verbose'],
         '--observation-id', global_cfg['observation-id'],
 
-        '--similarity-nc', '{}{}-{:05d}{}'.format(global_cfg['sims-folder'], month, i, '.nc'),
+        '--similarity-nc', '{}{:05d}{}'.format(global_cfg['sims-folder'], i, '.nc'),
         '--observation-nc', '{}{}{}'.format(global_cfg['observations-folder'], month, '.nc'),
-        '--analog-nc', '{}{}-{:05d}{}'.format(global_cfg['analogs-folder'], month, i, '.nc'),
+        '--analog-nc', analog_file,
     ]
 
     # Add list arguments

@@ -1,6 +1,7 @@
 from radical.entk import Task
 from utils import extract_month, get_indices
 from pprint import pprint
+import os
 
 def task_sim_calc(i, month, stage_cfg, global_cfg, files_dims):
     """
@@ -16,6 +17,17 @@ def task_sim_calc(i, month, stage_cfg, global_cfg, files_dims):
 
     t = Task()
     t.name = 'task-sims-calc-{:05d}'.format(i)
+
+    sim_comb_file = '{}{:05d}{}'.format(global_cfg['analogs-folder'], i, '.nc')
+    sim_file = '{}{}-{:05d}{}'.format(global_cfg['sims-folder'], month, i, '.nc')
+
+    if os.path.isfile(sim_comb_file):
+        print t.name + ": " + sim_comb_file + " already exists. Skip generating this file!"
+        return False
+
+    if os.path.isfile(sim_file):
+        print t.name + ": " + sim_file + " already exists. Skip generating this file!"
+        return False
 
     if global_cfg['print-progress']:
         print "Creating similarity task {}".format(t.name)
@@ -41,7 +53,7 @@ def task_sim_calc(i, month, stage_cfg, global_cfg, files_dims):
         '--test-forecast-nc', global_cfg['test-forecast-nc'],
         '--search-forecast-nc', '{}{}{}'.format(global_cfg['forecasts-folder'], month, '.nc'),
         '--observation-nc', '{}{}{}'.format(global_cfg['observations-folder'], month, '.nc'),
-        '--similarity-nc', '{}{}-{:05d}{}'.format(global_cfg['sims-folder'], month, i, '.nc'),
+        '--similarity-nc', sim_file,
         '--verbose', stage_cfg['args']['verbose'],
         '--observation-id', global_cfg['observation-id'],
         '--sds-nc', '{}task-sd-calc-{:05d}{}'.format(global_cfg['sds-folder'], i, '.nc'),

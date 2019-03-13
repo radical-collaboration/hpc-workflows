@@ -1,6 +1,7 @@
 from radical.entk import Task
 from utils import get_months_between, get_indices
 from pprint import pprint
+import os
 
 
 def task_sd_calc(i, stage_cfg, global_cfg, files_dims):
@@ -15,6 +16,12 @@ def task_sd_calc(i, stage_cfg, global_cfg, files_dims):
     """
     t = Task()
     t.name = 'task-sd-calc-{:05d}'.format(i)
+
+    out_file = '{}{}{}'.format(global_cfg['sds-folder'], t.name, '.nc')
+
+    if os.path.isfile(out_file):
+        print t.name + ": " + out_file + " already exists. Skip generating this file!"
+        return False
 
     if global_cfg['print-progress']:
         print "Creating standard deviation task {}".format(t.name)
@@ -33,7 +40,6 @@ def task_sd_calc(i, stage_cfg, global_cfg, files_dims):
 
     # Append the data folder prefix and the file format suffix
     in_files = ['{}{}{}'.format(global_cfg['forecasts-folder'], month, '.nc') for month in months]
-    out_file = '{}{}{}'.format(global_cfg['sds-folder'], t.name, '.nc')
 
     # Calculate the indices for starts and counts
     index_starts = []; index_counts = []

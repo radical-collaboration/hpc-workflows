@@ -4,9 +4,11 @@ import yaml
 import argparse
 from radical.entk import Pipeline, Stage, AppManager
 from helpers.utils import get_files_dims, get_months_between, check_empty, expand_tilde
-from helpers.s1_task_sd_calc import task_sd_calc
-from helpers.s2_task_sim_calc import task_sim_calc
-from helpers.s3_task_analog_select import create_analog_select_task
+from helpers.task_sd_calc import task_sd_calc
+from helpers.task_sim_calc import task_sim_calc
+from helpers.task_analog_select import create_analog_select_task
+from helpers.task_sims_combine import task_sim_combine
+from helpers.task_obs_combine import task_obs_combine
 
 os.environ['RADICAL_PILOT_DBURL'] = 'mongodb://entk:entk123@dbh63.mlab.com:27637/anen'
 
@@ -17,11 +19,6 @@ def create_pipelines(wcfg):
     :param wcfg: The configuration dictionary.
     :return: A Pipeline object.
     """
-    # Determine the number of files exists
-    num_sds_files = len(os.listdir(wcfg['global']['sds-folder']))
-    num_sims_files = len(os.listdir(wcfg['global']['sims-folder']))
-    num_analogs_files = len(os.listdir(wcfg['global']['analogs-folder'])) 
-
     # Get dimensions of all forecast and observation files
     files_dims = get_files_dims(wcfg['global'])
 
@@ -31,48 +28,65 @@ def create_pipelines(wcfg):
     p = Pipeline()
 
     # Create the stage for standard deviation calculator tasks
-    if num_sds_files != wcfg['global']['task-count'] + 1:
-        # The number of files plus one because this folder also contains the 
-        # mapping file.
-        #
-        print "Adding task sd calc stage ..."
-        s = Stage()
-        s.name = 'stage-sd-calc'
-        stage_cfg = wcfg[s.name]
-    
-        for i in range(wcfg['global']['task-count']):
-            t = task_sd_calc(i, stage_cfg, wcfg['global'], files_dims)
-            s.add_tasks(t)
-    
-        p.add_stages(s)
-    
-        # Create the stage for similarity calculator tasks
-    if num_sims_files != wcfg['global']['task-count']:
-        print "Adding task sim calc stage ..."
-        s = Stage()
-        s.name = 'stage-sim-calc'
-        stage_cfg = wcfg[s.name]
-    
-        for i in range(wcfg['global']['task-count']):
-            for j in range(len(months)):
-                t = task_sim_calc(i, months[j], stage_cfg, wcfg['global'], files_dims)
-                s.add_tasks(t)
-    
-        p.add_stages(s)
-    
-        # Create the stage for analog selector tasks
-    if num_analogs_files != wcfg['global']['task-count']:
-        print "Adding task analog select stage ..."
-        s = Stage()
-        s.name = 'stage-analog-select'
-        stage_cfg = wcfg[s.name]
-    
-        for i in range(wcfg['global']['task-count']):
-            for j in range(len(months)):
-                t = create_analog_select_task(i, months[j], stage_cfg, wcfg['global'], files_dims)
-                s.add_tasks(t)
-    
-        p.add_stages(s)
+    print "Adding task sd calc stage ..."
+    s = Stage()
+    s.name = 'stage-sd-calc'
+    stage_cfg = wcfg[s.name]
+
+    for i in range(wcfg['global']['task-count']):
+        t = task_sd_calc(i, stage_cfg, wcfg['global'], files_dims)
+        if t: s.add_tasks(t) # Add the task if it is created successfully
+
+    p.add_stages(s)
+
+    # Create the stage for similarity calculator tasks
+    print "Adding task sim calc stage ..."
+    s = Stage()
+    s.name = 'stage-sim-calc'
+    stage_cfg = wcfg[s.name]
+
+    for i in range(wcfg['global']['task-count']):
+        for j in range(len(months)):
+            t = task_sim_calc(i, months[j], stage_cfg, wcfg['global'], files_dims)
+            if t: s.add_tasks(t) # Add the task if it is created successfully
+
+    p.add_stages(s)
+
+    # Create the stage for combining similarity files
+    print "Adding task similarity combination stage ..."
+    s = Stage()
+    s.name = 'stage-sim-comb'
+    stage_cfg = wcfg[s.name]
+
+    for i in range(wcfg['global']['task-count']):
+        t = task_sim_combine(i, stage_cfg, wcfg['global'])
+        if t: s.add_tasks(t) # Add the task if it is created successfully
+
+    p.add_stages(s)
+
+    # Create the stage for combining observation files
+    s = Stage()
+    s.name = 'stage-obs-comb'
+    stage_cfg = wcfg[s.name]
+
+    for i in range(wcfg['global']['task-count']):
+        t = task_obs_combine(i, stage_cfg, wcfg['global'])
+        if t: s.add_tasks(t) # Add the task if it is created successfully
+
+    p.add_stages(s)
+
+    # Create the stage for analog selector tasks
+    print "Adding task analog select stage ..."
+    s = Stage()
+    s.name = 'stage-analog-select'
+    stage_cfg = wcfg[s.name]
+
+    for i in range(wcfg['global']['task-count']):
+        for j in range(len(months)):
+            t = create_analog_select_task(i, months[j], stage_cfg, wcfg['global'], files_dims)
+            if t: s.add_tasks(t) # Add the task if it is created successfully
+
+    p.add_stages(s)
 
     return p
 
