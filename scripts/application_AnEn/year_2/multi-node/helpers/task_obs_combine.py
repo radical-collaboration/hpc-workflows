@@ -46,19 +46,20 @@ def task_obs_combine(i, stage_cfg, global_cfg, files_dims):
     index_starts = []; index_counts = []
 
     for month in months:
-        [starts, counts] = get_indices('forecasts', month, i, files_dims, global_cfg)
-        index_starts.extend(starts)
-        index_counts.extend(counts)
+        [starts, counts] = get_indices('observations', month, i, files_dims, global_cfg)
+        index_starts.append(starts)
+        index_counts.append(counts)
 
     t.arguments = [
         '--type', 'Observations',
         '--in', in_files,
-        '--start', index_starts,
-        '--count', index_counts,
         '--out', obs_comb_file,
         '--along', 1, # Appending along the dimension times
         '--verbose', stage_cfg['args']['verbose'],
     ]
+
+    t.arguments.append('--start'); t.arguments.extend(index_starts)
+    t.arguments.append('--count'); t.arguments.extend(index_counts)
 
     if global_cfg['print-help']:
         t.arguments.extend(['-h'])
