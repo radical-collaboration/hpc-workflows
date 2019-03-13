@@ -35,7 +35,7 @@ global:
   analogs-folder: "/glade/u/home/wuh20/scratch/data/AnEn/analogs/"
   forecasts-folder: "/glade/u/home/wuh20/scratch/data/AnEn/forecasts/"
   mapping-file: "/glade/u/home/wuh20/scratch/data/AnEn/sds/mapping.txt"
-  observations-folder: "/glade/u/home/wuh20/scratch/data/AnEn/analysis/"
+  observations-folder: "/glade/u/home/wuh20/scratch/data/AnEn/observations/"
   test-forecast-nc: "/glade/u/home/wuh20/scratch/data/AnEn/forecasts/201801.nc"
 
 
@@ -55,6 +55,32 @@ stage-sd-calc:
 # Similarity calculation stage
 stage-sim-calc:
   executable: "similarityCalculator"
+  cpu:
+    processes: 1
+    process-type: 'MPI'
+    threads-per-process: 36
+    thread-type: 'OpenMP'
+  pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
+  args:
+    verbose: 3
+
+
+# Similarity combination stage
+stage-sim-comb:
+  executable: "fileAggregate"
+  cpu:
+    processes: 1
+    process-type: 'MPI'
+    threads-per-process: 36
+    thread-type: 'OpenMP'
+  pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
+  args:
+    verbose: 3
+
+
+# Observation combination stage
+stage-obs-comb:
+  executable: "fileAggregate"
   cpu:
     processes: 1
     process-type: 'MPI'
