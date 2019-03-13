@@ -7,12 +7,12 @@ global:
   print-help: 0
 
   # Set this to 1 to print progress information from the runme.py script.
-  print-progress: 0
+  print-progress: 1
 
   # Set this to 1 to print tasks in a pretty dictionary form without
   # actually running them.
   #
-  print-tasks-only: 0
+  print-tasks-only: 1
 
   # Set this to 1 to run tasks serially.
   run-serially: 0

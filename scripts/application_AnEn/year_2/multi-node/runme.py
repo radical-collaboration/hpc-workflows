@@ -70,7 +70,7 @@ def create_pipelines(wcfg):
     stage_cfg = wcfg[s.name]
 
     for i in range(wcfg['global']['task-count']):
-        t = task_obs_combine(i, stage_cfg, wcfg['global'])
+        t = task_obs_combine(i, stage_cfg, wcfg['global'], files_dims)
         if t: s.add_tasks(t) # Add the task if it is created successfully
 
     p.add_stages(s)
@@ -114,8 +114,7 @@ if __name__ == '__main__':
 
     wcfg = expand_tilde(wcfg)
 
-    if not check_empty(wcfg['global']):
-        sys.exit(1)
+    check_empty(wcfg['global'])
 
     amgr = AppManager(hostname=rcfg['rabbitmq']['hostname'],
                       port=rcfg['rabbitmq']['port'])
