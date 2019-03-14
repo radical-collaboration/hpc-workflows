@@ -52,7 +52,6 @@ def task_obs_combine(i, stage_cfg, global_cfg, files_dims):
 
     t.arguments = [
         '--type', 'Observations',
-        '--in', in_files,
         '--out', obs_comb_file,
         '--along', 1, # Appending along the dimension times
         '--verbose', stage_cfg['args']['verbose'],
