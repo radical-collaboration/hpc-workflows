@@ -1,3 +1,4 @@
+from helpers.utils import get_months_between
 from radical.entk import Task
 from pprint import pprint
 import os
@@ -34,9 +35,11 @@ def task_sim_combine(i, stage_cfg, global_cfg):
         'thread_type': stage_cfg['cpu']['thread-type'],
     }
 
-    # This pattern matches similarity files for this specific geographic region for all months.
-    pattern = '[0-9]{{6}}-{:05d}\.nc'.format(i)
-    sims_in = ['{}{}'.format(global_cfg['sims-folder'], file) for file in os.listdir(global_cfg['sims-folder']) if re.match(pattern, file)]
+    # Get the number of forecast files to be used. This is the number of months specified.
+    months = get_months_between(global_cfg['search-month-start'], global_cfg['search-month-end'])
+
+    # Define the similarity files to combine
+    sims_in = ['{}{}-{:05d}.nc'.format(global_cfg['sims-folder'], month, i) for month in months]
 
     t.arguments = [
         '--type', 'Similarity',
