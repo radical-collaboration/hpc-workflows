@@ -59,10 +59,6 @@ def task_sim_calc(i, month, stage_cfg, global_cfg, files_dims):
         '--sds-nc', '{}task-sd-calc-{:05d}{}'.format(global_cfg['sds-folder'], i, '.nc'),
     ]
     
-    if i == 0:
-        t.arguments.append('--mapping-txt')
-        t.arguments.append(global_cfg['mapping-file'])
-
     # Add list arguments
     t.arguments.append('--test-start'); t.arguments.extend(test_starts)
     t.arguments.append('--test-count'); t.arguments.extend(test_counts)

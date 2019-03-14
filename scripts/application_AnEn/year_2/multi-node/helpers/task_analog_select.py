@@ -41,7 +41,6 @@ def create_analog_select_task(i, stage_cfg, global_cfg):
 
         '--similarity-nc', '{}{:05d}{}'.format(global_cfg['sims-folder'], i, '.nc'),
         '--observation-nc', '{}{:05d}{}'.format(global_cfg['observations-folder'], i, '.nc'),
-        '--mapping-txt', global_cfg['mapping-file'],
         '--analog-nc', analog_file,
     ]
 
