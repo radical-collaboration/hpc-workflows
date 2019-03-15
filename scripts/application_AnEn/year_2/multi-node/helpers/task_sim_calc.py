@@ -3,7 +3,7 @@ from utils import extract_month, get_indices
 from pprint import pprint
 import os
 
-def task_sim_calc_v2(i, stage_cfg, global_cfg):
+def task_sim_calc_v2(i, stage_cfg, global_cfg, files_dims):
     """
     This function creates a similarity calculation task for the specified task number.
 
@@ -42,6 +42,12 @@ def task_sim_calc_v2(i, stage_cfg, global_cfg):
         '--search-forecast-nc', '{}{:05d}{}'.format(global_cfg['forecasts-folder'], i, '.nc'),
         '--observation-nc', '{}{:05d}{}'.format(global_cfg['observations-folder'], i, '.nc'),
     ]
+
+    test_month = extract_month(global_cfg['test-forecast-nc'])
+    [test_starts, test_counts] = get_indices('forecasts', test_month, i, files_dims, global_cfg)
+
+    t.arguments.append('--test-start'); t.arguments.extend(test_starts)
+    t.arguments.append('--test-count'); t.arguments.extend(test_counts)
 
     if global_cfg['print-help']:
         t.arguments.extend(['-h'])

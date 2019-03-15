@@ -33,8 +33,8 @@ def create_pipelines(wcfg):
     stage_cfg = wcfg[s.name]
 
     for i in range(wcfg['global']['task-count']):
-        t = task_combine('Forecasts', i, stage_cfg, wcfg['global'], 2)
-        t = task_combine('Observations', i, stage_cfg, wcfg['global'], 2)
+        t = task_combine('Forecasts', i, stage_cfg, wcfg['global'], 2, files_dims)
+        t = task_combine('Observations', i, stage_cfg, wcfg['global'], 2, files_dims)
         if t: s.add_tasks(t) # Add the task if it is created successfully
 
     if len(s.tasks) != 0: p.add_stages(s)
@@ -46,7 +46,7 @@ def create_pipelines(wcfg):
     stage_cfg = wcfg[s.name]
 
     for i in range(wcfg['global']['task-count']):
-        t = task_sim_calc_v2(i, stage_cfg, wcfg['global'])
+        t = task_sim_calc_v2(i, stage_cfg, wcfg['global'], files_dims)
         if t: s.add_tasks(t) # Add the task if it is created successfully
 
     if len(s.tasks) != 0: p.add_stages(s)
@@ -71,8 +71,8 @@ def create_pipelines(wcfg):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Process some arguments to get resource and workflow cfgs')
-    parser.add_argument('--wcfg', help='path to workflow cfg file', required=False, default='./workflow_cfg_localhost.yml')
-    parser.add_argument('--rcfg', help='path to resource cfg file', required=False, default='./resource_cfg_localhost.yml')
+    parser.add_argument('--wcfg', help='path to workflow cfg file', required=False, default='./workflow_cfg.yml')
+    parser.add_argument('--rcfg', help='path to resource cfg file', required=False, default='./resource_cfg.yml')
 
     args = parser.parse_args()
     if not os.path.isfile(args.wcfg):

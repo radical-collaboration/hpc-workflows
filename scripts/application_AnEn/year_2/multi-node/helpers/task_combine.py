@@ -19,15 +19,16 @@ def task_combine(type, i, stage_cfg, global_cfg, along, files_dims):
     t = Task()
     t.name = 'task-{}_combine-{:05d}'.format(type, i)
 
-    data_folder = global_cfg['sims-folder']
 
     if type is "Observations":
-        comb_file = '{}{:05d}{}'.format(data_folder, i, '.nc')
+        data_folder = global_cfg['observations-folder']
     elif type is "Forecasts":
-        comb_file = '{}{:05d}{}'.format(data_folder, i, '.nc')
+        data_folder = global_cfg['forecasts-folder']
     else:
         print "Unsupported file type {}!".format(type)
         sys.exit(1)
+
+    comb_file = '{}{:05d}{}'.format(data_folder, i, '.nc')
 
     if os.path.isfile(comb_file):
         print t.name + ": " + comb_file + " already exists. Skip generating this file!"

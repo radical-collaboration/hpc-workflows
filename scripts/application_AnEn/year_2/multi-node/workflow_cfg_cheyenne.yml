@@ -17,7 +17,7 @@ global:
   # Set this to 1 to run tasks serially.
   run-serially: 0
 
-  task-count: 160
+  task-count: 3
 
   num-forecast-parameters: 17
   num-observation-parameters: 17
