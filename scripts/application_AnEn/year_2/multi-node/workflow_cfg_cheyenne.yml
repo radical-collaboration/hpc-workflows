@@ -12,12 +12,12 @@ global:
   # Set this to 1 to print tasks in a pretty dictionary form without
   # actually running them.
   #
-  print-tasks-only: 1
+  print-tasks-only: 0
 
   # Set this to 1 to run tasks serially.
   run-serially: 0
 
-  task-count: 80
+  task-count: 160
 
   num-forecast-parameters: 17
   num-observation-parameters: 17
@@ -101,6 +101,6 @@ stage-analog-select:
     thread-type: 'OpenMP'
   pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
   args:
-    quick: 1
+    quick: 0
     verbose: 3
     members: 25
