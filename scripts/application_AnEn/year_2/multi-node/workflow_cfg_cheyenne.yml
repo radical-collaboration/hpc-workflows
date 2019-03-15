@@ -12,7 +12,7 @@ global:
   # Set this to 1 to print tasks in a pretty dictionary form without
   # actually running them.
   #
-  print-tasks-only: 0
+  print-tasks-only: 1
 
   # Set this to 1 to run tasks serially.
   run-serially: 0
@@ -34,8 +34,10 @@ global:
   sims-folder: "/glade/u/home/wuh20/scratch/data/AnEn/sims/"
   analogs-folder: "/glade/u/home/wuh20/scratch/data/AnEn/analogs/"
   forecasts-folder: "/glade/u/home/wuh20/scratch/data/AnEn/forecasts/"
-  mapping-file: "/glade/u/home/wuh20/scratch/data/AnEn/sds/mapping.txt"
   observations-folder: "/glade/u/home/wuh20/scratch/data/AnEn/observations/"
+
+  # Files on Cheyenne
+  mapping-file: "/glade/u/home/wuh20/scratch/data/AnEn/sds/mapping.txt"
   test-forecast-nc: "/glade/u/home/wuh20/scratch/data/AnEn/forecasts/201802.nc"
 
 
@@ -55,6 +57,19 @@ stage-sd-calc:
 # Similarity calculation stage
 stage-sim-calc:
   executable: "similarityCalculator"
+  cpu:
+    processes: 1
+    process-type: 'MPI'
+    threads-per-process: 36
+    thread-type: 'OpenMP'
+  pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
+  args:
+    verbose: 3
+
+
+# Combination stage
+stage-combination:
+  executable: "fileAggregate"
   cpu:
     processes: 1
     process-type: 'MPI'
