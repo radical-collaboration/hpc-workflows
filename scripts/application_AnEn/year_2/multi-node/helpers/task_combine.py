@@ -82,7 +82,7 @@ def task_combine(type, i, stage_cfg, global_cfg, along, files_dims):
         t.arguments.append('--count'); t.arguments.extend(index_counts)
 
     if global_cfg['print-help']:
-        t.arguments.extend(['-h'])
+        t.arguments.append('-h')
 
     t.link_input_data = []
     t.copy_output_data = []

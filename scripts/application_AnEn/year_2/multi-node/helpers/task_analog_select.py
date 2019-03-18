@@ -57,7 +57,7 @@ def create_analog_select_task(i, stage_cfg, global_cfg, files_dims):
     t.arguments.append('--obs-count'); t.arguments.extend(obs_counts)
 
     if global_cfg['print-help']:
-        t.arguments.extend(['-h'])
+        t.arguments.append('-h')
 
     t.link_input_data = []
     t.copy_output_data = []
