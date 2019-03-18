@@ -4,6 +4,7 @@ import sys
 import datetime
 from netCDF4 import Dataset
 
+
 def extract_month(file_path, pattern = '.*?/(\d{6})\.nc$'):
     """
     This function extracts the month string from a file path using the specified pattern.

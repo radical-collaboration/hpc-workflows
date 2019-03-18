@@ -12,12 +12,12 @@ global:
   # Set this to 1 to print tasks in a pretty dictionary form without
   # actually running them.
   #
-  print-tasks-only: 1
+  print-tasks-only: 0
 
   # Set this to 1 to run tasks serially.
-  run-serially: 1
+  run-serially: 0
 
-  task-count: 10
+  task-count: 3
 
   num-forecast-parameters: 17
   num-observation-parameters: 17
@@ -29,15 +29,6 @@ global:
   search-month-start: "201801"
   search-month-end: "201804"
 
-  # If data are on Grappa
-  # sds-folder: "~/storage/anen_results/sds/"
-  # sims-folder: "~/storage/anen_results/sims/"
-  # analogs-folder: "~/storage/anen_results/analogs/"
-  # forecasts-folder: "~/geolab_storage_V3/data/NAM/NCEI/forecasts_new/"
-  # observations-folder: "~/geolab_storage_V3/data/NAM/NCEI/analysis_new/"
-  # test-forecast-nc: "~/geolab_storage_V3/data/NAM/NCEI/forecasts_new/201805.nc"
-
-  # If data are local
   sds-folder: "~/geolab_storage_V3/data/NAM/NCEI/sds/"
   sims-folder: "~/geolab_storage_V3/data/NAM/NCEI/sims/"
   analogs-folder: "~/geolab_storage_V3/data/NAM/NCEI/analogs/"

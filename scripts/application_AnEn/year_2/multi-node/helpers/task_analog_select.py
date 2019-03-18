@@ -1,4 +1,4 @@
-from utils import extract_month, get_indices, get_months_between
+from utils import get_indices, get_months_between
 from radical.entk import Task
 from pprint import pprint
 import os

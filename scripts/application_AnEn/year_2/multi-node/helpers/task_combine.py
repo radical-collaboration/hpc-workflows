@@ -4,6 +4,7 @@ from pprint import pprint
 import os
 import sys
 
+
 def task_combine(type, i, stage_cfg, global_cfg, along, files_dims):
     """
     This function combines the similarity files along time for a specific geographic region.
@@ -13,6 +14,7 @@ def task_combine(type, i, stage_cfg, global_cfg, along, files_dims):
     :param stage_cfg: The configuration dictionary for this stage.
     :param global_cfg: The global configuration dictionary.
     :param along: Which dimension is appended to.
+    :param files_dims: The dimension information generated from the function get_files_dims.
     :return: A Task object.
     """
 
@@ -66,11 +68,10 @@ def task_combine(type, i, stage_cfg, global_cfg, along, files_dims):
         # Input files are all the analog files in analogs folder
         files_in = ['{}{:05d}{}'.format(global_cfg['analogs-folder'], i, '.nc') for i in range(global_cfg['task-count'])]
 
-
     t.arguments = [
         '--type', type,
         '--out', comb_file,
-        '--along', along, # Appending along the dimension num_entries
+        '--along', along,  # Appending along the dimension num_entries
         '--verbose', stage_cfg['args']['verbose'],
     ]
 
