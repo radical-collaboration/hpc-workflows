@@ -6,7 +6,6 @@ from radical.entk import Pipeline, Stage, AppManager
 from helpers.utils import get_files_dims, check_empty, expand_tilde
 from helpers.task_sim_calc import task_sim_calc
 from helpers.task_analog_select import create_analog_select_task
-from helpers.task_combine import task_combine
 
 os.environ['RADICAL_PILOT_DBURL'] = 'mongodb://entk:entk123@dbh63.mlab.com:27637/anen'
 
