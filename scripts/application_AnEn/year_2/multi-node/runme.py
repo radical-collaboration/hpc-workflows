@@ -3,12 +3,10 @@ import sys
 import yaml
 import argparse
 from radical.entk import Pipeline, Stage, AppManager
-from helpers.utils import get_files_dims, get_months_between, check_empty, expand_tilde
-from helpers.task_sd_calc import task_sd_calc
+from helpers.utils import get_files_dims, check_empty, expand_tilde
 from helpers.task_sim_calc import task_sim_calc
 from helpers.task_analog_select import create_analog_select_task
-from helpers.task_sims_combine import task_sim_combine
-from helpers.task_obs_combine import task_obs_combine
+from helpers.task_combine import task_combine
 
 os.environ['RADICAL_PILOT_DBURL'] = 'mongodb://entk:entk123@dbh63.mlab.com:27637/anen'
 
@@ -22,22 +20,7 @@ def create_pipelines(wcfg):
     # Get dimensions of all forecast and observation files
     files_dims = get_files_dims(wcfg['global'])
 
-    # Get the number of forecast files to be used. This is the number of months specified.
-    months = get_months_between(wcfg['global']['search-month-start'], wcfg['global']['search-month-end'])
-
     p = Pipeline()
-
-    # Create the stage for standard deviation calculator tasks
-    print "Adding task sd calc stage ..."
-    s = Stage()
-    s.name = 'stage-sd-calc'
-    stage_cfg = wcfg[s.name]
-
-    for i in range(wcfg['global']['task-count']):
-        t = task_sd_calc(i, stage_cfg, wcfg['global'], files_dims)
-        if t: s.add_tasks(t) # Add the task if it is created successfully
-
-    if len(s.tasks) != 0: p.add_stages(s)
 
     # Create the stage for similarity calculator tasks
     print "Adding task sim calc stage ..."
@@ -46,31 +29,7 @@ def create_pipelines(wcfg):
     stage_cfg = wcfg[s.name]
 
     for i in range(wcfg['global']['task-count']):
-        for j in range(len(months)):
-            t = task_sim_calc(i, months[j], stage_cfg, wcfg['global'], files_dims)
-            if t: s.add_tasks(t) # Add the task if it is created successfully
-
-    if len(s.tasks) != 0: p.add_stages(s)
-
-    # Create the stage for combining similarity files
-    print "Adding task similarity combination stage ..."
-    s = Stage()
-    s.name = 'stage-sim-comb'
-    stage_cfg = wcfg[s.name]
-
-    for i in range(wcfg['global']['task-count']):
-        t = task_sim_combine(i, stage_cfg, wcfg['global'])
-        if t: s.add_tasks(t) # Add the task if it is created successfully
-
-    if len(s.tasks) != 0: p.add_stages(s)
-
-    # Create the stage for combining observation files
-    s = Stage()
-    s.name = 'stage-obs-comb'
-    stage_cfg = wcfg[s.name]
-
-    for i in range(wcfg['global']['task-count']):
-        t = task_obs_combine(i, stage_cfg, wcfg['global'], files_dims)
+        t = task_sim_calc(i, stage_cfg, wcfg['global'], files_dims)
         if t: s.add_tasks(t) # Add the task if it is created successfully
 
     if len(s.tasks) != 0: p.add_stages(s)
@@ -83,6 +42,18 @@ def create_pipelines(wcfg):
 
     for i in range(wcfg['global']['task-count']):
         t = create_analog_select_task(i, stage_cfg, wcfg['global'])
+        if t: s.add_tasks(t) # Add the task if it is created successfully
+
+    if len(s.tasks) != 0: p.add_stages(s)
+
+    # Create the stage for combining analogs
+    print "Adding task combining analog files ..."
+    s = Stage()
+    s.name = "stage-analog-combine"
+    stage_cfg = wcfg[s.name]
+
+    for i in range(wcfg['global']['task-count']):
+        t = task_combine('Analogs', i, stage_cfg, wcfg['global'], 0, files_dims)
         if t: s.add_tasks(t) # Add the task if it is created successfully
 
     if len(s.tasks) != 0: p.add_stages(s)

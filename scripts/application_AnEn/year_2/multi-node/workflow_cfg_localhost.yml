@@ -27,7 +27,7 @@ global:
   observation-id: 0
 
   search-month-start: "201801"
-  search-month-end: "201801"
+  search-month-end: "201804"
 
   # If data are on Grappa
   # sds-folder: "~/storage/anen_results/sds/"
@@ -38,25 +38,12 @@ global:
   # test-forecast-nc: "~/geolab_storage_V3/data/NAM/NCEI/forecasts_new/201805.nc"
 
   # If data are local
-  sds-folder: "~/exfat-hu/Data/2019_Hu_AnEn-bias-correction/sds/"
-  sims-folder: "~/exfat-hu/Data/2019_Hu_AnEn-bias-correction/sims/"
-  analogs-folder: "~/exfat-hu/Data/2019_Hu_AnEn-bias-correction/analogs/"
-  forecasts-folder: "~/exfat-hu/Data/2019_Hu_AnEn-bias-correction/forecasts/"
-  observations-folder: "~/exfat-hu/Data/2019_Hu_AnEn-bias-correction/observations/"
-  test-forecast-nc: "~/exfat-hu/Data/2019_Hu_AnEn-bias-correction/forecasts/201802.nc"
-
-
-# Standard deviation calculation stage
-stage-sd-calc:
-  executable: "standardDeviationCalculator"
-  cpu:
-    processes: 1
-    process-type: None
-    threads-per-process: 1
-    thread-type: None
-  pre-exec: ["export PATH=$PATH:~/github/AnalogsEnsemble/output/bin"]
-  args:
-    verbose: 3
+  sds-folder: "~/geolab_storage_V3/data/NAM/NCEI/sds/"
+  sims-folder: "~/geolab_storage_V3/data/NAM/NCEI/sims/"
+  analogs-folder: "~/geolab_storage_V3/data/NAM/NCEI/analogs/"
+  forecasts-folder: "~/geolab_storage_V3/data/NAM/NCEI/forecasts_new/"
+  observations-folder: "~/geolab_storage_V3/data/NAM/NCEI/analysis_new/"
+  test-forecast-nc: "~/geolab_storage_V3/data/NAM/NCEI/forecasts_new/201806.nc"
 
 
 # Similarity calculation stage
@@ -64,9 +51,9 @@ stage-sim-calc:
   executable: "similarityCalculator"
   cpu:
     processes: 1
-    process-type: None
+    process-type: 'MPI'
     threads-per-process: 1
-    thread-type: None
+    thread-type: 'OpenMP'
   pre-exec: ["export PATH=$PATH:~/github/AnalogsEnsemble/output/bin"]
   args:
     verbose: 3
@@ -77,11 +64,24 @@ stage-analog-select:
   executable: "analogSelector"
   cpu:
     processes: 1
-    process-type: None
+    process-type: 'MPI'
     threads-per-process: 1
-    thread-type: None
+    thread-type: 'OpenMP'
   pre-exec: ["export PATH=$PATH:~/github/AnalogsEnsemble/output/bin"]
   args:
     quick: 1
     verbose: 3
     members: 15
+
+
+# Analog selection stage
+stage-analog-combine:
+  executable: "fileAggregate"
+  cpu:
+    processes: 1
+    process-type: 'MPI'
+    threads-per-process: 1
+    thread-type: 'OpenMP'
+  pre-exec: ["export PATH=$PATH:~/github/AnalogsEnsemble/output/bin"]
+  args:
+    verbose: 3

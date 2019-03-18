@@ -19,11 +19,12 @@ def task_combine(type, i, stage_cfg, global_cfg, along, files_dims):
     t = Task()
     t.name = 'task-{}_combine-{:05d}'.format(type, i)
 
-
     if type is "Observations":
         data_folder = global_cfg['observations-folder']
     elif type is "Forecasts":
         data_folder = global_cfg['forecasts-folder']
+    elif type is "Analogs":
+        data_folder = global_cfg['analogs-folder']
     else:
         print "Unsupported file type {}!".format(type)
         sys.exit(1)
@@ -46,19 +47,24 @@ def task_combine(type, i, stage_cfg, global_cfg, along, files_dims):
         'thread_type': stage_cfg['cpu']['thread-type'],
     }
 
-    # Get the number of forecast files to be used. This is the number of months specified.
-    months = get_months_between(global_cfg['search-month-start'], global_cfg['search-month-end'])
+    if type is "Observations" or type is "Forecasts":
+        # Get the number of forecast files to be used. This is the number of months specified.
+        months = get_months_between(global_cfg['search-month-start'], global_cfg['search-month-end'])
 
-    # Define the similarity files to combine
-    files_in = ['{}{}-{:05d}.nc'.format(data_folder, month, i) for month in months]
+        # Define the similarity files to combine
+        files_in = ['{}{}-{:05d}.nc'.format(data_folder, month, i) for month in months]
 
-    # Calculate the indices for starts and counts
-    index_starts = []; index_counts = []
+        # Calculate the indices for starts and counts
+        index_starts = []; index_counts = []
 
-    for month in months:
-        [starts, counts] = get_indices('forecasts', month, i, files_dims, global_cfg)
-        index_starts.extend(starts)
-        index_counts.extend(counts)
+        for month in months:
+            [starts, counts] = get_indices('forecasts', month, i, files_dims, global_cfg)
+            index_starts.extend(starts)
+            index_counts.extend(counts)
+
+    elif type is "Analogs":
+        files_in = ['{}{:05d}{}'.format(global_cfg['analogs-folder'], i, '.nc') for i in range(global_cfg['task-count'])]
+
 
     t.arguments = [
         '--type', type,
@@ -68,8 +74,10 @@ def task_combine(type, i, stage_cfg, global_cfg, along, files_dims):
     ]
 
     t.arguments.append('--in'); t.arguments.extend(files_in)
-    t.arguments.append('--start'); t.arguments.extend(index_starts)
-    t.arguments.append('--count'); t.arguments.extend(index_counts)
+
+    if type is "Observations" or type is "Forecasts":
+        t.arguments.append('--start'); t.arguments.extend(index_starts)
+        t.arguments.append('--count'); t.arguments.extend(index_counts)
 
     if global_cfg['print-help']:
         t.arguments.extend(['-h'])

@@ -1,5 +1,5 @@
 from radical.entk import Task
-from utils import extract_month, get_indices
+from utils import extract_month, get_indices, get_months_between
 from pprint import pprint
 import os
 
@@ -61,7 +61,7 @@ def task_sim_calc_v2(i, stage_cfg, global_cfg, files_dims):
     return t
 
 
-def task_sim_calc(i, month, stage_cfg, global_cfg, files_dims):
+def task_sim_calc(i, stage_cfg, global_cfg, files_dims):
     """
     This function creates a similarity calculation task for the specified task number.
 
@@ -74,14 +74,9 @@ def task_sim_calc(i, month, stage_cfg, global_cfg, files_dims):
     """
 
     t = Task()
-    t.name = 'task-sims-calc-{}-{:05d}'.format(month, i)
+    t.name = 'task-sims-calc-{:05d}'.format(i)
 
-    sim_comb_file = '{}{:05d}{}'.format(global_cfg['analogs-folder'], i, '.nc')
-    sim_file = '{}{}-{:05d}{}'.format(global_cfg['sims-folder'], month, i, '.nc')
-
-    if os.path.isfile(sim_comb_file):
-        print t.name + ": " + sim_comb_file + " already exists. Skip generating this file!"
-        return False
+    sim_file = '{}{:05d}{}'.format(global_cfg['sims-folder'], i, '.nc')
 
     if os.path.isfile(sim_file):
         print t.name + ": " + sim_file + " already exists. Skip generating this file!"
@@ -99,13 +94,21 @@ def task_sim_calc(i, month, stage_cfg, global_cfg, files_dims):
         'thread_type': stage_cfg['cpu']['thread-type'],
     }
 
-    # Extract the test month from the test forecast file path
+    # Extract the month
     test_month = extract_month(global_cfg['test-forecast-nc'])
+    months = get_months_between(global_cfg['search-month-start'], global_cfg['search-month-end'])
 
     # Calculate the indices for starts and counts
     [test_starts, test_counts] = get_indices('forecasts', test_month, i, files_dims, global_cfg)
-    [search_starts, search_counts] = get_indices('forecasts', month, i, files_dims, global_cfg)
-    [obs_starts, obs_counts] = get_indices('observations', month, i, files_dims, global_cfg)
+    search_counts = []; search_starts = [];
+    obs_counts = []; obs_starts = [];
+    for month in months:
+        [search_start, search_count] = get_indices('forecasts', month, i, files_dims, global_cfg)
+        search_starts.extend(search_start)
+        search_counts.extend(search_count)
+        [obs_start, obs_count] = get_indices('observations', month, i, files_dims, global_cfg)
+        obs_starts.extend(obs_start)
+        obs_counts.extend(obs_count)
 
     t.arguments = [
         '--test-forecast-nc', global_cfg['test-forecast-nc'],
