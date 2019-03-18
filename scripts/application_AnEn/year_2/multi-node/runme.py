@@ -41,7 +41,7 @@ def create_pipelines(wcfg):
     stage_cfg = wcfg[s.name]
 
     for i in range(wcfg['global']['task-count']):
-        t = create_analog_select_task(i, stage_cfg, wcfg['global'])
+        t = create_analog_select_task(i, stage_cfg, wcfg['global'], files_dims)
         if t: s.add_tasks(t) # Add the task if it is created successfully
 
     if len(s.tasks) != 0: p.add_stages(s)
@@ -52,9 +52,8 @@ def create_pipelines(wcfg):
     s.name = "stage-analog-combine"
     stage_cfg = wcfg[s.name]
 
-    for i in range(wcfg['global']['task-count']):
-        t = task_combine('Analogs', i, stage_cfg, wcfg['global'], 0, files_dims)
-        if t: s.add_tasks(t) # Add the task if it is created successfully
+    t = task_combine('Analogs', 0, stage_cfg, wcfg['global'], 0, files_dims)
+    if t: s.add_tasks(t) # Add the task if it is created successfully
 
     if len(s.tasks) != 0: p.add_stages(s)
 
@@ -77,10 +76,10 @@ if __name__ == '__main__':
         sys.exit(1)
 
     with open(args.rcfg, 'r') as fp:
-        rcfg = yaml.load(fp)
+        rcfg = yaml.load(fp, Loader=yaml.FullLoader)
 
     with open(args.wcfg, 'r') as fp:
-        wcfg = yaml.load(fp)
+        wcfg = yaml.load(fp, Loader=yaml.FullLoader)
 
     wcfg = expand_tilde(wcfg)
 

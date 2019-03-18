@@ -67,7 +67,7 @@ def get_files_dims(global_cfg, check_dims=True):
 
     # Add search files for observations and forecasts
     files_dims['forecasts']['search_files'] = ['{}{}{}'.format(global_cfg['forecasts-folder'], month, '.nc') for month in months]
-    files_dims['observations']['search_files'] = ['{}{}{}'.format(global_cfg['forecasts-folder'], month, '.nc') for month in months]
+    files_dims['observations']['search_files'] = ['{}{}{}'.format(global_cfg['observations-folder'], month, '.nc') for month in months]
 
     # Read dimensions from forecast files
     forecast_files = ['{}{}{}'.format(global_cfg['forecasts-folder'], month, '.nc') for month in months]

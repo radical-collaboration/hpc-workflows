@@ -63,6 +63,7 @@ def task_combine(type, i, stage_cfg, global_cfg, along, files_dims):
             index_counts.extend(counts)
 
     elif type is "Analogs":
+        # Input files are all the analog files in analogs folder
         files_in = ['{}{:05d}{}'.format(global_cfg['analogs-folder'], i, '.nc') for i in range(global_cfg['task-count'])]
 
 

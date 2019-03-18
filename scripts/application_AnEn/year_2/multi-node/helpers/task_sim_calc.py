@@ -112,15 +112,14 @@ def task_sim_calc(i, stage_cfg, global_cfg, files_dims):
 
     t.arguments = [
         '--test-forecast-nc', global_cfg['test-forecast-nc'],
-        '--search-forecast-nc', '{}{}{}'.format(global_cfg['forecasts-folder'], month, '.nc'),
-        '--observation-nc', '{}{}{}'.format(global_cfg['observations-folder'], month, '.nc'),
         '--similarity-nc', sim_file,
         '--verbose', stage_cfg['args']['verbose'],
         '--observation-id', global_cfg['observation-id'],
-        '--sds-nc', '{}task-sd-calc-{:05d}{}'.format(global_cfg['sds-folder'], i, '.nc'),
     ]
     
     # Add list arguments
+    t.arguments.append('--search-forecast-nc'); t.arguments.extend(files_dims['forecasts']['search_files'])
+    t.arguments.append('--observation-nc'); t.arguments.extend(files_dims['observations']['search_files'])
     t.arguments.append('--test-start'); t.arguments.extend(test_starts)
     t.arguments.append('--test-count'); t.arguments.extend(test_counts)
     t.arguments.append('--search-start'); t.arguments.extend(search_starts)

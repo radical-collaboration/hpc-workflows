@@ -1,8 +1,9 @@
+from utils import extract_month, get_indices, get_months_between
 from radical.entk import Task
 from pprint import pprint
 import os
 
-def create_analog_select_task(i, stage_cfg, global_cfg):
+def create_analog_select_task(i, stage_cfg, global_cfg, files_dims):
     """
     This function creates a analog selection task for the specified task number.
 
@@ -24,6 +25,14 @@ def create_analog_select_task(i, stage_cfg, global_cfg):
     if global_cfg['print-progress']:
         print "Creating analog selection task {}".format(t.name)
 
+    # Calculate the indices for starts and counts
+    months = get_months_between(global_cfg['search-month-start'], global_cfg['search-month-end'])
+    obs_counts = []; obs_starts = [];
+    for month in months:
+        [obs_start, obs_count] = get_indices('observations', month, i, files_dims, global_cfg)
+        obs_starts.extend(obs_start)
+        obs_counts.extend(obs_count)
+
     t.pre_exec = stage_cfg['pre-exec']
     t.executable = stage_cfg['executable']
     t.cpu_reqs = {
@@ -40,9 +49,12 @@ def create_analog_select_task(i, stage_cfg, global_cfg):
         '--observation-id', global_cfg['observation-id'],
 
         '--similarity-nc', '{}{:05d}{}'.format(global_cfg['sims-folder'], i, '.nc'),
-        '--observation-nc', '{}{:05d}{}'.format(global_cfg['observations-folder'], i, '.nc'),
         '--analog-nc', analog_file,
     ]
+
+    t.arguments.append('--observation-nc'); t.arguments.extend(files_dims['observations']['search_files'])
+    t.arguments.append('--obs-start'); t.arguments.extend(obs_starts)
+    t.arguments.append('--obs-count'); t.arguments.extend(obs_counts)
 
     if global_cfg['print-help']:
         t.arguments.extend(['-h'])
