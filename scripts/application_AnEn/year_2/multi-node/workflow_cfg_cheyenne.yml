@@ -27,7 +27,7 @@ global:
   observation-id: 0
 
   search-month-start: "201701"
-  search-month-end: "201705"
+  search-month-end: "201712"
 
   # Folders on Cheyenne
   sds-folder: "/glade/u/home/wuh20/scratch/data/AnEn/sds/"
@@ -49,7 +49,8 @@ stage-sim-calc:
     process-type: 'MPI'
     threads-per-process: 36
     thread-type: 'OpenMP'
-  pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
+  pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin",
+             "export OMP_NUM_THREADS=36"]
   args:
     verbose: 3
 
@@ -62,7 +63,8 @@ stage-analog-select:
     process-type: 'MPI'
     threads-per-process: 36
     thread-type: 'OpenMP'
-  pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
+  pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin",
+             "export OMP_NUM_THREADS=36"]
   args:
     quick: 0
     verbose: 3
@@ -77,6 +79,7 @@ stage-analog-combine:
     process-type: 'MPI'
     threads-per-process: 36
     thread-type: 'OpenMP'
-  pre-exec: ["export PATH=$PATH:~/github/AnalogsEnsemble/output/bin"]
+  pre-exec: ["export PATH=$PATH:~/github/AnalogsEnsemble/output/bin",
+             "export OMP_NUM_THREADS=36"]
   args:
     verbose: 3

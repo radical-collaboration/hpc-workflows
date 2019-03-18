@@ -58,6 +58,8 @@ def task_sim_calc(i, stage_cfg, global_cfg, files_dims):
         '--similarity-nc', sim_file,
         '--verbose', stage_cfg['args']['verbose'],
         '--observation-id', global_cfg['observation-id'],
+        '--obs-along', 2,
+        '--search-along', 2,
     ]
     
     # Add list arguments

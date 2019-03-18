@@ -50,6 +50,7 @@ def create_analog_select_task(i, stage_cfg, global_cfg, files_dims):
 
         '--similarity-nc', '{}{:05d}{}'.format(global_cfg['sims-folder'], i, '.nc'),
         '--analog-nc', analog_file,
+        '--obs-along', 2,
     ]
 
     t.arguments.append('--observation-nc'); t.arguments.extend(files_dims['observations']['search_files'])
