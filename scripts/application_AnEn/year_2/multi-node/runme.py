@@ -23,39 +23,50 @@ def create_pipelines(wcfg):
     p = Pipeline()
 
     # Create the stage for similarity calculator tasks
-    print "Adding task sim calc stage ..."
     s = Stage()
     s.name = 'stage-sim-calc'
     stage_cfg = wcfg[s.name]
 
     for i in range(wcfg['global']['task-count']):
         t = task_sim_calc(i, stage_cfg, wcfg['global'], files_dims)
-        if t: s.add_tasks(t) # Add the task if it is created successfully
 
-    if len(s.tasks) != 0: p.add_stages(s)
+        if t:
+            print "Adding task {}".format(t.name)
+            s.add_tasks(t)
+
+    if len(s.tasks) != 0:
+        print "Adding stage {}".format(s.name)
+        p.add_stages(s)
 
     # Create the stage for analog selector tasks
-    print "Adding task analog select stage ..."
     s = Stage()
     s.name = 'stage-analog-select'
     stage_cfg = wcfg[s.name]
 
     for i in range(wcfg['global']['task-count']):
         t = create_analog_select_task(i, stage_cfg, wcfg['global'], files_dims)
-        if t: s.add_tasks(t) # Add the task if it is created successfully
 
-    if len(s.tasks) != 0: p.add_stages(s)
+        if t:
+            print "Adding task {}".format(s.name)
+            s.add_tasks(t)
+
+    if len(s.tasks) != 0:
+        print "Adding stage {}".format(s.name)
+        p.add_stages(s)
 
     # Create the stage for combining analogs
-    print "Adding task combining analog files ..."
     s = Stage()
     s.name = "stage-analog-combine"
     stage_cfg = wcfg[s.name]
 
     t = task_combine('Analogs', 0, stage_cfg, wcfg['global'], 0, files_dims)
-    if t: s.add_tasks(t) # Add the task if it is created successfully
+    if t:
+        print "Adding task {}".format(s.name)
+        s.add_tasks(t)
 
-    if len(s.tasks) != 0: p.add_stages(s)
+    if len(s.tasks) != 0:
+        print "Adding stage {}".format(s.name)
+        p.add_stages(s)
 
     return p
 
@@ -75,10 +86,10 @@ if __name__ == '__main__':
         print '%s does not exist' % args.rcfg
         sys.exit(1)
 
-    with open(args.rcfg, 'r') as fp:
+    with open('./resource_cfg_localhost.yml', 'r') as fp:
         rcfg = yaml.load(fp, Loader=yaml.FullLoader)
 
-    with open(args.wcfg, 'r') as fp:
+    with open('./workflow_cfg_localhost.yml', 'r') as fp:
         wcfg = yaml.load(fp, Loader=yaml.FullLoader)
 
     wcfg = expand_tilde(wcfg)
