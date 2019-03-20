@@ -10,6 +10,9 @@ from helpers.task_combine import task_combine
 
 os.environ['RADICAL_PILOT_DBURL'] = 'mongodb://entk:entk123@dbh63.mlab.com:27637/anen'
 
+# os.environ['RADICAL_ENTK_VERBOSE'] = 'REPORT'
+os.environ['RADICAL_ENTK_VERBOSE'] = 'INFO'
+
 def create_pipelines(wcfg):
     """
     This function creates a Pipeline with the given configuration dictionary.
