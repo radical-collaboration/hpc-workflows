@@ -10,6 +10,10 @@ from helpers.task_combine import task_combine
 
 os.environ['RADICAL_PILOT_DBURL'] = 'mongodb://entk:entk123@dbh63.mlab.com:27637/anen'
 
+# Keep profiling information
+os.environ['RADICAL_PILOT_PROFIL'] = 'True'
+os.environ['RADICAL_PROFILE'] = 'True'
+
 # os.environ['RADICAL_ENTK_VERBOSE'] = 'REPORT'
 os.environ['RADICAL_ENTK_VERBOSE'] = 'INFO'
 
