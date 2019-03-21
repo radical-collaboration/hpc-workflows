@@ -32,17 +32,13 @@ def create_pipelines(wcfg):
 
     for i in range(wcfg['global']['task-count']):
         t = task_sim_calc(i, stage_cfg, wcfg['global'], files_dims)
-	s.add_tasks(t)
+        if t:
+            print "Adding task {}".format(t.name)
+            s.add_tasks(t)
 
-        #if t:
-        #    print "Adding task {}".format(t.name)
-        #    s.add_tasks(t)
-
-    p.add_stages(s)
-
-    #if len(s.tasks) != 0:
-    #    print "Adding stage {}".format(s.name)
-    #    p.add_stages(s)
+    if len(s.tasks) != 0:
+        print "Adding stage {}".format(s.name)
+        p.add_stages(s)
 
     # Create the stage for analog selector tasks
     s = Stage()
@@ -51,16 +47,13 @@ def create_pipelines(wcfg):
 
     for i in range(wcfg['global']['task-count']):
         t = create_analog_select_task(i, stage_cfg, wcfg['global'], files_dims)
-        s.add_tasks(t)
+        if t:
+            print "Adding task {}".format(s.name)
+            s.add_tasks(t)
 
-        #if t:
-        #    print "Adding task {}".format(s.name)
-        #    s.add_tasks(t)
-
-    p.add_stages(s)
-    #if len(s.tasks) != 0:
-    #    print "Adding stage {}".format(s.name)
-    #    p.add_stages(s)
+    if len(s.tasks) != 0:
+        print "Adding stage {}".format(s.name)
+        p.add_stages(s)
 
     # Create the stage for combining analogs
     s = Stage()
@@ -68,15 +61,13 @@ def create_pipelines(wcfg):
     stage_cfg = wcfg[s.name]
 
     t = task_combine('Analogs', 0, stage_cfg, wcfg['global'], 0, files_dims)
-    s.add_tasks(t)
-    #if t:
-    #    print "Adding task {}".format(s.name)
-    #    s.add_tasks(t)
+    if t:
+        print "Adding task {}".format(s.name)
+        s.add_tasks(t)
 
-    p.add_stages(s)
-    #if len(s.tasks) != 0:
-    #    print "Adding stage {}".format(s.name)
-    #    p.add_stages(s)
+    if len(s.tasks) != 0:
+        print "Adding stage {}".format(s.name)
+        p.add_stages(s)
 
     return p
 

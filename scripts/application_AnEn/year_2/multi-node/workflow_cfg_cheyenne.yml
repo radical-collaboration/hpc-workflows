@@ -4,7 +4,7 @@ global:
   # Set this to 1 to only print help messages from AnEn executables
   # without running any real computation.
   #
-  print-help: 1
+  print-help: 0
 
   # Set this to 1 to print progress information from the runme.py script.
   print-progress: 1
@@ -17,14 +17,14 @@ global:
   # Set this to 1 to run tasks serially.
   run-serially: 0
 
-  task-count: 1000
+  task-count: 525
 
   num-forecast-parameters: 17
   num-observation-parameters: 17
   num-grids: 262792
   num-flts: 53
 
-  observation-id: 0
+  observation-id: 15
 
   search-month-start: "201301"
   search-month-end: "201712"
@@ -37,6 +37,7 @@ global:
 
   # Files on Cheyenne
   test-forecast-nc: "/glade/u/home/wuh20/scratch/data/AnEn/forecasts/201802.nc"
+  config: "/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_2/multi-node/experiment-configs/0001.cfg"
 
 
 # Similarity calculation stage
