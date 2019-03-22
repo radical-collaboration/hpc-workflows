@@ -61,6 +61,7 @@ def task_sim_calc(i, stage_cfg, global_cfg, files_dims):
         '--config', global_cfg['config'],
         '--obs-along', 2,
         '--search-along', 2,
+        '--max-num-sims', stage_cfg['args']['max-num-sims'],
     ]
     
     # Add list arguments

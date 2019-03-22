@@ -17,7 +17,7 @@ global:
   # Set this to 1 to run tasks serially.
   run-serially: 0
 
-  task-count: 525
+  task-count: 2700
 
   num-forecast-parameters: 17
   num-observation-parameters: 17
@@ -26,7 +26,7 @@ global:
 
   observation-id: 15
 
-  search-month-start: "201301"
+  search-month-start: "201401"
   search-month-end: "201712"
 
   # Folders on Cheyenne
@@ -46,12 +46,12 @@ stage-sim-calc:
   cpu:
     processes: 1
     process-type: 'MPI'
-    threads-per-process: 36
+    threads-per-process: 1
     thread-type: 'OpenMP'
-  pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin",
-             "export OMP_NUM_THREADS=36"]
+  pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
   args:
-    verbose: 3
+    verbose: 4
+    max-num-sims: 100
 
 
 # Analog selection stage
@@ -60,14 +60,13 @@ stage-analog-select:
   cpu:
     processes: 1
     process-type: 'MPI'
-    threads-per-process: 36
+    threads-per-process: 1
     thread-type: 'OpenMP'
-  pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin",
-             "export OMP_NUM_THREADS=36"]
+  pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
   args:
     quick: 0
-    verbose: 3
-    members: 25
+    verbose: 4
+    members: 50
 
 
 # Analog selection stage
@@ -81,4 +80,4 @@ stage-analog-combine:
   pre-exec: ["export PATH=$PATH:~/github/AnalogsEnsemble/output/bin",
              "export OMP_NUM_THREADS=36"]
   args:
-    verbose: 3
+    verbose: 4
