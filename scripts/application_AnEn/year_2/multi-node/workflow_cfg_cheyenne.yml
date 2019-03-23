@@ -12,12 +12,12 @@ global:
   # Set this to 1 to print tasks in a pretty dictionary form without
   # actually running them.
   #
-  print-tasks-only: 0
+  print-tasks-only: 1
 
   # Set this to 1 to run tasks serially.
   run-serially: 0
 
-  task-count: 2700
+  task-count: 3000
 
   num-forecast-parameters: 17
   num-observation-parameters: 17
@@ -26,8 +26,8 @@ global:
 
   observation-id: 15
 
-  search-month-start: "201401"
-  search-month-end: "201712"
+  search-month-start: "201701"
+  search-month-end: "201703"
 
   # Folders on Cheyenne
   sims-folder: "/glade/u/home/wuh20/scratch/data/AnEn/sims/"

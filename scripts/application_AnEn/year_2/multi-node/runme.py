@@ -8,7 +8,7 @@ from helpers.task_sim_calc import task_sim_calc
 from helpers.task_analog_select import create_analog_select_task
 from helpers.task_combine import task_combine
 
-os.environ['RADICAL_PILOT_DBURL'] = 'mongodb://entk:entk123@dbh63.mlab.com:27637/anen'
+os.environ['RADICAL_PILOT_DBURL'] = 'mongodb://example:example000@ds058579.mlab.com:58579/wuh20'
 
 # Keep profiling information
 os.environ['RADICAL_PILOT_PROFIL'] = 'True'
@@ -17,7 +17,7 @@ os.environ['RADICAL_PROFILE'] = 'True'
 # os.environ['RADICAL_ENTK_VERBOSE'] = 'REPORT'
 os.environ['RADICAL_ENTK_VERBOSE'] = 'INFO'
 
-def create_pipelines(wcfg):
+def create_pipelines(wcfg, rcfg):
     """
     This function creates a Pipeline with the given configuration dictionary.
 
@@ -36,12 +36,22 @@ def create_pipelines(wcfg):
 
     for i in range(wcfg['global']['task-count']):
         t = task_sim_calc(i, stage_cfg, wcfg['global'], files_dims)
+
         if t:
-            print "Adding task {}".format(t.name)
             s.add_tasks(t)
+            print "Adding task {}: {}".format(len(s.tasks), t.name)
+        
+        if len(s.tasks) == rcfg['resource-desc']['cpus']:
+            print "Adding stage {} because it is full with tasks.".format(s.name)
+            p.add_stages(s)
+
+            # Create a new stage
+            s = Stage()
+            s.name = 'stage-sim-calc'
+            stage_cfg = wcfg[s.name]
 
     if len(s.tasks) != 0:
-        print "Adding stage {}".format(s.name)
+        print "Adding stage {} for the residual tasks.".format(s.name)
         p.add_stages(s)
 
     # Create the stage for analog selector tasks
@@ -52,11 +62,20 @@ def create_pipelines(wcfg):
     for i in range(wcfg['global']['task-count']):
         t = create_analog_select_task(i, stage_cfg, wcfg['global'], files_dims)
         if t:
-            print "Adding task {}".format(s.name)
             s.add_tasks(t)
+            print "Adding task {}: {}".format(len(s.tasks), t.name)
+
+        if len(s.tasks) == rcfg['resource-desc']['cpus']:
+            print "Adding stage {} because it is full with tasks.".format(s.name)
+            p.add_stages(s)
+
+            # Create a new stage
+            s = Stage()
+            s.name = 'stage-analog-select'
+            stage_cfg = wcfg[s.name]
 
     if len(s.tasks) != 0:
-        print "Adding stage {}".format(s.name)
+        print "Adding stage {} for the residual tasks".format(s.name)
         p.add_stages(s)
 
     # Create the stage for combining analogs
@@ -114,7 +133,7 @@ if __name__ == '__main__':
 
     amgr.resource_desc = res_desc
 
-    pipelines = create_pipelines(wcfg)
+    pipelines = create_pipelines(wcfg, rcfg)
     if not isinstance(pipelines, list):
         pipelines = [pipelines]
 
