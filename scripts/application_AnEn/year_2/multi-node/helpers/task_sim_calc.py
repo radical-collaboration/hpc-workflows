@@ -1,4 +1,4 @@
-from utils import extract_month, get_indices, get_months_between
+from utils import extract_month, get_indices
 from radical.entk import Task
 from pprint import pprint
 import os
@@ -19,7 +19,7 @@ def task_sim_calc(i, stage_cfg, global_cfg, files_dims):
     t = Task()
     t.name = 'task-sims-calc-{:05d}'.format(i)
 
-    sim_file = '{}{:05d}{}'.format(global_cfg['sims-folder'], i, '.nc')
+    sim_file = '{}{:05d}.nc'.format(global_cfg['sims-folder'], i)
 
     if os.path.isfile(sim_file):
         print t.name + ": " + sim_file + " already exists. Skip generating this file!"
@@ -39,19 +39,9 @@ def task_sim_calc(i, stage_cfg, global_cfg, files_dims):
 
     # Extract the month
     test_month = extract_month(global_cfg['test-forecast-nc'])
-    months = get_months_between(global_cfg['search-month-start'], global_cfg['search-month-end'])
 
     # Calculate the indices for starts and counts
     [test_starts, test_counts] = get_indices('forecasts', test_month, i, files_dims, global_cfg)
-    search_counts = []; search_starts = [];
-    obs_counts = []; obs_starts = [];
-    for month in months:
-        [search_start, search_count] = get_indices('forecasts', month, i, files_dims, global_cfg)
-        search_starts.extend(search_start)
-        search_counts.extend(search_count)
-        [obs_start, obs_count] = get_indices('observations', month, i, files_dims, global_cfg)
-        obs_starts.extend(obs_start)
-        obs_counts.extend(obs_count)
 
     t.arguments = [
         '--test-forecast-nc', global_cfg['test-forecast-nc'],
@@ -62,17 +52,14 @@ def task_sim_calc(i, stage_cfg, global_cfg, files_dims):
         '--obs-along', 2,
         '--search-along', 2,
         '--max-num-sims', stage_cfg['args']['max-num-sims'],
+
+        '--config', "{}search-{:05d}.cfg".format(global_cfg['config-folder'], i),
+        '--config', "{}obs-{:05d}.cfg".format(global_cfg['config-folder'], i),
     ]
     
     # Add list arguments
-    t.arguments.append('--search-forecast-nc'); t.arguments.extend(files_dims['forecasts']['search_files'])
-    t.arguments.append('--observation-nc'); t.arguments.extend(files_dims['observations']['search_files'])
     t.arguments.append('--test-start'); t.arguments.extend(test_starts)
     t.arguments.append('--test-count'); t.arguments.extend(test_counts)
-    t.arguments.append('--search-start'); t.arguments.extend(search_starts)
-    t.arguments.append('--search-count'); t.arguments.extend(search_counts)
-    t.arguments.append('--obs-start'); t.arguments.extend(obs_starts)
-    t.arguments.append('--obs-count'); t.arguments.extend(obs_counts)
 
     if global_cfg['print-help']:
         t.arguments.append('-h')

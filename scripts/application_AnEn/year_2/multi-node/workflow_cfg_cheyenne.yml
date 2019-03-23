@@ -30,6 +30,7 @@ global:
   search-month-end: "201703"
 
   # Folders on Cheyenne
+  config-folder: "/glade/u/home/wuh20/scratch/data/AnEn/configs/"
   sims-folder: "/glade/u/home/wuh20/scratch/data/AnEn/sims/"
   analogs-folder: "/glade/u/home/wuh20/scratch/data/AnEn/analogs/"
   forecasts-folder: "/glade/u/home/wuh20/scratch/data/AnEn/forecasts/"

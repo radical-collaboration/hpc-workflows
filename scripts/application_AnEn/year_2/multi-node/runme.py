@@ -3,7 +3,7 @@ import sys
 import yaml
 import argparse
 from radical.entk import Pipeline, Stage, AppManager
-from helpers.utils import get_files_dims, check_empty, expand_tilde
+from helpers.utils import get_files_dims, check_empty, expand_tilde, write_config_files
 from helpers.task_sim_calc import task_sim_calc
 from helpers.task_analog_select import create_analog_select_task
 from helpers.task_combine import task_combine
@@ -26,6 +26,10 @@ def create_pipelines(wcfg, rcfg):
     """
     # Get dimensions of all forecast and observation files
     files_dims = get_files_dims(wcfg['global'])
+
+    # Write config files
+    write_config_files('search-forecasts', wcfg['global'], files_dims)
+    write_config_files('observations', wcfg['global'], files_dims)
 
     p = Pipeline()
 

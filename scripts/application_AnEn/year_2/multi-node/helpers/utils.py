@@ -17,7 +17,8 @@ def extract_month(file_path, pattern = '.*?/(\d{6})\.nc$'):
     month = re.search(pattern, file_path)
 
     if month is None:
-        sys.exit('Cannot extract month from the file path {}'.format(file_path))
+        print 'Error: Cannot extract month from the file path {}'.format(file_path)
+        sys.exit(1)
 
     return month.group(1)
 
@@ -92,7 +93,8 @@ def get_files_dims(global_cfg, check_dims=True):
             if (dims[0] != global_cfg['num-forecast-parameters']) or \
                     (dims[1] != global_cfg['num-grids']) or \
                     (dims[3] != global_cfg['num-flts']):
-                sys.exit("File ({}) does not meet the dimension requirement.".format(forecast_files[i]))
+                print "Error: File ({}) does not meet the dimension requirement.".format(forecast_files[i])
+                sys.exit(1)
 
         files_dims['forecasts'][months[i]] = dims
 
@@ -115,7 +117,8 @@ def get_files_dims(global_cfg, check_dims=True):
 
         if check_dims:
             if (dims[0] != global_cfg['num-observation-parameters']) or (dims[1] != global_cfg['num-grids']):
-                sys.exit("File ({}) does not meet the dimension requirement.".format(forecast_files[i]))
+                print "Error: File ({}) does not meet the dimension requirement.".format(forecast_files[i])
+                sys.exit(1)
 
         files_dims['observations'][months[i]] = dims
 
@@ -145,7 +148,8 @@ def get_indices(type, month, task_i, files_dims, global_cfg):
     elif type is "observations":
         counts = [global_cfg['num-observation-parameters']]
     else:
-        sys.exit("Unrecognized type {}".format(type))
+        print "Error: Unrecognized type {}".format(type)
+        sys.exit(1)
 
     # Add the index for stations
     starts.append(int(global_cfg['num-grids'] / global_cfg['task-count']) * task_i)
@@ -169,7 +173,12 @@ def get_indices(type, month, task_i, files_dims, global_cfg):
 def check_empty(global_cfg):
     empty = True
     num_sims_files = len(os.listdir(global_cfg['sims-folder']))
-    num_analogs_files = len(os.listdir(global_cfg['analogs-folder'])) 
+    num_analogs_files = len(os.listdir(global_cfg['analogs-folder']))
+    num_config_files = len(os.listdir(global_cfg['config-folder']))
+
+    if num_config_files != 0:
+        print "Directory {} is not empty.".format(global_cfg['config-folder'])
+        empty = False
 
     if num_sims_files != 0:
         if num_sims_files != global_cfg['task-count']:
@@ -210,3 +219,66 @@ def expand_tilde(cfg):
 
     iterdict(cfg)
     return cfg
+
+
+def write_config_files(type, global_cfg, files_dims):
+    """
+    This function writes the configuration files for
+
+    - search-forecasts: search-forecast-nc, search-start, search-count;
+    - observations: observation-nc; obs-start; obs-count;
+
+    :param type: The type of configurations.
+    :param global_cfg: The global configurations.
+    :param files_dims: The dimension information for files.
+    :return: A boolean for whether it is successfully finished.
+    """
+
+    if type is 'search-forecasts':
+        config_prefix = 'search'
+        par_name_file = 'search-forecast-nc'
+        par_name_start = 'search-start'
+        par_name_count = 'search-count'
+    elif type is 'observations':
+        config_prefix = 'obs'
+        par_name_file = 'observation-nc'
+        par_name_start = 'obs-start'
+        par_name_count = 'obs-count'
+    else:
+        print 'Error: Wrong type {}'.format(type)
+        sys.exit(1)
+
+    for i in range(global_cfg['task-count']):
+        config_file = "{}{}-{:05d}.cfg".format(global_cfg['config-folder'], config_prefix, i)
+
+        if os.path.isfile(config_file):
+            print "{} exists. Skip writing to this file!".format(config_file)
+        else:
+            print "Generating configuration file {} ...".format(config_file)
+            months = get_months_between(global_cfg['search-month-start'], global_cfg['search-month-end'])
+
+            with open(config_file, 'a') as out_file:
+                for month in months:
+
+                    if type is 'search-forecasts':
+                        [start, count] = get_indices('forecasts', month, files_dims, global_cfg)
+                        nc_file = [file for file in files_dims['forecasts']['search-files'] if month in file]
+                    elif type is 'observations':
+                        [start, count] = get_indices('observations', month, files_dims, global_cfg)
+                        nc_file = [file for file in files_dims['observations']['search-files'] if month in file]
+                    else:
+                        print 'Error: Wrong type {}'.format(type)
+                        sys.exit(1)
+
+                    if len(nc_file) != 1:
+                        print 'Error: Cannot find the file for month {}.'.format(month)
+                        sys.exit(1)
+
+                    out_file.write(' '.join([par_name_file, '=', nc_file[0]]))
+                    out_file.write('\n')
+                    out_file.write(' '.join([par_name_start, '='].extend(start)))
+                    out_file.write('\n')
+                    out_file.write(' '.join([par_name_count, '='].extend(count)))
+                    out_file.write('\n\n')
+
+    return True
