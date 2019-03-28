@@ -17,7 +17,7 @@ global:
   # Set this to 1 to run tasks serially.
   run-serially: 0
 
-  task-count: 3000
+  task-count: 105
 
   num-forecast-parameters: 17
   num-observation-parameters: 17
@@ -26,8 +26,8 @@ global:
 
   observation-id: 15
 
-  search-month-start: "201701"
-  search-month-end: "201703"
+  search-month-start: "201501"
+  search-month-end: "201712"
 
   # Folders on Cheyenne
   config-folder: "/glade/u/home/wuh20/scratch/data/AnEn/configs/"
@@ -38,7 +38,7 @@ global:
 
   # Files on Cheyenne
   test-forecast-nc: "/glade/u/home/wuh20/scratch/data/AnEn/forecasts/201802.nc"
-  config: "/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_2/multi-node/experiment-configs/0001.cfg"
+  weight-config: "/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_2/multi-node/experiment-configs/0001.cfg"
 
 
 # Similarity calculation stage

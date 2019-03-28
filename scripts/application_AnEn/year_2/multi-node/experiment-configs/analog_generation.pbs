@@ -1,0 +1,64 @@
+#!/bin/bash
+
+#PBS -N analog_generation
+#PBS -A URTG0014
+#PBS -l walltime=00:45:00
+#PBS -q regular
+#PBS -j oe                           
+#PBS -l select=1:ncpus=36:ompthreads=36
+#PBS -m a
+#PBS -M weiming@psu.edu
+
+export OMP_NUM_THREADS=36
+
+taskCount=105
+numMembers=25
+maxNumSims=100
+alongSearch=2
+alongObs=2
+verbose=4
+
+simFolder='/glade/u/home/wuh20/scratch/data/AnEn/sims'
+configFolder='/glade/u/home/wuh20/scratch/data/AnEn/configs'
+analogFolder='/glade/u/home/wuh20/scratch/data/AnEn/analogs'
+weightConfig='/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_2/multi-node/experiment-configs/0001.cfg'
+
+obsConfigCount=`ls $configFolder/obs-* | wc -l`
+
+if [ $taskCount -eq $obsConfigCount ]; then
+    echo The number of observation configuration files are as expected.
+else 
+    echo $taskCount observation configuration files are expected. $obsConfigCount found.
+    exit 
+fi
+
+for iTask in $(seq 0 $(($taskCount - 1))); do
+
+    lockFile=$analogFolder/lock-$(printf %05d $iTask)
+    obsConfig=$configFolder/obs-$(printf %05d $iTask).cfg
+    searchConfig=$configFolder/search-$(printf %05d $iTask).cfg
+    testConfig=$configFolder/test-$(printf %05d $iTask).cfg
+    analogFile=$analogFolder/$(printf %05d $iTask).nc
+    simFile=$simFolder/$(printf %05d $iTask).nc
+
+    if [ -f $analogFile ]; then
+        echo $analogFile exists. Skip this generation.
+        continue
+    fi
+
+    if [ -f $lockFile ]; then
+        echo $lockFile exists. Skip this generation.
+        continue
+    fi
+
+    echo Create lock file $lockFile
+    touch $lockFile
+
+    analogGenerator -c $obsConfig -c $searchConfig -c $testConfig -c $weightConfig --analog-nc $analogFile --members $numMembers --similarity-nc $simFile --max-num-sims $maxNumSims --search-along $alongSearch --obs-along $alongObs --verbose $verbose
+
+    sleep 10
+    echo Remove lock file $lockFile
+    rm $lockFile
+    exit 0
+done
+

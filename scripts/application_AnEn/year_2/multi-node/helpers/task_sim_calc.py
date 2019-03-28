@@ -1,4 +1,3 @@
-from utils import extract_month, get_indices
 from radical.entk import Task
 from pprint import pprint
 import os
@@ -37,30 +36,20 @@ def task_sim_calc(i, stage_cfg, global_cfg, files_dims):
         'thread_type': stage_cfg['cpu']['thread-type'],
     }
 
-    # Extract the month
-    test_month = extract_month(global_cfg['test-forecast-nc'])
-
-    # Calculate the indices for starts and counts
-    [test_starts, test_counts] = get_indices('forecasts', test_month, i, files_dims, global_cfg)
-
     t.arguments = [
-        '--test-forecast-nc', global_cfg['test-forecast-nc'],
         '--similarity-nc', sim_file,
         '--verbose', stage_cfg['args']['verbose'],
         '--observation-id', global_cfg['observation-id'],
-        '--config', global_cfg['config'],
         '--obs-along', 2,
         '--search-along', 2,
         '--max-num-sims', stage_cfg['args']['max-num-sims'],
 
+        '--config', global_cfg['weight-config'],
+        '--config', "{}test-{:05d}.cfg".format(global_cfg['config-folder'], i),
         '--config', "{}search-{:05d}.cfg".format(global_cfg['config-folder'], i),
         '--config', "{}obs-{:05d}.cfg".format(global_cfg['config-folder'], i),
     ]
     
-    # Add list arguments
-    t.arguments.append('--test-start'); t.arguments.extend(test_starts)
-    t.arguments.append('--test-count'); t.arguments.extend(test_counts)
-
     if global_cfg['print-help']:
         t.arguments.append('-h')
 

@@ -68,8 +68,8 @@ def get_files_dims(global_cfg, check_dims=True):
     files_dims['observations'] = dict.fromkeys(months)
 
     # Add search files for observations and forecasts
-    files_dims['forecasts']['search_files'] = ['{}{}{}'.format(global_cfg['forecasts-folder'], month, '.nc') for month in months]
-    files_dims['observations']['search_files'] = ['{}{}{}'.format(global_cfg['observations-folder'], month, '.nc') for month in months]
+    files_dims['forecasts']['search-files'] = ['{}{}{}'.format(global_cfg['forecasts-folder'], month, '.nc') for month in months]
+    files_dims['observations']['search-files'] = ['{}{}{}'.format(global_cfg['observations-folder'], month, '.nc') for month in months]
 
     # Read dimensions from forecast files
     forecast_files = ['{}{}{}'.format(global_cfg['forecasts-folder'], month, '.nc') for month in months]
@@ -221,32 +221,42 @@ def expand_tilde(cfg):
     return cfg
 
 
-def write_config_files(type, global_cfg, files_dims):
+def write_config_files(file_type, global_cfg, files_dims):
     """
     This function writes the configuration files for
 
     - search-forecasts: search-forecast-nc, search-start, search-count;
     - observations: observation-nc; obs-start; obs-count;
 
-    :param type: The type of configurations.
+    :param file_type: The type of configurations.
     :param global_cfg: The global configurations.
     :param files_dims: The dimension information for files.
     :return: A boolean for whether it is successfully finished.
     """
 
-    if type is 'search-forecasts':
+    if file_type == 'test-forecasts':
+        config_prefix = 'test'
+        par_name_file = 'test-forecast-nc'
+        par_name_start = 'test-start'
+        par_name_count = 'test-count'
+    elif file_type == 'search-forecasts':
         config_prefix = 'search'
         par_name_file = 'search-forecast-nc'
         par_name_start = 'search-start'
         par_name_count = 'search-count'
-    elif type is 'observations':
+    elif file_type == 'observations':
         config_prefix = 'obs'
         par_name_file = 'observation-nc'
         par_name_start = 'obs-start'
         par_name_count = 'obs-count'
     else:
-        print 'Error: Wrong type {}'.format(type)
+        print 'Error: Wrong file_type {}'.format(file_type)
         sys.exit(1)
+
+    if file_type == 'test-forecasts':
+        months = [extract_month(global_cfg['test-forecast-nc'])]
+    else:
+        months = get_months_between(global_cfg['search-month-start'], global_cfg['search-month-end'])
 
     for i in range(global_cfg['task-count']):
         config_file = "{}{}-{:05d}.cfg".format(global_cfg['config-folder'], config_prefix, i)
@@ -255,19 +265,21 @@ def write_config_files(type, global_cfg, files_dims):
             print "{} exists. Skip writing to this file!".format(config_file)
         else:
             print "Generating configuration file {} ...".format(config_file)
-            months = get_months_between(global_cfg['search-month-start'], global_cfg['search-month-end'])
 
             with open(config_file, 'a') as out_file:
                 for month in months:
 
-                    if type is 'search-forecasts':
-                        [start, count] = get_indices('forecasts', month, files_dims, global_cfg)
+                    if file_type == 'test-forecasts':
+                        [start, count] = get_indices('forecasts', month, i, files_dims, global_cfg)
+                        nc_file = [global_cfg['test-forecast-nc']]
+                    elif file_type == 'search-forecasts':
+                        [start, count] = get_indices('forecasts', month, i, files_dims, global_cfg)
                         nc_file = [file for file in files_dims['forecasts']['search-files'] if month in file]
-                    elif type is 'observations':
-                        [start, count] = get_indices('observations', month, files_dims, global_cfg)
+                    elif file_type == 'observations':
+                        [start, count] = get_indices('observations', month, i, files_dims, global_cfg)
                         nc_file = [file for file in files_dims['observations']['search-files'] if month in file]
                     else:
-                        print 'Error: Wrong type {}'.format(type)
+                        print 'Error: Wrong file_type {}'.format(file_type)
                         sys.exit(1)
 
                     if len(nc_file) != 1:
@@ -276,9 +288,16 @@ def write_config_files(type, global_cfg, files_dims):
 
                     out_file.write(' '.join([par_name_file, '=', nc_file[0]]))
                     out_file.write('\n')
-                    out_file.write(' '.join([par_name_start, '='].extend(start)))
+
+                    str_list = [par_name_start, '=']
+                    str_list =  ['{} {}'.format(' '.join(str_list), s) for s in start]
+                    out_file.write('\n'.join(str_list))
                     out_file.write('\n')
-                    out_file.write(' '.join([par_name_count, '='].extend(count)))
+
+                    str_list = [par_name_count, '=']
+                    str_list =  ['{} {}'.format(' '.join(str_list), s) for s in count]
+                    out_file.write('\n'.join(str_list))
+
                     out_file.write('\n\n')
 
     return True

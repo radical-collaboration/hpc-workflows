@@ -28,6 +28,7 @@ def create_pipelines(wcfg, rcfg):
     files_dims = get_files_dims(wcfg['global'])
 
     # Write config files
+    write_config_files('test-forecasts', wcfg['global'], files_dims)
     write_config_files('search-forecasts', wcfg['global'], files_dims)
     write_config_files('observations', wcfg['global'], files_dims)
 
