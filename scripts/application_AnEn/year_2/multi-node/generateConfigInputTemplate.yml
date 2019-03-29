@@ -5,18 +5,18 @@ global:
     # How many parallel tasks to create. In another way, how many subsections 
     # is the entire domain broken into.
     #
-    task-count: 1500
+    task-count: 400
 
     num-forecast-parameters: 17
     num-observation-parameters: 17
     num-grids: 262792
     num-flts: 53
 
-    test-month-start: "201709"
+    test-month-start: "201708"
     test-month-end: "201807"
 
-    search-month-start: "201301"
-    search-month-end: "201712"
+    search-month-start: "201208"
+    search-month-end: "201707"
 
     # Folders on Cheyenne
     config-folder: "/glade/u/home/wuh20/scratch/data/AnEn/configs/"

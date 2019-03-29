@@ -176,11 +176,6 @@ def check_empty(global_cfg):
     empty = True
     num_sims_files = len(os.listdir(global_cfg['sims-folder']))
     num_analogs_files = len(os.listdir(global_cfg['analogs-folder']))
-    num_config_files = len(os.listdir(global_cfg['config-folder']))
-
-    if num_config_files != 0:
-        print "Directory {} is not empty.".format(global_cfg['config-folder'])
-        empty = False
 
     if num_sims_files != 0:
         if num_sims_files != global_cfg['task-count']:

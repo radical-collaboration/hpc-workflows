@@ -43,7 +43,6 @@ def task_anen_gen(i, stage_cfg, global_cfg):
         '--similarity-nc', sim_file,
         '--analog-nc', anen_file,
         '--verbose', stage_cfg['args']['verbose'],
-        '--observation-id', global_cfg['observation-id'],
         '--obs-along', 2,
         '--test-along', 2,
         '--search-along', 2,

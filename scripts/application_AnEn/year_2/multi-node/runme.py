@@ -43,7 +43,8 @@ def create_pipelines(wcfg, rcfg):
             s.add_tasks(t)
             print "Adding task {}: {}".format(len(s.tasks), t.name)
         
-        if len(s.tasks) == rcfg['resource-desc']['cpus']:
+        if len(s.tasks) == rcfg['resource-desc']['cpus'] / stage_cfg['cpu']['threads-per-process']:
+
             print "Adding stage {} because it is full with tasks.".format(s.name)
             p.add_stages(s)
             stage_count += 1

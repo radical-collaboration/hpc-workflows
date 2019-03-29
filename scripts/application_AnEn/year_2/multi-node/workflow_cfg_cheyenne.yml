@@ -12,25 +12,23 @@ global:
   # Set this to 1 to print tasks in a pretty dictionary form without
   # actually running them.
   #
-  print-tasks-only: 1
+  print-tasks-only: 0
 
   # Set this to 1 to run tasks serially.
   run-serially: 0
 
-  task-count: 1500
+  task-count: 400
 
   num-forecast-parameters: 17
   num-observation-parameters: 17
   num-grids: 262792
   num-flts: 53
 
-  observation-id: 15
-
-  test-month-start: "201709"
+  test-month-start: "201708"
   test-month-end: "201807"
 
-  search-month-start: "201301"
-  search-month-end: "201712"
+  search-month-start: "201208"
+  search-month-end: "201707"
 
   # Folders on Cheyenne
   config-folder: "/glade/u/home/wuh20/scratch/data/AnEn/configs/"
@@ -52,7 +50,8 @@ stage-anen-gen:
     threads-per-process: 36
     thread-type: 'OpenMP'
   pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin",
-  "export OMP_NUM_THREADS=72"]
+  "export OMP_NUM_THREADS=72",
+  "module load gnu/7.3.0"]
   args:
     verbose: 4
     max-num-sims: 100
