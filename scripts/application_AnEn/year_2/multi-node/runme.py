@@ -3,8 +3,9 @@ import sys
 import yaml
 import argparse
 from radical.entk import Pipeline, Stage, AppManager
-from helpers.utils import get_files_dims, check_empty, expand_tilde, write_config_files
+from helpers.utils import get_files_dims, check_empty, expand_tilde, get_months_between
 from helpers.task_sim_calc import task_sim_calc
+from helpers.task_anen_gen import task_anen_gen 
 from helpers.task_analog_select import create_analog_select_task
 from helpers.task_combine import task_combine
 
@@ -17,7 +18,49 @@ os.environ['RADICAL_PROFILE'] = 'True'
 # os.environ['RADICAL_ENTK_VERBOSE'] = 'REPORT'
 os.environ['RADICAL_ENTK_VERBOSE'] = 'INFO'
 
+
 def create_pipelines(wcfg, rcfg):
+    """
+    This function creates a Pipeline with the given configuration dictionary.
+
+    :param wcfg: The configuration dictionary.
+    :return: A Pipeline object.
+    """
+    p = Pipeline()
+
+    stage_count = 0
+
+    # Create the stage for similarity calculator tasks
+    s = Stage()
+    s.name = 'stage-anen-gen-{:05d}'.format(stage_count)
+    stage_cfg = wcfg['stage-anen-gen']
+
+    for i in range(wcfg['global']['task-count']):
+
+        t = task_anen_gen(i, stage_cfg, wcfg['global'])
+
+        if t:
+            s.add_tasks(t)
+            print "Adding task {}: {}".format(len(s.tasks), t.name)
+        
+        if len(s.tasks) == rcfg['resource-desc']['cpus']:
+            print "Adding stage {} because it is full with tasks.".format(s.name)
+            p.add_stages(s)
+            stage_count += 1
+
+            # Create a new stage
+            s = Stage()
+            s.name = 'stage-anen-gen-{:05d}'.format(stage_count)
+            stage_cfg = wcfg['stage-anen-gen']
+
+    if len(s.tasks) != 0:
+        print "Adding stage {} for the residual tasks.".format(s.name)
+        p.add_stages(s)
+
+    return (p)
+
+
+def create_pipelines_old(wcfg, rcfg):
     """
     This function creates a Pipeline with the given configuration dictionary.
 
@@ -26,11 +69,6 @@ def create_pipelines(wcfg, rcfg):
     """
     # Get dimensions of all forecast and observation files
     files_dims = get_files_dims(wcfg['global'])
-
-    # Write config files
-    write_config_files('test-forecasts', wcfg['global'], files_dims)
-    write_config_files('search-forecasts', wcfg['global'], files_dims)
-    write_config_files('observations', wcfg['global'], files_dims)
 
     p = Pipeline()
 

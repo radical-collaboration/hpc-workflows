@@ -75,9 +75,11 @@ def get_files_dims(global_cfg, check_dims=True):
     forecast_files = ['{}{}{}'.format(global_cfg['forecasts-folder'], month, '.nc') for month in months]
 
     # Add the forecast file
-    month = extract_month(global_cfg['test-forecast-nc'])
-    months.append(month)
-    forecast_files.append('{}{}{}'.format(global_cfg['forecasts-folder'], month, '.nc'))
+    test_months = get_months_between(global_cfg['test-month-start'], global_cfg['test-month-end'])
+    files_dims['forecasts']['test-files'] = ['{}{}{}'.format(global_cfg['forecasts-folder'], month, '.nc') for month in test_months]
+
+    months.extend(test_months)
+    forecast_files.extend(['{}{}{}'.format(global_cfg['forecasts-folder'], month, '.nc') for month in test_months])
 
     for i in range(len(forecast_files)):
         if global_cfg['print-progress']:
@@ -254,7 +256,7 @@ def write_config_files(file_type, global_cfg, files_dims):
         sys.exit(1)
 
     if file_type == 'test-forecasts':
-        months = [extract_month(global_cfg['test-forecast-nc'])]
+        months = get_months_between(global_cfg['test-month-start'], global_cfg['test-month-end'])
     else:
         months = get_months_between(global_cfg['search-month-start'], global_cfg['search-month-end'])
 
@@ -271,7 +273,7 @@ def write_config_files(file_type, global_cfg, files_dims):
 
                     if file_type == 'test-forecasts':
                         [start, count] = get_indices('forecasts', month, i, files_dims, global_cfg)
-                        nc_file = [global_cfg['test-forecast-nc']]
+                        nc_file = [file for file in files_dims['forecasts']['test-files'] if month in file]
                     elif file_type == 'search-forecasts':
                         [start, count] = get_indices('forecasts', month, i, files_dims, global_cfg)
                         nc_file = [file for file in files_dims['forecasts']['search-files'] if month in file]

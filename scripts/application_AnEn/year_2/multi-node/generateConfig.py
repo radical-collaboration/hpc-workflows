@@ -12,8 +12,6 @@ if __name__ == '__main__':
             An input configuration file is required. Please refer to the configuration template file.')
 
     parser.add_argument('--cfg', help='Path to the configuration file', required=True)
-    parser.add_argument('--type', help='Type of configuration files to generate. It can be \
-            1) search-forecasts; 2) observations', required=True)
 
     try:
         args = parser.parse_args()
@@ -32,7 +30,21 @@ if __name__ == '__main__':
 
     files_dims = get_files_dims(cfg['global'])
 
-    if write_config_files(args.type, cfg['global'], files_dims):
-        sys.exit(0)
+    if write_config_files('search-forecasts', cfg['global'], files_dims):
+        print "Successfully generated search forecast configuration!"
     else:
         sys.exit(1)
+
+    if write_config_files('test-forecasts', cfg['global'], files_dims):
+        print "Successfully generated test forecast configuration!"
+    else:
+        sys.exit(1)
+
+    if write_config_files('observations', cfg['global'], files_dims):
+        print "Successfully generated observation configuration!"
+    else:
+        sys.exit(1)
+
+    print "All configurations are generated!"
+    sys.exit(0)
+

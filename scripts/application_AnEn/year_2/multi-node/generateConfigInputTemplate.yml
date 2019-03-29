@@ -1,21 +1,24 @@
 global:
+    # Set this to 1 to print progress information from the runme.py script.
+    print-progress: 1
+
     # How many parallel tasks to create. In another way, how many subsections 
     # is the entire domain broken into.
     #
-    task-count: 3000
+    task-count: 1500
 
     num-forecast-parameters: 17
     num-observation-parameters: 17
     num-grids: 262792
     num-flts: 53
 
-    search-month-start: "200901"
+    test-month-start: "201709"
+    test-month-end: "201807"
+
+    search-month-start: "201301"
     search-month-end: "201712"
 
     # Folders on Cheyenne
     config-folder: "/glade/u/home/wuh20/scratch/data/AnEn/configs/"
     forecasts-folder: "/glade/u/home/wuh20/scratch/data/AnEn/forecasts/"
     observations-folder: "/glade/u/home/wuh20/scratch/data/AnEn/observations/"
-
-    # Files on Cheyenne
-    test-forecast-nc: "/glade/u/home/wuh20/scratch/data/AnEn/forecasts/201802.nc"
