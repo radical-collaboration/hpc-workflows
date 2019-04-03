@@ -28,6 +28,10 @@ if __name__ == '__main__':
 
     cfg = expand_tilde(cfg)
 
+    files_dims = list()
+    write_config_files('day-analog-similarity', cfg['global'], files_dims)
+    sys.exit(0)
+
     files_dims = get_files_dims(cfg['global'])
 
     if write_config_files('search-forecasts', cfg['global'], files_dims):
@@ -45,6 +49,6 @@ if __name__ == '__main__':
     else:
         sys.exit(1)
 
-    print "All configurations are generated!"
+    print "Configurations are generated!"
     sys.exit(0)
 

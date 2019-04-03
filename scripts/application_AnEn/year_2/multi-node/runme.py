@@ -15,8 +15,12 @@ os.environ['RADICAL_PILOT_DBURL'] = 'mongodb://example:example000@ds058579.mlab.
 os.environ['RADICAL_PILOT_PROFIL'] = 'True'
 os.environ['RADICAL_PROFILE'] = 'True'
 
+# Succinct output
 # os.environ['RADICAL_ENTK_VERBOSE'] = 'REPORT'
-os.environ['RADICAL_ENTK_VERBOSE'] = 'INFO'
+
+# Detailed output
+# os.environ['RADICAL_ENTK_VERBOSE'] = 'INFO'
+os.environ['RADICAL_ENTK_VERBOSE'] = 'DEBUG'
 
 
 def create_pipelines(wcfg, rcfg):
@@ -28,11 +32,9 @@ def create_pipelines(wcfg, rcfg):
     """
     p = Pipeline()
 
-    stage_count = 0
-
     # Create the stage for similarity calculator tasks
     s = Stage()
-    s.name = 'stage-anen-gen-{:05d}'.format(stage_count)
+    s.name = 'stage-anen-gen'
     stage_cfg = wcfg['stage-anen-gen']
 
     for i in range(wcfg['global']['task-count']):
@@ -43,19 +45,8 @@ def create_pipelines(wcfg, rcfg):
             s.add_tasks(t)
             print "Adding task {}: {}".format(len(s.tasks), t.name)
         
-        if len(s.tasks) == rcfg['resource-desc']['cpus'] / stage_cfg['cpu']['threads-per-process']:
-
-            print "Adding stage {} because it is full with tasks.".format(s.name)
-            p.add_stages(s)
-            stage_count += 1
-
-            # Create a new stage
-            s = Stage()
-            s.name = 'stage-anen-gen-{:05d}'.format(stage_count)
-            stage_cfg = wcfg['stage-anen-gen']
-
     if len(s.tasks) != 0:
-        print "Adding stage {} for the residual tasks.".format(s.name)
+        print "Adding stage {}.".format(s.name)
         p.add_stages(s)
 
     return (p)

@@ -1,0 +1,51 @@
+#!/bin/bash
+
+#PBS -N day_analog_reshape
+#PBS -A URTG0014
+#PBS -l walltime=2:00:00
+#PBS -q regular
+#PBS -j oe                           
+#PBS -l select=1:ncpus=1:ompthreads=1
+#PBS -m ae
+#PBS -M weiming@psu.edu
+
+simFolder='/glade/u/home/wuh20/flash/sliced/sims'
+configFolder='/glade/u/home/wuh20/scratch/data/AnEn/configs'
+analogFolder='/glade/u/home/wuh20/flash/sliced/analogs'
+experimentConfig='/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_2/multi-node/experiment-configs/0001.cfg'
+
+taskCount=365
+
+signalFile='signalFile'
+
+for id in $(seq 0 $(( $taskCount - 1 ))); do
+    id=$(printf %05d $id)
+    lockFile=$analogFolder/lock-$id
+
+    if [ -f $simFolder/day-$id.nc ]; then
+        echo $simFolder/day-$id.nc exists. Skip this generation.
+        continue
+    fi
+
+    if [ -f $lockFile ]; then
+        echo $lockFile exists. Skip this generation.
+        continue
+    fi
+
+	echo Create signal file
+	touch $signalFile
+
+    echo Create lock file $lockFile
+    touch $lockFile
+
+    echo fileAggregate -c $configFolder/sims-$id.cfg --out $simFolder/day-$id.nc -a 0 -v 4 --type Similarity
+    fileAggregate -c $configFolder/sims-$id.cfg --out $simFolder/day-$id.nc -a 0 -v 4 --type Similarity
+
+    echo fileAggregate -c $configFolder/analogs-$id.cfg --out $analogFolder/day-$id.nc -a 0 -v 4 --type Analogs
+    fileAggregate -c $configFolder/analogs-$id.cfg --out $analogFolder/day-$id.nc -a 0 -v 4 --type Analogs
+
+    echo Remove lock file $lockFile
+    rm $lockFile
+
+    exit 0
+done

@@ -1,28 +1,50 @@
 #!/bin/bash
 
 # Define the total number of jobs to create.
-totalJobs=65
+totalJobs=365
 
 # Define the job file
-jobFile="analog_generation.pbs"
+# jobFile="/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_2/multi-node/experiment-configs/analog_generation.pbs"
+# jobFile="/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_2/multi-node/experiment-configs/day_analog_reshape.pbs"
+jobFile="/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_2/multi-node/experiment-configs/generateMetrics.pbs"
 
 # Define the counter start.
 submittedJobs=0
+
+#signalFile='signalFile'
+#if [ ! -f $signalFile ]; then
+#    touch $signalFile
+#fi
 
 while true; do
     # Get the number of queued jobs by looking at the queue status looking for the symbols
     number=`qstat | grep "Q regular" | wc -l`
     
-    echo The number of queued jobs: $number
-    echo The number of submitted jobs: $submittedJobs
+    echo Queued jobs: $number, Submitted jobs: $submittedJobs
+
     if (( number == 0  )); then
-        echo There is no queued jobs. Submit a new one.
-        qsub $jobFile
-        submittedJobs=$((submittedJobs + 1))
-        if (( submittedJobs == totalJobs  )); then
-            echo $submittedJobs jobs submitted. Done!
-            exit 0
-        fi
+        #if [ -f $signalFile ]; then
+
+            echo All jobs are currently running. Signal file is found. Submit a new one.
+            qsub $jobFile
+            submittedJobs=$((submittedJobs + 1))
+
+			#rm $signalFile
+
+            if (( submittedJobs == totalJobs  )); then
+                echo $submittedJobs jobs submitted. Done!
+                exit 0
+            fi
+
+        #else
+        #    echo No jobs are waiting but the signal file is not found. Wait for 5 seconds.
+        #    sleep 5
+        #fi
+
+    else
+		sleep 5
     fi
-    sleep 10
+
 done
+
+

@@ -17,7 +17,7 @@ global:
   # Set this to 1 to run tasks serially.
   run-serially: 0
 
-  task-count: 400
+  task-count: 10
 
   num-forecast-parameters: 17
   num-observation-parameters: 17
@@ -46,7 +46,7 @@ stage-anen-gen:
   executable: "analogGenerator"
   cpu:
     processes: 1
-    process-type: ''
+    process-type: 'MPI'
     threads-per-process: 36
     thread-type: 'OpenMP'
   pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin",
@@ -58,44 +58,44 @@ stage-anen-gen:
     members: 50
 
 
-# Similarity calculation stage
-stage-sim-calc:
-  executable: "similarityCalculator"
-  cpu:
-    processes: 1
-    process-type: ''
-    threads-per-process: 1
-    thread-type: 'OpenMP'
-  pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
-  args:
-    verbose: 4
-    max-num-sims: 100
-
-
-# Analog selection stage
-stage-analog-select:
-  executable: "analogSelector"
-  cpu:
-    processes: 1
-    process-type: ''
-    threads-per-process: 1
-    thread-type: 'OpenMP'
-  pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
-  args:
-    quick: 0
-    verbose: 4
-    members: 50
-
-
-# Analog selection stage
-stage-analog-combine:
-  executable: "fileAggregate"
-  cpu:
-    processes: 1
-    process-type: ''
-    threads-per-process: 36
-    thread-type: 'OpenMP'
-  pre-exec: ["export PATH=$PATH:~/github/AnalogsEnsemble/output/bin",
-             "export OMP_NUM_THREADS=72"]
-  args:
-    verbose: 4
+## Similarity calculation stage
+#stage-sim-calc:
+#  executable: "similarityCalculator"
+#  cpu:
+#    processes: 1
+#    process-type: 
+#    threads-per-process: 1
+#    thread-type: 'OpenMP'
+#  pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
+#  args:
+#    verbose: 4
+#    max-num-sims: 100
+#
+#
+## Analog selection stage
+#stage-analog-select:
+#  executable: "analogSelector"
+#  cpu:
+#    processes: 1
+#    process-type: 
+#    threads-per-process: 1
+#    thread-type: 'OpenMP'
+#  pre-exec: ["export PATH=$PATH:/glade/u/home/wuh20/github/AnalogsEnsemble/output/bin"]
+#  args:
+#    quick: 0
+#    verbose: 4
+#    members: 50
+#
+#
+## Analog selection stage
+#stage-analog-combine:
+#  executable: "fileAggregate"
+#  cpu:
+#    processes: 1
+#    process-type: 
+#    threads-per-process: 36
+#    thread-type: 'OpenMP'
+#  pre-exec: ["export PATH=$PATH:~/github/AnalogsEnsemble/output/bin",
+#             "export OMP_NUM_THREADS=72"]
+#  args:
+#    verbose: 4

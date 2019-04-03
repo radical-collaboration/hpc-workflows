@@ -6,24 +6,20 @@
 #PBS -q regular
 #PBS -j oe                           
 #PBS -l select=1:ncpus=36:ompthreads=36
-#PBS -m a
+#PBS -m ae
 #PBS -M weiming@psu.edu
 
-export OMP_NUM_THREADS=36
+export OMP_NUM_THREADS=72
 
-taskCount=105
-numMembers=25
-maxNumSims=100
-alongSearch=2
-alongObs=2
-verbose=4
+taskCount=601
 
 simFolder='/glade/u/home/wuh20/scratch/data/AnEn/sims'
 configFolder='/glade/u/home/wuh20/scratch/data/AnEn/configs'
 analogFolder='/glade/u/home/wuh20/scratch/data/AnEn/analogs'
-weightConfig='/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_2/multi-node/experiment-configs/0001.cfg'
+experimentConfig='/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_2/multi-node/experiment-configs/0001.cfg'
 
 obsConfigCount=`ls $configFolder/obs-* | wc -l`
+signalFile='signalFile'
 
 if [ $taskCount -eq $obsConfigCount ]; then
     echo The number of observation configuration files are as expected.
@@ -51,14 +47,18 @@ for iTask in $(seq 0 $(($taskCount - 1))); do
         continue
     fi
 
+	echo Create signal file
+	touch $signalFile
+
     echo Create lock file $lockFile
     touch $lockFile
 
-    analogGenerator -c $obsConfig -c $searchConfig -c $testConfig -c $weightConfig --analog-nc $analogFile --members $numMembers --similarity-nc $simFile --max-num-sims $maxNumSims --search-along $alongSearch --obs-along $alongObs --verbose $verbose
+    echo Command: analogGenerator -c $obsConfig -c $searchConfig -c $testConfig -c $experimentConfig --analog-nc $analogFile --similarity-nc $simFile
+    analogGenerator -c $obsConfig -c $searchConfig -c $testConfig -c $experimentConfig --analog-nc $analogFile --similarity-nc $simFile
 
-    sleep 10
     echo Remove lock file $lockFile
     rm $lockFile
+
     exit 0
 done
 

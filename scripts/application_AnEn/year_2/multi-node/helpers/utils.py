@@ -246,6 +246,9 @@ def write_config_files(file_type, global_cfg, files_dims):
         par_name_file = 'observation-nc'
         par_name_start = 'obs-start'
         par_name_count = 'obs-count'
+    elif file_type == 'day-analog-similarity':
+        config_prefix_analogs = 'analogs'
+        config_prefix_sims = 'sims'
     else:
         print 'Error: Wrong file_type {}'.format(file_type)
         sys.exit(1)
@@ -255,8 +258,75 @@ def write_config_files(file_type, global_cfg, files_dims):
     else:
         months = get_months_between(global_cfg['search-month-start'], global_cfg['search-month-end'])
 
-    for i in range(global_cfg['task-count']):
-        config_file = "{}{}-{:05d}.cfg".format(global_cfg['config-folder'], config_prefix, i)
+    if file_type == 'day-analog-similarity':
+
+        num_days = 365
+
+        for i in range(num_days):
+            config_file_sims = "{}{}-{:05d}.cfg".format(global_cfg['config-folder'], config_prefix_sims, i)
+            config_file_analogs = "{}{}-{:05d}.cfg".format(global_cfg['config-folder'], config_prefix_analogs, i)
+
+            open(config_file_sims, 'w').close()
+            open(config_file_analogs, 'w').close()
+
+        for i in range(global_cfg['task-count']):
+            file_analogs = "{}{:05d}.nc".format(global_cfg['analogs-folder'], i)
+            file_sims = "{}{:05d}.nc".format(global_cfg['sims-folder'], i)
+
+            nc = Dataset(file_analogs)
+
+            for i in range(num_days):
+                config_file_analogs = "{}{}-{:05d}.cfg".format(global_cfg['config-folder'], config_prefix_analogs, i)
+                
+                with open(config_file_analogs, 'a') as out_file:
+                    out_file.write(' '.join(['in', '=', file_analogs]))
+                    out_file.write('\n')
+
+                    start = [0, i, 0, 0, 0]
+                    count = list(nc.variables['Analogs'].shape)
+                    count = count[::-1]
+                    count[1] = 1
+
+                    str_list = ['start', '=']
+                    str_list =  ['{} {}'.format(' '.join(str_list), s) for s in start]
+                    out_file.write('\n'.join(str_list))
+                    out_file.write('\n')
+
+                    str_list = ['count', '=']
+                    str_list =  ['{} {}'.format(' '.join(str_list), s) for s in count]
+                    out_file.write('\n'.join(str_list))
+                    out_file.write('\n\n')
+
+            nc.close()
+            nc = Dataset(file_sims)
+
+            for i in range(num_days):
+                config_file_sims = "{}{}-{:05d}.cfg".format(global_cfg['config-folder'], config_prefix_sims, i)
+                
+                with open(config_file_sims, 'a') as out_file:
+                    out_file.write(' '.join(['in', '=', file_sims]))
+                    out_file.write('\n')
+
+                    start = [0, i, 0, 0, 0]
+                    count = list(nc.variables['SimilarityMatrices'].shape)
+                    count[1] = 1
+
+                    str_list = ['start', '=']
+                    str_list =  ['{} {}'.format(' '.join(str_list), s) for s in start]
+                    out_file.write('\n'.join(str_list))
+                    out_file.write('\n')
+
+                    str_list = ['count', '=']
+                    str_list =  ['{} {}'.format(' '.join(str_list), s) for s in count]
+                    out_file.write('\n'.join(str_list))
+                    out_file.write('\n\n')
+
+            nc.close()
+
+    else:
+    
+        for i in range(global_cfg['task-count']):
+            config_file = "{}{}-{:05d}.cfg".format(global_cfg['config-folder'], config_prefix, i)
 
         if os.path.isfile(config_file):
             print "{} exists. Skip writing to this file!".format(config_file)
