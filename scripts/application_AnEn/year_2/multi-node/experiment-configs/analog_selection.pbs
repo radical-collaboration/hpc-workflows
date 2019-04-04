@@ -1,23 +1,22 @@
 #!/bin/bash
 
-#PBS -N analog_generation
+#PBS -N analog_selection
 #PBS -A URTG0014
-#PBS -l walltime=01:00:00
+#PBS -l walltime=00:30:00
 #PBS -q regular
 #PBS -j oe                           
-#PBS -l select=1:ncpus=36
+#PBS -l select=1:ncpus=18
 #PBS -m ae
 #PBS -M weiming@psu.edu
 
-export OMP_NUM_THREADS=72
+export OMP_NUM_THREADS=36
 
 simFolder='/glade/u/home/wuh20/scratch/data/AnEn/sims'
 configFolder='/glade/u/home/wuh20/scratch/data/AnEn/configs'
-analogFolder='/glade/u/home/wuh20/scratch/data/AnEn/analogs'
-experimentConfig='/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_2/multi-node/experiment-configs/0001.cfg'
+analogFolder='/glade/u/home/wuh20/flash/analogs-temperature'
+experimentConfig='/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_2/multi-node/experiment-configs/0002.cfg'
 
 obsConfigCount=`ls $configFolder/obs-* | wc -l`
-signalFile='signalFile'
 
 obsConfig=$configFolder/obs-$(printf %05d $index).cfg
 searchConfig=$configFolder/search-$(printf %05d $index).cfg
@@ -34,6 +33,6 @@ echo Create signal file
 touch $signalFile
 
 echo Command: analogGenerator -c $obsConfig -c $searchConfig -c $testConfig -c $experimentConfig --analog-nc $analogFile --similarity-nc $simFile
-analogGenerator -c $obsConfig -c $searchConfig -c $testConfig -c $experimentConfig --analog-nc $analogFile --similarity-nc $simFile
+analogSelector -c $obsConfig -c $experimentConfig --analog-nc $analogFile --similarity-nc $simFile
 
 exit 0

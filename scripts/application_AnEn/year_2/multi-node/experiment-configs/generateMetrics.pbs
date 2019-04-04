@@ -2,12 +2,13 @@
 
 #PBS -N generate_metrics
 #PBS -A URTG0014
-#PBS -l walltime=2:00:00
+#PBS -l walltime=00:45:00
 #PBS -q regular
 #PBS -j oe                           
 #PBS -l select=1:ncpus=1:ompthreads=1:mem=109GB
 #PBS -m ae
 #PBS -M weiming@psu.edu
 
-module purge && module load R/3.5.2
-Rscript /glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_2/multi-node/experiment-configs/generateMetrics.R
+module load R/3.5.2
+
+Rscript /glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_2/multi-node/experiment-configs/generateMetrics.R $index
