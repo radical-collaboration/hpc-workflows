@@ -6,7 +6,7 @@
 #PBS -q regular
 #PBS -j oe                           
 #PBS -l select=1:ncpus=1:ompthreads=1:mem=109GB
-#PBS -m ae
+#PBS -m a
 #PBS -M weiming@psu.edu
 
 module load R/3.5.2

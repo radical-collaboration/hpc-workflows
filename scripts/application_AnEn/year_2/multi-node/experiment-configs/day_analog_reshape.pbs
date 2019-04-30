@@ -2,17 +2,19 @@
 
 #PBS -N day_analog_reshape
 #PBS -A URTG0014
-#PBS -l walltime=1:00:00
+#PBS -l walltime=4:00:00
 #PBS -q regular
 #PBS -j oe
-#PBS -l select=1:ncpus=1:ompthreads=1:mem=109GB
+#PBS -l select=1:ncpus=1
 #PBS -m a
 #PBS -M weiming@psu.edu
 
+# Output folder
 simFolder='/glade/u/home/wuh20/flash/sliced/sims'
+analogFolder='/glade/u/home/wuh20/flash/sliced/analogs-t'
+
+# Input folder
 configFolder='/glade/u/home/wuh20/flash/analogs-temperature-config'
-analogFolder='/glade/u/home/wuh20/flash/analogs-temperature'
-experimentConfig='/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_2/multi-node/experiment-configs/0001.cfg'
 
 index=$(printf %05d $index)
 

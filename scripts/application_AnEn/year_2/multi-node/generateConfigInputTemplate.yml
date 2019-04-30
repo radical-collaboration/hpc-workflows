@@ -5,23 +5,26 @@ global:
     # How many parallel tasks to create. In another way, how many subsections 
     # is the entire domain broken into.
     #
-    task-count: 601
+    task-count: 50
+
+    # How many days to partition for analogs and similarity
+    num-days: 31
 
     num-forecast-parameters: 17
     num-observation-parameters: 17
     num-grids: 262792
     num-flts: 53
 
-    test-month-start: "201708"
+    test-month-start: "201807"
     test-month-end: "201807"
 
-    search-month-start: "201208"
-    search-month-end: "201707"
+    search-month-start: "201701"
+    search-month-end: "201712"
 
     # Folders on Cheyenne
-    config-folder: "/glade/u/home/wuh20/flash/analogs-temperature-config/"
-    forecasts-folder: "/glade/u/home/wuh20/scratch/data/AnEn/forecasts/"
-    observations-folder: "/glade/u/home/wuh20/scratch/data/AnEn/observations/"
-    sims-folder: "/glade/u/home/wuh20/scratch/data/AnEn/sims/"
-    analogs-folder: "/glade/u/home/wuh20/flash/analogs-temperature/"
+    sims-folder: "/glade/u/home/wuh20/work/SEA2019/similarity/"
+    config-folder: "/glade/u/home/wuh20/work/SEA2019/configuration/"
+    analogs-folder: "/glade/u/home/wuh20/work/SEA2019/analogs/"
+    forecasts-folder: "/glade/u/home/wuh20/work/SEA2019/forecasts/"
+    observations-folder: "/glade/u/home/wuh20/work/SEA2019/observations/"
 

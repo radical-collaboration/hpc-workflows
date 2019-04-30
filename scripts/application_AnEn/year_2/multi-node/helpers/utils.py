@@ -259,8 +259,9 @@ def write_config_files(file_type, global_cfg, files_dims):
         months = get_months_between(global_cfg['search-month-start'], global_cfg['search-month-end'])
 
     if file_type == 'day-analog-similarity':
+        print "Writing daily partitioned configuration files for analogs and similarity ..."
 
-        num_days = 365
+        num_days = global_cfg['num-days']
 
         for i in range(num_days):
             config_file_sims = "{}{}-{:05d}.cfg".format(global_cfg['config-folder'], config_prefix_sims, i)
@@ -323,48 +324,50 @@ def write_config_files(file_type, global_cfg, files_dims):
 
             nc.close()
 
+        print "Done!"
+
     else:
     
         for i in range(global_cfg['task-count']):
             config_file = "{}{}-{:05d}.cfg".format(global_cfg['config-folder'], config_prefix, i)
 
-        if os.path.isfile(config_file):
-            print "{} exists. Skip writing to this file!".format(config_file)
-        else:
-            print "Generating configuration file {} ...".format(config_file)
+            if os.path.isfile(config_file):
+                print "{} exists. Skip writing to this file!".format(config_file)
+            else:
+                print "Generating configuration file {} ...".format(config_file)
 
-            with open(config_file, 'a') as out_file:
-                for month in months:
+                with open(config_file, 'a') as out_file:
+                    for month in months:
 
-                    if file_type == 'test-forecasts':
-                        [start, count] = get_indices('forecasts', month, i, files_dims, global_cfg)
-                        nc_file = [file for file in files_dims['forecasts']['test-files'] if month in file]
-                    elif file_type == 'search-forecasts':
-                        [start, count] = get_indices('forecasts', month, i, files_dims, global_cfg)
-                        nc_file = [file for file in files_dims['forecasts']['search-files'] if month in file]
-                    elif file_type == 'observations':
-                        [start, count] = get_indices('observations', month, i, files_dims, global_cfg)
-                        nc_file = [file for file in files_dims['observations']['search-files'] if month in file]
-                    else:
-                        print 'Error: Wrong file_type {}'.format(file_type)
-                        sys.exit(1)
+                        if file_type == 'test-forecasts':
+                            [start, count] = get_indices('forecasts', month, i, files_dims, global_cfg)
+                            nc_file = [file for file in files_dims['forecasts']['test-files'] if month in file]
+                        elif file_type == 'search-forecasts':
+                            [start, count] = get_indices('forecasts', month, i, files_dims, global_cfg)
+                            nc_file = [file for file in files_dims['forecasts']['search-files'] if month in file]
+                        elif file_type == 'observations':
+                            [start, count] = get_indices('observations', month, i, files_dims, global_cfg)
+                            nc_file = [file for file in files_dims['observations']['search-files'] if month in file]
+                        else:
+                            print 'Error: Wrong file_type {}'.format(file_type)
+                            sys.exit(1)
 
-                    if len(nc_file) != 1:
-                        print 'Error: Cannot find the file for month {}.'.format(month)
-                        sys.exit(1)
+                        if len(nc_file) != 1:
+                            print 'Error: Cannot find the file for month {}.'.format(month)
+                            sys.exit(1)
 
-                    out_file.write(' '.join([par_name_file, '=', nc_file[0]]))
-                    out_file.write('\n')
+                        out_file.write(' '.join([par_name_file, '=', nc_file[0]]))
+                        out_file.write('\n')
 
-                    str_list = [par_name_start, '=']
-                    str_list =  ['{} {}'.format(' '.join(str_list), s) for s in start]
-                    out_file.write('\n'.join(str_list))
-                    out_file.write('\n')
+                        str_list = [par_name_start, '=']
+                        str_list =  ['{} {}'.format(' '.join(str_list), s) for s in start]
+                        out_file.write('\n'.join(str_list))
+                        out_file.write('\n')
 
-                    str_list = [par_name_count, '=']
-                    str_list =  ['{} {}'.format(' '.join(str_list), s) for s in count]
-                    out_file.write('\n'.join(str_list))
+                        str_list = [par_name_count, '=']
+                        str_list =  ['{} {}'.format(' '.join(str_list), s) for s in count]
+                        out_file.write('\n'.join(str_list))
 
-                    out_file.write('\n\n')
+                        out_file.write('\n\n')
 
     return True

@@ -1,7 +1,13 @@
 #!/usr/bin/env Rscript
 args <- commandArgs(trailingOnly = T)
-i <- as.numeric(args[1])
+i <- as.numeric(args[1]) + 1
 print(paste("Got index", i, "from command line arguments."))
+
+# Wind speed
+# par.id <- 16
+
+# Surface temperature
+par.id <- 8
 
 # This script combines analog and similarity files and generate metrics
 library(ncdf4)
@@ -9,9 +15,9 @@ library(RAnEn)
 library(stringr)
 
 # Define some folders
-analog.folder <- '/glade/u/home/wuh20/flash/sliced/analogs'
+analog.folder <- '/glade/u/home/wuh20/flash/sliced/analogs-t'
 similarity.folder <- '/glade/u/home/wuh20/flash/sliced/sims'
-rds.folder <- '/glade/u/home/wuh20/flash/sliced/rds'
+rds.folder <- '/glade/u/home/wuh20/work/rds-t'
 forecast.folder <- '~/scratch/data/AnEn/forecasts'
 observation.folder <- '~/scratch/data/AnEn/observations'
 
@@ -119,10 +125,10 @@ observations.aligned <- alignObservations(observations, observation.times.found,
 anen <- analogs[, , , 1, drop = F]
 dim(anen) <- c(262792, 1, 53, 50)
 
-obs <- observations.aligned[16, , , , drop = F]
+obs <- observations.aligned[par.id, , , , drop = F]
 dim(obs) <- dim(obs)[-1]
 
-fcsts <- forecasts[16, , , drop = F]
+fcsts <- forecasts[par.id, , , drop = F]
 dim(fcsts) <- c(262792, 1, 53, 1)
 
 ret <- list(AnEn = NULL, NAM = NULL)
