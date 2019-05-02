@@ -4,7 +4,7 @@ global:
   # Set this to 1 to only print help messages from AnEn executables
   # without running any real computation.
   #
-  print-help: 0
+  print-help: 1
 
   # Set this to 1 to print progress information from the runme.py script.
   print-progress: 1
@@ -17,18 +17,18 @@ global:
   # Set this to 1 to run tasks serially.
   run-serially: 0
 
-  task-count: 10
+  task-count: 20
 
   num-forecast-parameters: 17
   num-observation-parameters: 17
   num-grids: 262792
   num-flts: 53
 
-  test-month-start: "201708"
+  test-month-start: "201807"
   test-month-end: "201807"
 
-  search-month-start: "201208"
-  search-month-end: "201707"
+  search-month-start: "201606"
+  search-month-end: "201706"
 
   # Folders on Cheyenne
   config-folder: "/glade/u/home/wuh20/scratch/data/AnEn/configs/"

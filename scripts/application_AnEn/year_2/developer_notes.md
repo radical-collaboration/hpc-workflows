@@ -5,17 +5,24 @@ export RADICAL_ENTK_VERBOSE=INFO
 Install Radical EnTK on Cheyenne
 
 ```
-# Create and run a python environment
+# prepare VE
 module purge && module load python/2.7.15
 virtualenv venv
 source venv/bin/activate
 
-# Install packages
+# Install entk and dependencies
 pip install radical.entk pyyaml netcdf4
+
+# replace RP version
 git clone https://github.com/radical-cybertools/radical.pilot.git
 cd radical.pilot
 git checkout fix/cheyenne
-pip install . --upgrade
+pip uninstall -y radical.pilot
+pip install .
+
+# verify installation
+python -V
+radical-stack
 ```
 
 ## Documentation
