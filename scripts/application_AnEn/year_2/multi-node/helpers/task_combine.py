@@ -1,4 +1,4 @@
-from utils import get_months_between, get_indices
+from helpers.helper_functions import get_months_between, get_indices
 from radical.entk import Task
 from pprint import pprint
 import os
@@ -28,17 +28,17 @@ def task_combine(type, i, stage_cfg, global_cfg, along, files_dims):
     elif type is "Analogs":
         data_folder = global_cfg['analogs-folder']
     else:
-        print "Unsupported file type {}!".format(type)
+        print("Unsupported file type {}!".format(type))
         sys.exit(1)
 
     comb_file = '{}{:05d}{}'.format(data_folder, i, '.nc')
 
     if os.path.isfile(comb_file):
-        print t.name + ": " + comb_file + " already exists. Skip generating this file!"
+        print(t.name + ": " + comb_file + " already exists. Skip generating this file!")
         return False
 
     if global_cfg['print-progress']:
-        print "Creating {} combination task {}".format(type, t.name)
+        print("Creating {} combination task {}".format(type, t.name))
 
     t.pre_exec = stage_cfg['pre-exec']
     t.executable = stage_cfg['executable']

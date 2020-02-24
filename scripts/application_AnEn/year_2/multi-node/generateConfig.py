@@ -2,7 +2,7 @@ import os
 import sys
 import yaml
 import argparse
-from helpers.utils import get_files_dims, expand_tilde, write_config_files
+from helpers.helper_functions import get_files_dims, expand_tilde, write_config_files
 
 
 if __name__ == '__main__':
@@ -20,7 +20,7 @@ if __name__ == '__main__':
         sys.exit(0)
 
     if not os.path.isfile(args.cfg):
-        print '%s does not exist' % args.cfg
+        print('%s does not exist' % args.cfg)
         sys.exit(1)
 
     with open(args.cfg, 'r') as fp:
@@ -35,20 +35,20 @@ if __name__ == '__main__':
     files_dims = get_files_dims(cfg['global'])
 
     if write_config_files('search-forecasts', cfg['global'], files_dims):
-        print "Successfully generated search forecast configuration!"
+        print("Successfully generated search forecast configuration!")
     else:
         sys.exit(1)
 
     if write_config_files('test-forecasts', cfg['global'], files_dims):
-        print "Successfully generated test forecast configuration!"
+        print("Successfully generated test forecast configuration!")
     else:
         sys.exit(1)
 
     if write_config_files('observations', cfg['global'], files_dims):
-        print "Successfully generated observation configuration!"
+        print("Successfully generated observation configuration!")
     else:
         sys.exit(1)
 
-    print "Configurations are generated!"
+    print("Configurations are generated!")
     sys.exit(0)
 

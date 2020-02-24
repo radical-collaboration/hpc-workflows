@@ -1,0 +1,18 @@
+{
+    "base": "/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_3",
+    "cmgr": "cmgr.0001",
+    "count": 1,
+    "db_poll_sleeptime": 10.0,
+    "dburl": "mongodb://hpcworkflows:hpcw0rkf70w@two.radical-project.org:27017/hpcworkflows",
+    "heartbeat": {
+        "addr_pub": "tcp://10.148.0.2:43567",
+        "addr_sub": "tcp://10.148.0.2:34079",
+        "interval": 1.0,
+        "timeout": 60.0
+    },
+    "kind": "pmgr_launching",
+    "owner": "pmgr.0000",
+    "path": "/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_3/re.session.cheyenne1.wuh20.018311.0012",
+    "sid": "re.session.cheyenne1.wuh20.018311.0012",
+    "uid": "pmgr_launching.0000"
+}

@@ -18,11 +18,11 @@ def create_analog_select_task(i, stage_cfg, global_cfg, files_dims):
     analog_file = '{}{:05d}.nc'.format(global_cfg['analogs-folder'], i)
 
     if os.path.isfile(analog_file):
-        print t.name + ": " + analog_file + " already exists. Skip generating this file!"
+        print(t.name + ": " + analog_file + " already exists. Skip generating this file!")
         return False
 
     if global_cfg['print-progress']:
-        print "Creating analog selection task {}".format(t.name)
+        print("Creating analog selection task {}".format(t.name))
 
     t.pre_exec = stage_cfg['pre-exec']
     t.executable = stage_cfg['executable']

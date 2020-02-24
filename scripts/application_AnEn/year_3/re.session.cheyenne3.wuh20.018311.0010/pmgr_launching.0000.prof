@@ -1,0 +1,15 @@
+#time,event,comp,thread,uid,state,msg
+1582144242.4586966,sync_abs,pmgr_launching.0000,MainThread,,,cheyenne3.ib0.cheyenne.ucar.edu:10.148.0.4:1582144242.4581437:1582144242.5664017:ntp
+1582144242.4634573,comp_start,pmgr_launching.0000,MainThread,pmgr_launching.0000,,
+#time,event,comp,thread,uid,state,msg
+1582144242.6275871,sync_abs,pmgr_launching.0000,MainThread,,,cheyenne3.ib0.cheyenne.ucar.edu:10.148.0.4:1582144242.627474:1582144242.735732:ntp
+1582144242.6276531,init1,pmgr_launching.0000,MainThread,pmgr_launching.0000,,/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_3/re.session.cheyenne3.wuh20.018311.0010
+1582144242.7032557,component_init,pmgr_launching.0000,Thread-1,,,
+1582144244.4693437,get,pmgr_launching.0000,Thread-1,pilot.0000,PMGR_LAUNCHING_PENDING,
+1582144244.4694598,advance,pmgr_launching.0000,Thread-1,pilot.0000,PMGR_LAUNCHING,
+1582144245.0230742,staging_in_start,pmgr_launching.0000,Thread-1,pilot.0000,,
+1582144247.9494531,staging_in_stop,pmgr_launching.0000,Thread-1,pilot.0000,,
+1582144247.9495268,submission_start,pmgr_launching.0000,Thread-1,pilot.0000,,
+1582144251.1860654,advance,pmgr_launching.0000,Thread-1,pilot.0000,FAILED,
+1582144321.2048671,component_final,pmgr_launching.0000,Thread-4,,,
+1582144321.2049665,END,pmgr_launching.0000,Thread-4,,,

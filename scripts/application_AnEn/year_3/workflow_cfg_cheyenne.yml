@@ -1,0 +1,28 @@
+# Global arguments
+global:
+
+  # Set this to 1 to only print help messages from AnEn executables
+  # without running any real computation.
+  #
+  print-help: 1
+
+  # Set this to 1 to print tasks in a pretty dictionary form without
+  # actually running them.
+  #
+  print-tasks-only: 0
+
+  # How many parallel tasks to create
+  task-count: 3
+  
+  # Extra arguments
+  out-folder: "/glade/u/home/wuh20/scratch/data/AnEn/"
+
+# Analog generation stage
+stage-analogs:
+  executable: "/glade/u/home/wuh20/packages/release/bin/anen"
+  cpu:
+    processes: 1
+    process-type: 'MPI'
+    threads-per-process: 1
+    thread-type: 'OpenMP'
+  pre-exec: ["module load gnu/9.1.0"]

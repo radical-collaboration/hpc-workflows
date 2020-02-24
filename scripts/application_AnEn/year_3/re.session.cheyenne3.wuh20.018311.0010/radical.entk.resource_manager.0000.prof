@@ -1,0 +1,12 @@
+#time,event,comp,thread,uid,state,msg
+1582144233.4884470,sync_abs,radical.entk.resource_manager.0000,MainThread,,,cheyenne3.ib0.cheyenne.ucar.edu:10.148.0.4:1582144233.4882314:1582144233.5964894:ntp
+1582144233.4885955,rmgr obj created,radical.entk.resource_manager.0000,MainThread,resource_manager.0000,,
+1582144233.4886520,rdesc_validate,radical.entk.resource_manager.0000,MainThread,resource_manager.0000,,
+1582144233.4888184,rdesc_valid,radical.entk.resource_manager.0000,MainThread,resource_manager.0000,,
+1582144233.4888370,populating rmgr,radical.entk.resource_manager.0000,MainThread,resource_manager.0000,,
+1582144233.4889512,rmgr populated,radical.entk.resource_manager.0000,MainThread,resource_manager.0000,,
+1582144233.4896770,creating rreq,radical.entk.resource_manager.0000,MainThread,resource_manager.0000,,
+1582144243.7602856,rreq created,radical.entk.resource_manager.0000,MainThread,resource_manager.0000,,
+1582144244.4651530,rreq submitted,radical.entk.resource_manager.0000,MainThread,resource_manager.0000,,
+1582144252.3123477,rreq_cancel,radical.entk.resource_manager.0000,MainThread,resource_manager.0000,,
+1582144252.3127925,rreq_canceled,radical.entk.resource_manager.0000,MainThread,resource_manager.0000,,

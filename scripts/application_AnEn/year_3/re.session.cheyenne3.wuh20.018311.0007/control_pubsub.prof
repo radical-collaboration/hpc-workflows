@@ -1,0 +1,7 @@
+#time,event,comp,thread,uid,state,msg
+1582143779.2243,sync_abs,control_pubsub,MainThread,,,cheyenne3.ib0.cheyenne.ucar.edu:10.148.0.4:1582143779.2238364:1582143779.2203846:ntp
+1582143779.2301569,bridge_start,control_pubsub,MainThread,control_pubsub,,
+#time,event,comp,thread,uid,state,msg
+1582143779.2313,sync_abs,control_pubsub,MainThread,,,cheyenne3.ib0.cheyenne.ucar.edu:10.148.0.4:1582143779.231151:1582143779.2276993:ntp
+1582143779.2312872,init3,control_pubsub,MainThread,control_pubsub,,/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_3/re.session.cheyenne3.wuh20.018311.0007
+1582143852.3148034,term,control_pubsub,Thread-2,control_pubsub,,

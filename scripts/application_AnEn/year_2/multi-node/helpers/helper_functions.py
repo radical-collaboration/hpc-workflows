@@ -17,7 +17,7 @@ def extract_month(file_path, pattern = '.*?/(\d{6})\.nc$'):
     month = re.search(pattern, file_path)
 
     if month is None:
-        print 'Error: Cannot extract month from the file path {}'.format(file_path)
+        print('Error: Cannot extract month from the file path {}'.format(file_path))
         sys.exit(1)
 
     return month.group(1)
@@ -95,7 +95,7 @@ def get_files_dims(global_cfg, check_dims=True):
             if (dims[0] != global_cfg['num-forecast-parameters']) or \
                     (dims[1] != global_cfg['num-grids']) or \
                     (dims[3] != global_cfg['num-flts']):
-                print "Error: File ({}) does not meet the dimension requirement.".format(forecast_files[i])
+                print("Error: File ({}) does not meet the dimension requirement.".format(forecast_files[i]))
                 sys.exit(1)
 
         files_dims['forecasts'][months[i]] = dims
@@ -119,7 +119,7 @@ def get_files_dims(global_cfg, check_dims=True):
 
         if check_dims:
             if (dims[0] != global_cfg['num-observation-parameters']) or (dims[1] != global_cfg['num-grids']):
-                print "Error: File ({}) does not meet the dimension requirement.".format(forecast_files[i])
+                print("Error: File ({}) does not meet the dimension requirement.".format(forecast_files[i]))
                 sys.exit(1)
 
         files_dims['observations'][months[i]] = dims
@@ -150,7 +150,7 @@ def get_indices(type, month, task_i, files_dims, global_cfg):
     elif type is "observations":
         counts = [global_cfg['num-observation-parameters']]
     else:
-        print "Error: Unrecognized type {}".format(type)
+        print("Error: Unrecognized type {}".format(type))
         sys.exit(1)
 
     # Add the index for stations
@@ -179,12 +179,12 @@ def check_empty(global_cfg):
 
     if num_sims_files != 0:
         if num_sims_files != global_cfg['task-count']:
-            print "Directory {} is not empty.".format(global_cfg['sims-folder'])
+            print("Directory {} is not empty.".format(global_cfg['sims-folder']))
             empty = False
 
     if num_analogs_files != 0:
         if num_analogs_files != global_cfg['task-count']:
-            print "Directory {} is not empty.".format(global_cfg['analogs-folder'])
+            print("Directory {} is not empty.".format(global_cfg['analogs-folder']))
             empty = False
 
     return empty
@@ -250,7 +250,7 @@ def write_config_files(file_type, global_cfg, files_dims):
         config_prefix_analogs = 'analogs'
         config_prefix_sims = 'sims'
     else:
-        print 'Error: Wrong file_type {}'.format(file_type)
+        print('Error: Wrong file_type {}'.format(file_type))
         sys.exit(1)
 
     if file_type == 'test-forecasts':
@@ -259,7 +259,7 @@ def write_config_files(file_type, global_cfg, files_dims):
         months = get_months_between(global_cfg['search-month-start'], global_cfg['search-month-end'])
 
     if file_type == 'day-analog-similarity':
-        print "Writing daily partitioned configuration files for analogs and similarity ..."
+        print("Writing daily partitioned configuration files for analogs and similarity ...")
 
         num_days = global_cfg['num-days']
 
@@ -324,7 +324,7 @@ def write_config_files(file_type, global_cfg, files_dims):
 
             nc.close()
 
-        print "Done!"
+        print("Done!")
 
     else:
     
@@ -332,9 +332,9 @@ def write_config_files(file_type, global_cfg, files_dims):
             config_file = "{}{}-{:05d}.cfg".format(global_cfg['config-folder'], config_prefix, i)
 
             if os.path.isfile(config_file):
-                print "{} exists. Skip writing to this file!".format(config_file)
+                print("{} exists. Skip writing to this file!".format(config_file))
             else:
-                print "Generating configuration file {} ...".format(config_file)
+                print("Generating configuration file {} ...".format(config_file))
 
                 with open(config_file, 'a') as out_file:
                     for month in months:
@@ -349,11 +349,11 @@ def write_config_files(file_type, global_cfg, files_dims):
                             [start, count] = get_indices('observations', month, i, files_dims, global_cfg)
                             nc_file = [file for file in files_dims['observations']['search-files'] if month in file]
                         else:
-                            print 'Error: Wrong file_type {}'.format(file_type)
+                            print('Error: Wrong file_type {}'.format(file_type))
                             sys.exit(1)
 
                         if len(nc_file) != 1:
-                            print 'Error: Cannot find the file for month {}.'.format(month)
+                            print('Error: Cannot find the file for month {}.'.format(month))
                             sys.exit(1)
 
                         out_file.write(' '.join([par_name_file, '=', nc_file[0]]))

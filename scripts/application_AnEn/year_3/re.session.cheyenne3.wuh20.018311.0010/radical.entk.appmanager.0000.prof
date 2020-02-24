@@ -1,0 +1,14 @@
+#time,event,comp,thread,uid,state,msg
+1582144231.8932791,sync_abs,radical.entk.appmanager.0000,MainThread,,,cheyenne3.ib0.cheyenne.ucar.edu:10.148.0.4:1582144231.8928998:1582144232.0011575:ntp
+1582144231.8971112,amgr_creat,radical.entk.appmanager.0000,MainThread,appmanager.0000,,
+1582144231.8972554,mqs_setup_start,radical.entk.appmanager.0000,MainThread,appmanager.0000,,
+1582144233.4836473,mqs_setup_stop,radical.entk.appmanager.0000,MainThread,appmanager.0000,,
+1582144233.4837630,amgr_created,radical.entk.appmanager.0000,MainThread,appmanager.0000,,
+1582144233.4893568,assigning workflow,radical.entk.appmanager.0000,MainThread,appmanager.0000,,
+1582144233.4894722,amgr_start,radical.entk.appmanager.0000,MainThread,appmanager.0000,,
+1582144233.4894905,amgr run started,radical.entk.appmanager.0000,MainThread,appmanager.0000,,
+1582144233.4896576,rreq_init,radical.entk.appmanager.0000,MainThread,appmanager.0000,,
+1582144252.3123062,term_start,radical.entk.appmanager.0000,MainThread,appmanager.0000,,
+1582144252.3128223,mqs_cleanup_start,radical.entk.appmanager.0000,MainThread,appmanager.0000,,
+1582144253.8937316,mqs_cleanup_stop,radical.entk.appmanager.0000,MainThread,appmanager.0000,,
+1582144253.8938665,termination done,radical.entk.appmanager.0000,MainThread,appmanager.0000,,

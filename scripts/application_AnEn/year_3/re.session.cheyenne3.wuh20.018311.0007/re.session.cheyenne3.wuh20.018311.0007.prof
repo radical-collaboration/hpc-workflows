@@ -1,0 +1,15 @@
+#time,event,comp,thread,uid,state,msg
+1582143775.8993,sync_abs,re.session.cheyenne3.wuh20.018311.0007,MainThread,,,cheyenne3.ib0.cheyenne.ucar.edu:10.148.0.4:1582143775.898051:1582143775.8945992:ntp
+1582143775.9009104,session_start,re.session.cheyenne3.wuh20.018311.0007,MainThread,re.session.cheyenne3.wuh20.018311.0007,,1
+#time,event,comp,thread,uid,state,msg
+1582143781.2065,sync_abs,re.session.cheyenne3.wuh20.018311.0007,MainThread,,,cheyenne3.ib0.cheyenne.ucar.edu:10.148.0.4:1582143781.2064157:1582143781.2029638:ntp
+1582143781.2069182,session_start,re.session.cheyenne3.wuh20.018311.0007,MainThread,re.session.cheyenne3.wuh20.018311.0007,,0
+1582143781.3355267,session_ok,re.session.cheyenne3.wuh20.018311.0007,MainThread,re.session.cheyenne3.wuh20.018311.0007,,0
+1582143782.4685974,session_ok,re.session.cheyenne3.wuh20.018311.0007,MainThread,re.session.cheyenne3.wuh20.018311.0007,,1
+#time,event,comp,thread,uid,state,msg
+1582143785.4668,sync_abs,re.session.cheyenne3.wuh20.018311.0007,MainThread,,,cheyenne3.ib0.cheyenne.ucar.edu:10.148.0.4:1582143785.4667182:1582143785.4632664:ntp
+1582143785.4672503,session_start,re.session.cheyenne3.wuh20.018311.0007,MainThread,re.session.cheyenne3.wuh20.018311.0007,,0
+1582143785.5913961,session_ok,re.session.cheyenne3.wuh20.018311.0007,MainThread,re.session.cheyenne3.wuh20.018311.0007,,0
+1582143790.7781615,session_close,re.session.cheyenne3.wuh20.018311.0007,MainThread,re.session.cheyenne3.wuh20.018311.0007,,
+1582143792.6603162,session_stop,re.session.cheyenne3.wuh20.018311.0007,MainThread,re.session.cheyenne3.wuh20.018311.0007,,
+1582143792.6603904,END,re.session.cheyenne3.wuh20.018311.0007,MainThread,,,

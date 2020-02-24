@@ -1,0 +1,7 @@
+#time,event,comp,thread,uid,state,msg
+1582143905.4231939,sync_abs,pmgr_launching_queue,MainThread,,,cheyenne3.ib0.cheyenne.ucar.edu:10.148.0.4:1582143905.4227276:1582143905.4191825:ntp
+1582143905.4289689,bridge_start,pmgr_launching_queue,MainThread,pmgr_launching_queue,,
+#time,event,comp,thread,uid,state,msg
+1582143905.4299924,sync_abs,pmgr_launching_queue,MainThread,,,cheyenne3.ib0.cheyenne.ucar.edu:10.148.0.4:1582143905.429884:1582143905.426339:ntp
+1582143905.4300299,init3,pmgr_launching_queue,MainThread,pmgr_launching_queue,,/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_3/re.session.cheyenne3.wuh20.018311.0008
+1582143976.5056994,term,pmgr_launching_queue,Thread-2,pmgr_launching_queue,,

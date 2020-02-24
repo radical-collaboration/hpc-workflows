@@ -1,0 +1,4 @@
+#time,event,comp,thread,uid,state,msg
+1582149032.1983037,sync_abs,cmgr.0001.hb,MainThread,,,cheyenne1.ib0.cheyenne.ucar.edu:10.148.0.2:1582149032.1979253:1582149032.2908893:ntp
+1582149032.1983402,init3,cmgr.0001.hb,MainThread,cmgr.0001.hb,,/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_3/re.session.cheyenne1.wuh20.018311.0012
+1582149766.8477573,term,cmgr.0001.hb,MainThread,cmgr.0001.hb,,

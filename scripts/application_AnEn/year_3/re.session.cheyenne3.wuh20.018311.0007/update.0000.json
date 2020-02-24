@@ -1,0 +1,22 @@
+{
+    "base": "/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_3",
+    "bulk_size": 1024,
+    "bulk_time": 1.0,
+    "client_sandbox": "/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_3",
+    "cmgr": "cmgr.0000",
+    "count": 1,
+    "dburl": "mongodb://hpcworkflows:hpcw0rkf70w@two.radical-project.org:27017/hpcworkflows",
+    "default_dburl": "mongodb://rct:rct_test@two.radical-project.org/rct_test",
+    "heartbeat": {
+        "addr_pub": "tcp://10.148.0.4:33441",
+        "addr_sub": "tcp://10.148.0.4:36195",
+        "interval": 1.0,
+        "timeout": 60.0
+    },
+    "kind": "update",
+    "path": "/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_3/re.session.cheyenne3.wuh20.018311.0007",
+    "record": null,
+    "session_base": "/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_3",
+    "sid": "re.session.cheyenne3.wuh20.018311.0007",
+    "uid": "update.0000"
+}

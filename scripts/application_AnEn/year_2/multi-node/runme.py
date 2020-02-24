@@ -1,15 +1,16 @@
+#!/glade/u/home/wuh20/venv/bin/python
 import os
 import sys
 import yaml
 import argparse
 from radical.entk import Pipeline, Stage, AppManager
-from helpers.utils import get_files_dims, check_empty, expand_tilde, get_months_between
+from helpers.helper_functions import get_files_dims, check_empty, expand_tilde, get_months_between
 from helpers.task_sim_calc import task_sim_calc
 from helpers.task_anen_gen import task_anen_gen 
 from helpers.task_analog_select import create_analog_select_task
 from helpers.task_combine import task_combine
 
-os.environ['RADICAL_PILOT_DBURL'] = 'mongodb://example:example000@ds058579.mlab.com:58579/wuh20'
+os.environ['RADICAL_PILOT_DBURL'] = 'mongodb://wuh20:example123@ds137271.mlab.com:37271/entk'
 
 # Keep profiling information
 os.environ['RADICAL_PILOT_PROFIL'] = 'True'
@@ -43,10 +44,10 @@ def create_pipelines(wcfg, rcfg):
 
         if t:
             s.add_tasks(t)
-            print "Adding task {}: {}".format(len(s.tasks), t.name)
+            print(("Adding task {}: {}".format(len(s.tasks), t.name)))
         
     if len(s.tasks) != 0:
-        print "Adding stage {}.".format(s.name)
+        print("Adding stage {}.".format(s.name))
         p.add_stages(s)
 
     return (p)
@@ -74,10 +75,10 @@ def create_pipelines_old(wcfg, rcfg):
 
         if t:
             s.add_tasks(t)
-            print "Adding task {}: {}".format(len(s.tasks), t.name)
+            print("Adding task {}: {}".format(len(s.tasks), t.name))
         
         if len(s.tasks) == rcfg['resource-desc']['cpus']:
-            print "Adding stage {} because it is full with tasks.".format(s.name)
+            print("Adding stage {} because it is full with tasks.".format(s.name))
             p.add_stages(s)
 
             # Create a new stage
@@ -86,7 +87,7 @@ def create_pipelines_old(wcfg, rcfg):
             stage_cfg = wcfg[s.name]
 
     if len(s.tasks) != 0:
-        print "Adding stage {} for the residual tasks.".format(s.name)
+        print("Adding stage {} for the residual tasks.".format(s.name))
         p.add_stages(s)
 
     # Create the stage for analog selector tasks
@@ -98,10 +99,10 @@ def create_pipelines_old(wcfg, rcfg):
         t = create_analog_select_task(i, stage_cfg, wcfg['global'], files_dims)
         if t:
             s.add_tasks(t)
-            print "Adding task {}: {}".format(len(s.tasks), t.name)
+            print("Adding task {}: {}".format(len(s.tasks), t.name))
 
         if len(s.tasks) == rcfg['resource-desc']['cpus']:
-            print "Adding stage {} because it is full with tasks.".format(s.name)
+            print("Adding stage {} because it is full with tasks.".format(s.name))
             p.add_stages(s)
 
             # Create a new stage
@@ -110,7 +111,7 @@ def create_pipelines_old(wcfg, rcfg):
             stage_cfg = wcfg[s.name]
 
     if len(s.tasks) != 0:
-        print "Adding stage {} for the residual tasks".format(s.name)
+        print("Adding stage {} for the residual tasks".format(s.name))
         p.add_stages(s)
 
     # Create the stage for combining analogs
@@ -120,11 +121,11 @@ def create_pipelines_old(wcfg, rcfg):
 
     t = task_combine('Analogs', 0, stage_cfg, wcfg['global'], 0, files_dims)
     if t:
-        print "Adding task {}".format(s.name)
+        print("Adding task {}".format(s.name))
         s.add_tasks(t)
 
     if len(s.tasks) != 0:
-        print "Adding stage {}".format(s.name)
+        print("Adding stage {}".format(s.name))
         p.add_stages(s)
 
     return p
@@ -133,16 +134,16 @@ def create_pipelines_old(wcfg, rcfg):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Process some arguments to get resource and workflow cfgs')
-    parser.add_argument('--wcfg', help='path to workflow cfg file', required=False, default='./workflow_cfg.yml')
-    parser.add_argument('--rcfg', help='path to resource cfg file', required=False, default='./resource_cfg.yml')
+    parser.add_argument('--wcfg', help='path to workflow cfg file', required=False, default='./workflow_cfg_cheyenne.yml')
+    parser.add_argument('--rcfg', help='path to resource cfg file', required=False, default='./resource_cfg_cheyenne.yml')
 
     args = parser.parse_args()
     if not os.path.isfile(args.wcfg):
-        print '%s does not exist' % args.wcfg
+        print('%s does not exist' % args.wcfg)
         sys.exit(1)
 
     if not os.path.isfile(args.rcfg):
-        print '%s does not exist' % args.rcfg
+        print('%s does not exist' % args.rcfg)
         sys.exit(1)
 
     with open(args.rcfg, 'r') as fp:

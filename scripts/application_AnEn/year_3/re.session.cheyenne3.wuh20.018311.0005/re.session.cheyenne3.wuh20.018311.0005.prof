@@ -1,0 +1,3 @@
+#time,event,comp,thread,uid,state,msg
+1582143605.3681,sync_abs,re.session.cheyenne3.wuh20.018311.0005,MainThread,,,cheyenne3.ib0.cheyenne.ucar.edu:10.148.0.4:1582143605.3676498:1582143605.363942:ntp
+1582143605.3686945,session_start,re.session.cheyenne3.wuh20.018311.0005,MainThread,re.session.cheyenne3.wuh20.018311.0005,,1
