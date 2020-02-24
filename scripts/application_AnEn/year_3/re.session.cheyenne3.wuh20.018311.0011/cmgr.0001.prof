@@ -1,8 +1,0 @@
-#time,event,comp,thread,uid,state,msg
-1582144545.6143005,sync_abs,cmgr.0001,MainThread,,,cheyenne3.ib0.cheyenne.ucar.edu:10.148.0.4:1582144545.6137912:1582144545.6102333:ntp
-1582144545.6149719,init2,cmgr.0001,MainThread,cmgr.0001,,/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_3/re.session.cheyenne3.wuh20.018311.0011
-1582144545.6714630,start_bridges_start,cmgr.0001,MainThread,cmgr.0001,,
-1582144546.9638193,start_bridges_stop,cmgr.0001,MainThread,cmgr.0001,,
-1582144546.9638851,start_components_start,cmgr.0001,MainThread,cmgr.0001,,
-1582144547.6031582,start_components_stop,cmgr.0001,MainThread,cmgr.0001,,
-1582145218.0088274,close,cmgr.0001,MainThread,cmgr.0001,,

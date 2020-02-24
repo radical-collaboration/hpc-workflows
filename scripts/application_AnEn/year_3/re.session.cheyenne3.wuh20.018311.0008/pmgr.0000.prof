@@ -1,9 +1,0 @@
-#time,event,comp,thread,uid,state,msg
-1582143904.9818714,sync_abs,pmgr.0000,MainThread,,,cheyenne3.ib0.cheyenne.ucar.edu:10.148.0.4:1582143904.9814398:1582143904.9778948:ntp
-1582143904.9825401,init1,pmgr.0000,MainThread,pmgr.0000,,/glade/u/home/wuh20/github/hpc-workflows/scripts/application_AnEn/year_3/re.session.cheyenne3.wuh20.018311.0008
-1582143904.9876709,component_init,pmgr.0000,Thread-4,,,
-1582143908.1228375,setup_done,pmgr.0000,MainThread,pmgr.0000,,
-1582143908.6727698,advance,pmgr.0000,MainThread,pilot.0000,NEW,
-1582143908.8159626,advance,pmgr.0000,MainThread,pilot.0000,PMGR_LAUNCHING_PENDING,
-1582143908.8162749,put,pmgr.0000,MainThread,pilot.0000,PMGR_LAUNCHING_PENDING,pmgr_launching_queue.put.0000
-1582143908.8268576,advance,pmgr.0000,Thread-11,pilot.0000,PMGR_LAUNCHING,
