@@ -15,14 +15,14 @@ global:
   task-count: 3
   
   # Extra arguments
-  out-folder: "/glade/u/home/wuh20/scratch/data/AnEn/"
+  out-folder: "/home1/04672/tg839717/scratch/AnEn"
 
 # Analog generation stage
 stage-analogs:
-  executable: "/glade/u/home/wuh20/packages/release/bin/anen"
+  executable: "anen"
   cpu:
     processes: 1
     process-type: 'MPI'
     threads-per-process: 1
     thread-type: 'OpenMP'
-  pre-exec: ["module load gnu/9.1.0"]
+  pre-exec: []

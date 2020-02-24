@@ -1,0 +1,12 @@
+rabbitmq:
+  hostname: 'two.radical-project.org'
+  port: 33239
+
+resource-desc:
+  name: 'xsede.stampede2_srun'
+  walltime: 60
+  cpus: 1
+  gpus: 0
+  queue: 'normal'
+  project: 'TG-MCB090174'
+  schema: 'gsissh'

@@ -1,4 +1,4 @@
-#!/glade/u/home/wuh20/venv/bin/python
+#!/home/weiming/venv/bin/python
 import os
 import sys
 import yaml
@@ -52,8 +52,8 @@ def pipeline_analogs(wcfg, rcfg):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Process some arguments to get resource and workflow cfgs')
-    parser.add_argument('--wcfg', help='path to workflow cfg file', required=False, default='./workflow_cfg_cheyenne.yml')
-    parser.add_argument('--rcfg', help='path to resource cfg file', required=False, default='./resource_cfg_cheyenne.yml')
+    parser.add_argument('--wcfg', help='path to workflow cfg file', required=False, default='./workflow_cfg.yml')
+    parser.add_argument('--rcfg', help='path to resource cfg file', required=False, default='./resource_cfg_stampede.yml')
 
     args = parser.parse_args()
     if not os.path.isfile(args.wcfg):
@@ -78,7 +78,8 @@ if __name__ == '__main__':
         'walltime': rcfg['resource-desc']['walltime'],
         'cpus': rcfg['resource-desc']['cpus'],
         'queue': rcfg['resource-desc']['queue'],
-        'project': rcfg['resource-desc']['project']
+        'project': rcfg['resource-desc']['project'],
+        'access_schema': rcfg['resource-desc']['schema']
     }
 
     amgr.resource_desc = res_desc
