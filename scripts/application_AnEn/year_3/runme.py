@@ -83,6 +83,7 @@ if __name__ == '__main__':
     }
 
     amgr.resource_desc = res_desc
+    amgr.shared_data = [wcfg['global']['shared-config']]
 
     pipelines = pipeline_analogs(wcfg, rcfg)
     if not isinstance(pipelines, list):

@@ -39,7 +39,7 @@ def task_anen_gen(i, stage_cfg, global_cfg):
 
     t.arguments = [
         '--config', global_cfg['shared-config'],
-        '--stations-index', stations_index,
+        '--stations-index', stations_index.tolist(),
         '--out', out_file,
     ]
     
