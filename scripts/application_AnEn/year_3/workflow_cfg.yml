@@ -4,15 +4,15 @@ global:
   # Set this to 1 to only print help messages from AnEn executables
   # without running any real computation.
   #
-  print-help: 1
+  print-help: 0
 
   # Set this to 1 to print tasks in a pretty dictionary form without
   # actually running them.
   #
-  print-tasks-only: 1
+  print-tasks-only: 0
 
   # The number of total parallel tasks
-  task-count: 3
+  task-count: 100
 
   # The number of total grids
   grid-count: 262792
