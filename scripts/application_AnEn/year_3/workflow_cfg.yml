@@ -18,10 +18,10 @@ global:
   grid-count: 262792
 
   # Shared configuration file
-  shared-config: "/UNKNOWN"
+  shared-config: "anen_shared_config.cfg"
   
   # Extra arguments
-  out-folder: "/home1/04672/tg839717/scratch/AnEn"
+  out-folder: "/home1/04672/tg839717/scratch/AnEn/"
 
 # Analog generation stage
 stage-analogs:
