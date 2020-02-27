@@ -9,10 +9,16 @@ global:
   # Set this to 1 to print tasks in a pretty dictionary form without
   # actually running them.
   #
-  print-tasks-only: 0
+  print-tasks-only: 1
 
-  # How many parallel tasks to create
+  # The number of total parallel tasks
   task-count: 3
+
+  # The number of total grids
+  grid-count: 262792
+
+  # Shared configuration file
+  shared-config: "/UNKNOWN"
   
   # Extra arguments
   out-folder: "/home1/04672/tg839717/scratch/AnEn"
@@ -25,4 +31,3 @@ stage-analogs:
     process-type: 'MPI'
     threads-per-process: 1
     thread-type: 'OpenMP'
-  pre-exec: []
