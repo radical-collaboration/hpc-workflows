@@ -26,6 +26,7 @@ global:
 # Analog generation stage
 stage-analogs:
   executable: "anen"
+  pre-exec: ["module load boost netcdf"]
   cpu:
     processes: 1
     process-type: 'MPI'

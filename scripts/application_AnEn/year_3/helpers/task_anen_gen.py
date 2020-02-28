@@ -30,6 +30,7 @@ def task_anen_gen(i, stage_cfg, global_cfg):
         return False
 
     t.executable = stage_cfg['executable']
+    t.pre_exec = stage_cfg['pre-exec']
     t.cpu_reqs = {
         'processes': stage_cfg['cpu']['processes'],
         'process_type': stage_cfg['cpu']['process-type'],
@@ -39,9 +40,10 @@ def task_anen_gen(i, stage_cfg, global_cfg):
 
     t.arguments = [
         '--config', global_cfg['shared-config'],
-        '--stations-index', stations_index.tolist(),
-        '--out', out_file,
-    ]
+        '--stations-index'] + [str(x) for x in stations_index] + \
+        ['--out', out_file]
+
+    t.link_input_data = ["$SHARED/{}".format(global_cfg['shared-config'])]
     
     if global_cfg['print-help']:
         t.arguments.append('-h')
