@@ -22,9 +22,15 @@ radical-stack
 
 If you want to quit the current virtual environment, use the command `deactivate`.
 
-## Developing Workflow
+## Workflow Development
 
 For details, please refer to 
 
 - [the official examples](https://radicalentk.readthedocs.io/en/latest/examples.html)
 - [the user guide](https://radicalentk.readthedocs.io/en/latest/user_guide.html)
+
+## Caveats
+
+1. Don't use symbollic link. While specifying input and output directories in `EnTK` pipelines, avoid using symbolic links and prefer to use absolute paths.
+2. Avoid long strings in `Task.arguments`. There is a character limit for the length of the command line and its arguments. When the argument list proliferate, try to avoid passing them directly through the command line by writing arguments into a file to read.
+
