@@ -21,11 +21,11 @@ global:
   shared-config: "anen_shared_config.cfg"
   
   # Extra arguments
-  out-folder: "/home1/04672/tg839717/scratch/AnEn/"
+  out-folder: "/scratch/04672/tg839717/AnEn/"
 
 # Analog generation stage
 stage-analogs:
-  executable: "anen"
+  executable: "anen_grib"
   pre-exec: ["module load boost netcdf"]
   cpu:
     processes: 1

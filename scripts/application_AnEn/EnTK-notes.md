@@ -29,6 +29,18 @@ For details, please refer to
 - [the official examples](https://radicalentk.readthedocs.io/en/latest/examples.html)
 - [the user guide](https://radicalentk.readthedocs.io/en/latest/user_guide.html)
 
+## Runtime
+
+After pilots have been submitted, the job can be monitored on the supercomputer. In the following case, the job is queued.
+
+```
+$ squeue -u `whoami`
+  JOBID   PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+5341930      normal pilot.00 tg839717 PD       0:00      1 (Priority)
+```
+
+When all piplines have been submitted, you can go `$WORK` to find `radical.pilot.sandbox` folder. All logs files can be found over there.
+
 ## Caveats
 
 1. Don't use symbollic link. While specifying input and output directories in `EnTK` pipelines, avoid using symbolic links and prefer to use absolute paths.

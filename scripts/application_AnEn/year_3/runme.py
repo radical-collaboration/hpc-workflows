@@ -35,6 +35,8 @@ def pipeline_analogs(wcfg, rcfg):
     stage_cfg = wcfg['stage-analogs']
 
     for i in range(wcfg['global']['task-count']):
+        if i > 5:
+            continue
 
         t = task_anen_gen(i, stage_cfg, wcfg['global'])
 
