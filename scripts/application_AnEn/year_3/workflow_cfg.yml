@@ -26,7 +26,7 @@ global:
 # Analog generation stage
 stage-analogs:
   executable: "anen_grib"
-  pre-exec: ["module load boost netcdf"]
+  pre-exec: ["module load boost netcdf python3"]
   cpu:
     processes: 1
     process-type: 'MPI'
