@@ -11,8 +11,8 @@ global:
   #
   print-tasks-only: 0
 
-  # The number of total parallel tasks
-  task-count: 100
+  # The number of total parallel tasks. 262792
+  task-count: 10000
 
   # The number of total grids
   grid-count: 262792
@@ -26,7 +26,7 @@ global:
 # Analog generation stage
 stage-analogs:
   executable: "anen_grib"
-  pre-exec: ["module load boost netcdf python3"]
+  pre-exec: ["module purge", "module load intel boost netcdf python3"]
   cpu:
     processes: 1
     process-type: 'MPI'
