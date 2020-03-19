@@ -1,4 +1,3 @@
-#!/home/weiming/venv/bin/python
 import os
 import sys
 import yaml
