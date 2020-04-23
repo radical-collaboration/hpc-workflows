@@ -31,7 +31,7 @@ stage-analogs:
   executable: "anen_grib_mpi"
   pre-exec: [
     "module purge",
-    "module load intel boost netcdf python3",
+    "module load boost netcdf impi python3",
   ]
   cpu:
     processes: 204
