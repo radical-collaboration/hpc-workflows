@@ -11,7 +11,7 @@ global:
   # Set this to 1 to print tasks in a pretty dictionary form without
   # actually running them.
   #
-  print-tasks-only: 1
+  print-tasks-only: 0
 
   # Shared configuration file
   # This can be relative folder because files will be uploaded to computing nodes
@@ -34,7 +34,7 @@ stage-analogs:
     "module load intel boost netcdf python3",
   ]
   cpu:
-    processes: 136
+    processes: 204
     process-type: 'MPI'
     threads-per-process: 1
     thread-type: 'OpenMP'
@@ -43,21 +43,22 @@ stage-analogs:
 stage-power:
 
   # The absolute path to the python main script
-  python-main: "evergreen.py"
+  python-main: "/home1/04672/tg839717/github/RenewableSimulator/evergreen.py"
 
   # The absolute path to the variable map yaml file
-  map-file: "variable-map.yaml"
+  map-file: "/home1/04672/tg839717/github/RenewableSimulator/variable-map.yaml"
 
   # The absolute path to the scenario yaml file
-  scenario-file: "scenarios.yaml"
+  scenario-file: "/home1/04672/tg839717/github/RenewableSimulator/scenarios.yaml"
 
   executable: "python"
   pre-exec: [
     "module purge",
     "module load intel/18.0.2 impi/18.0.2 pnetcdf/1.11.0 python3/3.7.0 phdf5/1.10.4 parallel-netcdf/4.6.2",
+    "source $HOME/venv/bin/activate",
   ]
   cpu:
-    processes: 136
+    processes: 204
     process-type: 'MPI'
     threads-per-process: 1
     thread-type: 'OpenMP'

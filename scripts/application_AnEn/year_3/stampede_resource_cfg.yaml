@@ -6,8 +6,8 @@ rabbitmq:
 
 resource-desc:
   name: 'xsede.stampede2_srun'
-  walltime: 60
-  cpus: 136
+  walltime: 300
+  cpus: 204
   gpus: 0
   queue: 'normal'
   project: 'TG-MCB090174'
