@@ -88,7 +88,11 @@ if __name__ == '__main__':
 
     # Add stages
     p = Pipeline()
-    p.add_stages(stage_analogs(wcfg))
+
+    s = stage_analogs(wcfg)
+    if len(s.tasks) != 0:
+        p.add_stages(s)
+
     p.add_stages(stage_power(wcfg))
 
     # Add pipelines

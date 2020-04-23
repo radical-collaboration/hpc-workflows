@@ -48,7 +48,7 @@ def stage_power(wcfg):
     ]
 
     shared_arguments = [
-        'evergreen.py', '--map variable-map.yaml',
+        stage_cfg['python-main'], '--map variable-map.yaml',
         '--scenario scenarios.yaml', '--silent',
         '--solar nrel_numba'
     ]
@@ -126,13 +126,18 @@ def stage_analogs(wcfg):
         t.name = 'task-analogs_{}'.format(basename)
         output_file = os.path.join(global_cfg['out-folder'], 'analogs_{}.nc'.format(basename))
 
-        t.arguments = shared_arguments + ['--config', domain_cfg, '--out', output_file]
-        t.link_input_data = link_input_data + ['$SHARED/{} > {}/{}'.format(
-            domain_cfg, global_cfg['subset-config'], domain_cfg)]
+        if os.path.exists(output_file):
+            print("{} exists. Do not generate this file again [stage analogs]".format(output_file))
+            continue
 
-        s.add_tasks(t)
+        else:
+            t.arguments = shared_arguments + ['--config', domain_cfg, '--out', output_file]
+            t.link_input_data = link_input_data + ['$SHARED/{} > {}/{}'.format(
+                domain_cfg, global_cfg['subset-config'], domain_cfg)]
 
-        if global_cfg['print-tasks-only']:
-            pprint(t.to_dict())
+            s.add_tasks(t)
+
+            if global_cfg['print-tasks-only']:
+                pprint(t.to_dict())
 
     return s

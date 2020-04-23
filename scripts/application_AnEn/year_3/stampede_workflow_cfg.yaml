@@ -14,9 +14,13 @@ global:
   print-tasks-only: 1
 
   # Shared configuration file
+  # This can be relative folder because files will be uploaded to computing nodes
+  #
   shared-config: "stampede_anen_shared_config.cfg"
 
-  # Domain subset configuration file
+  # Domain subset configuration file.
+  # This can be relative folder because files will be uploaded to computing nodes
+  #
   subset-config: "domain-USA"
   
   # Output folder
@@ -37,11 +41,20 @@ stage-analogs:
 
 # Power simulation stage
 stage-power:
+
+  # The absolute path to the python main script
+  python-main: "evergreen.py"
+
+  # The absolute path to the variable map yaml file
   map-file: "variable-map.yaml"
+
+  # The absolute path to the scenario yaml file
   scenario-file: "scenarios.yaml"
+
   executable: "python"
   pre-exec: [
     "module purge",
+    "module load intel/18.0.2 impi/18.0.2 pnetcdf/1.11.0 python3/3.7.0 phdf5/1.10.4 parallel-netcdf/4.6.2",
   ]
   cpu:
     processes: 136

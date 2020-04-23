@@ -46,3 +46,8 @@ When all pipelines have been submitted, you can go `$WORK` to find `radical.pilo
 1. Don't use symbolic link. While specifying input and output directories in `EnTK` pipelines, avoid using symbolic links and prefer to use absolute paths.
 2. Avoid long strings in `Task.arguments`. There is a character limit for the length of the command line and its arguments. When the argument list proliferate, try to avoid passing them directly through the command line by writing arguments into a file to read.
 
+
+## Questions
+
+1. How many tasks are there in a stage? I tried to use `len(p.taksks)` but it only returns 1?
+2. What's the proper use of the task attribute `link_input_data`?
