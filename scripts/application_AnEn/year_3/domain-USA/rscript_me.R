@@ -13,4 +13,4 @@ ext <- c(left = floor(min(usa_boundary$x, na.rm = T)),
          bottom = floor(min(usa_boundary$y, na.rm = T)),
          top = ceiling(max(usa_boundary$y, na.rm = T)))
 
-subset <- subsetCoordinates(xs = xs, ys = ys, poi = ext, file.output = "domain-USA.cfg", num.chunks = 20)
+subset <- subsetCoordinates(xs = xs, ys = ys, poi = ext, file.output = "domain-USA.cfg", num.chunks = 30)
