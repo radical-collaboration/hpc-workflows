@@ -63,6 +63,7 @@ def stage_power(wcfg):
                 '--map', stage_cfg["map-file"],
                 '--scenario', stage_cfg["scenario-file"],
                 '--silent', '--solar nrel_numba',
+                '--profile', '--profiler simple',
                 '--nc', file_to_process,
             ]
 
