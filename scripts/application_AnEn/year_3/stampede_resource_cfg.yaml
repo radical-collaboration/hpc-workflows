@@ -1,3 +1,5 @@
+# Resource configuration on XSEDE Stampede2
+
 rabbitmq:
   hostname: 'two.radical-project.org'
   port: 33239

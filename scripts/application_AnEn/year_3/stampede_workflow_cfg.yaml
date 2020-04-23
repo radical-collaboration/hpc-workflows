@@ -1,0 +1,50 @@
+# Workflow configuration on XSEDE Stampede2
+
+# Global arguments
+global:
+
+  # Set this to 1 to only print help messages from AnEn executables
+  # without running any real computation.
+  #
+  print-help: 0
+
+  # Set this to 1 to print tasks in a pretty dictionary form without
+  # actually running them.
+  #
+  print-tasks-only: 1
+
+  # Shared configuration file
+  shared-config: "stampede_anen_shared_config.cfg"
+
+  # Domain subset configuration file
+  subset-config: "domain-USA"
+  
+  # Output folder
+  out-folder: "/scratch/04672/tg839717/AnEn"
+
+# Analog generation stage
+stage-analogs:
+  executable: "anen_grib_mpi"
+  pre-exec: [
+    "module purge",
+    "module load intel boost netcdf python3",
+  ]
+  cpu:
+    processes: 136
+    process-type: 'MPI'
+    threads-per-process: 1
+    thread-type: 'OpenMP'
+
+# Power simulation stage
+stage-power:
+  map-file: "variable-map.yaml"
+  scenario-file: "scenarios.yaml"
+  executable: "python"
+  pre-exec: [
+    "module purge",
+  ]
+  cpu:
+    processes: 136
+    process-type: 'MPI'
+    threads-per-process: 1
+    thread-type: 'OpenMP'
