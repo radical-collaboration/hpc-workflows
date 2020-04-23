@@ -42,7 +42,7 @@ stage-analogs:
 # Power simulation stage
 stage-power:
 
-  # The absolute path to the python main script
+  # The absolute path to the python main script 
   python-main: "/home1/04672/tg839717/github/RenewableSimulator/evergreen.py"
 
   # The absolute path to the variable map yaml file

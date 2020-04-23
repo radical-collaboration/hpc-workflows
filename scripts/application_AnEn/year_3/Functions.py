@@ -42,15 +42,11 @@ def stage_power(wcfg):
     t.executable = stage_cfg["executable"]
     t.pre_exec = stage_cfg['pre-exec']
 
-    t.link_input_data = [
-        "$SHARED/variable-map.yaml > {}".format(stage_cfg["map-file"]),
-        "$SHARED/scenarios.yaml > {}".format(stage_cfg["scenario-file"])
-    ]
-
     shared_arguments = [
-        stage_cfg['python-main'], '--map variable-map.yaml',
-        '--scenario scenarios.yaml', '--silent',
-        '--solar nrel_numba'
+        stage_cfg['python-main'],
+        '--map', stage_cfg["map-file"],
+        '--scenario', stage_cfg["scenario-file"],
+        '--silent', '--solar nrel_numba'
     ]
 
     t.cpu_reqs = {
