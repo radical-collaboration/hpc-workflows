@@ -84,7 +84,9 @@ if __name__ == '__main__':
     amgr.resource_desc = res_desc
 
     # This shared configuration will be copied to each unit folder
-    amgr.shared_data = [wcfg['global']['shared-config']]
+    domain_cfgs = [os.path.join(wcfg['global']['subset-config'], f)
+                   for f in os.listdir(wcfg['global']['subset-config']) if f.endswith('.cfg')] 
+    amgr.shared_data = [wcfg['global']['shared-config']] + domain_cfgs
 
     # Add stages
     p = Pipeline()

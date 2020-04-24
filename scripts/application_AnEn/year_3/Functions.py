@@ -100,7 +100,6 @@ def stage_analogs(wcfg):
     # For each domain subset, a task will be created and added to the current stage
     for domain_cfg in domain_cfgs:
         basename = os.path.basename(domain_cfg).split('.')[0]
-        domain_cfg_path = os.path.join(global_cfg['subset-config'], domain_cfg)
         output_file = os.path.join(global_cfg['out-folder'], 'analogs_{}.nc'.format(basename))
 
         if os.path.exists(output_file):
@@ -125,11 +124,11 @@ def stage_analogs(wcfg):
 
                 t.link_input_data = [
                     "$SHARED/{}".format(global_cfg['shared-config']),
-                    '$SHARED/{} > {}'.format(domain_cfg, domain_cfg_path),
+                    "$SHARED/{}".format(domain_cfg),
                 ]
 
                 t.arguments = [
-                    '--config', global_cfg['shared-config'], domain_cfg_path,
+                    '--config', global_cfg['shared-config'], domain_cfg,
                     '--out', output_file,
                 ]
 
